@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -65,12 +66,22 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class LightComponentInfo : ComponentInfoBase
     {
-        public string Light;
+        public string LightType;
+        public string Color;
         
         public LightComponentInfo(Light light)
         {
-            Type = UnityJSONExporter.ComponentType.Light.ToString();
-            Light = light.type.ToString();
+            Type = ComponentType.Light.ToString();
+            LightType = light.type.ToString();
+            Color = ColorUtilities.ConvertColorToHexString(light.color);
+        }
+    }
+
+    public static class ColorUtilities
+    {
+        public static string ConvertColorToHexString(Color color)
+        {
+            return $"0x{color.r.ToString("X2")}{color.g.ToString("X2")}{color.b.ToString("X2")}";
         }
     }
 }
