@@ -79,7 +79,7 @@ namespace UnityJSONExporter
                     var sceneInfo = SceneInfoBuilder.GenerateSceneInfo();
 
                     // var jsonContent = JsonUtility.ToJson(sceneInfo);
-                    var jsonContent = JsonConvert.SerializeObject(sceneInfo);
+                    var jsonContent = JsonConvert.SerializeObject(sceneInfo, Formatting.Indented);
 
                     Debug.Log($"[UnityJSONExporterWindow] json content: {jsonContent}");
                     
