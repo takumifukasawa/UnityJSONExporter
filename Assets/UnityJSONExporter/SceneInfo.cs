@@ -10,6 +10,7 @@ namespace UnityJSONExporter
     public class SceneInfo
     {
         public string Name;
+
         // public Hierarchy Hierarchy;
         public List<ObjectInfo> Objects;
     }
@@ -68,7 +69,7 @@ namespace UnityJSONExporter
     {
         public string LightType;
         public string Color;
-        
+
         public LightComponentInfo(Light light)
         {
             Type = ComponentType.Light.ToString();
@@ -81,7 +82,20 @@ namespace UnityJSONExporter
     {
         public static string ConvertColorToHexString(Color color)
         {
-            return $"0x{color.r.ToString("X2")}{color.g.ToString("X2")}{color.b.ToString("X2")}";
+            var r = Mathf.RoundToInt(color.r * 255);
+            var g = Mathf.RoundToInt(color.g * 255);
+            var b = Mathf.RoundToInt(color.b * 255);
+            var a = Mathf.RoundToInt(color.a * 255);
+
+            // for debug
+            // Debug.Log(r.ToString("X2"));
+            // Debug.Log(g.ToString("X2"));
+            // Debug.Log(b.ToString("X2"));
+            // Debug.Log(a.ToString("X2"));
+            
+            string hexColor = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", r, g, b, a);
+
+            return hexColor;
         }
     }
 }

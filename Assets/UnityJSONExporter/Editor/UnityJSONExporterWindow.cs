@@ -34,7 +34,7 @@ namespace UnityJSONExporter
         void OnGUI()
         {
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
-            
+
             _dryRun = EditorGUILayout.Toggle("Dry Run", _dryRun);
 
             _fileName = EditorGUILayout.TextField("File Name", _fileName);
@@ -69,36 +69,29 @@ namespace UnityJSONExporter
                 // var filePath = $"{fileName}.txt";
                 // var writeFilePath = $"{projectPath}/../{filePath}";
 
-                try
+                var filePath = $"{_fileName}.json";
+                var writeFilePath = Path.Combine(_exportDirectoryPath, filePath);
+
+                Debug.Log($"[UnityJSONExporterWindow] write file path: {writeFilePath}");
+
+                var sceneInfo = SceneInfoBuilder.GenerateSceneInfo();
+
+                // var jsonContent = JsonUtility.ToJson(sceneInfo);
+                var jsonContent = JsonConvert.SerializeObject(sceneInfo, Formatting.Indented);
+
+                Debug.Log($"[UnityJSONExporterWindow] json content: {jsonContent}");
+
+                if (_dryRun)
                 {
-                    var filePath = $"{_fileName}.json";
-                    var writeFilePath = Path.Combine(_exportDirectoryPath, filePath);
-
-                    Debug.Log($"[UnityJSONExporterWindow] write file path: {writeFilePath}");
-
-                    var sceneInfo = SceneInfoBuilder.GenerateSceneInfo();
-
-                    // var jsonContent = JsonUtility.ToJson(sceneInfo);
-                    var jsonContent = JsonConvert.SerializeObject(sceneInfo, Formatting.Indented);
-
-                    Debug.Log($"[UnityJSONExporterWindow] json content: {jsonContent}");
-                    
-                    if (_dryRun)
-                    {
-                        return;
-                    }
-
-                    if (File.Exists(writeFilePath))
-                    {
-                        File.Delete(writeFilePath);
-                    }
-
-                    File.WriteAllText(writeFilePath, jsonContent);
+                    return;
                 }
-                catch (Exception e)
+
+                if (File.Exists(writeFilePath))
                 {
-                    Debug.LogError(e.ToString());
+                    File.Delete(writeFilePath);
                 }
+
+                File.WriteAllText(writeFilePath, jsonContent);
             }
         }
     }
