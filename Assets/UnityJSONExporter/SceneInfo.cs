@@ -2,10 +2,18 @@
 using Newtonsoft.Json;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace UnityJSONExporter
 {
+    // ---------------------------------------------------------------------------------------------
+    // public
+    // ---------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// 
+    /// </summary>
     [System.Serializable]
     public class SceneInfo
     {
@@ -15,13 +23,18 @@ namespace UnityJSONExporter
         public List<ObjectInfo> Objects;
     }
 
-    [System.Serializable]
-    public class Hierarchy
-    {
-        public List<ObjectInfo> Objects;
-    }
+    // /// <summary>
+    // /// 
+    // /// </summary>
+    // [System.Serializable]
+    // public class Hierarchy
+    // {
+    //     public List<ObjectInfo> Objects;
+    // }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     [System.Serializable]
     public class ObjectInfo
     {
@@ -42,42 +55,66 @@ namespace UnityJSONExporter
         }
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     [System.Serializable]
     public class ComponentInfoBase
     {
         public string Type;
+
+        public ComponentInfoBase(string type)
+        {
+            Type = type;
+        }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum ComponentType
     {
         Light,
+        PlayableDirector
     }
 
-    // [System.Serializable]
-    // public class ComponentInfo
-    // {
-    //     public ComponentType ComponentType;
-
-    //     // public static ComponentBase BuildComponentInfo()
-    //     // {
-    //     //     return new LightComponent();
-    //     // }
-    // }
+    /// <summary>
+    /// 
+    /// </summary>
     [System.Serializable]
     public class LightComponentInfo : ComponentInfoBase
     {
         public string LightType;
         public string Color;
 
-        public LightComponentInfo(Light light)
+        public LightComponentInfo(Light light) : base(ComponentType.Light.ToString())
         {
-            Type = ComponentType.Light.ToString();
             LightType = light.type.ToString();
             Color = ColorUtilities.ConvertColorToHexString(light.color);
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    [System.Serializable]
+    public class PlayableDirectorComponentInfo : ComponentInfoBase
+    {
+        public string Name;
+        public double Duration;
+
+        public PlayableDirectorComponentInfo(PlayableDirector playableDirector) : base(ComponentType.PlayableDirector.ToString())
+        {
+            var asset = playableDirector.playableAsset;
+
+            Duration = asset.duration;
+            Name = asset.name;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ColorUtilities
     {
         public static string ConvertColorToHexString(Color color)
@@ -92,7 +129,7 @@ namespace UnityJSONExporter
             // Debug.Log(g.ToString("X2"));
             // Debug.Log(b.ToString("X2"));
             // Debug.Log(a.ToString("X2"));
-            
+
             string hexColor = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", r, g, b, a);
 
             return hexColor;

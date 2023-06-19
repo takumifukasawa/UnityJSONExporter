@@ -8,14 +8,9 @@ namespace UnityJSONExporter
 {
     public class UnityJSONExporterWindow : EditorWindow
     {
-        private bool _dryRun = false;
-        private bool _prettyFormat = false;
-        private string _fileName = "file_name";
-        private string _exportDirectoryPath = "";
-
-        // private bool _groupEnabled;
-        // private bool _myBool = true;
-        // private float _myFloat = 1.23f;
+        // ---------------------------------------------------------------------------------------------
+        // public
+        // ---------------------------------------------------------------------------------------------
 
         /// <summary>
         /// メニューアイテムを追加してウィンドウを開く
@@ -26,6 +21,19 @@ namespace UnityJSONExporter
             // 既存のウィンドウを表示する、または新しいウィンドウを作成する
             GetWindow<UnityJSONExporterWindow>("Unity JSON Exporter Window");
         }
+
+        // ---------------------------------------------------------------------------------------------
+        // private
+        // ---------------------------------------------------------------------------------------------
+
+        private bool _dryRun = false;
+        private bool _prettyFormat = false;
+        private string _fileName = "file_name";
+        private string _exportDirectoryPath = "";
+
+        // private bool _groupEnabled;
+        // private bool _myBool = true;
+        // private float _myFloat = 1.23f;
 
         /// <summary>
         /// ここに GUI コントロールを描画するコードを書く
@@ -79,10 +87,9 @@ namespace UnityJSONExporter
                 // var jsonContent = JsonUtility.ToJson(sceneInfo);
                 var jsonContent = JsonConvert.SerializeObject(sceneInfo, _prettyFormat ? Formatting.Indented : Formatting.None);
 
-                Debug.Log($"[UnityJSONExporterWindow] json content: {jsonContent}");
-
                 if (_dryRun)
                 {
+                    Debug.Log($"[UnityJSONExporterWindow] json content: {jsonContent}");
                     return;
                 }
 

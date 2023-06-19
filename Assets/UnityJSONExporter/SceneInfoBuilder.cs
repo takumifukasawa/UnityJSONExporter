@@ -1,11 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace UnityJSONExporter
 {
     public static class SceneInfoBuilder
     {
+        // ---------------------------------------------------------------------------------------------
+        // public
+        // ---------------------------------------------------------------------------------------------
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static SceneInfo GenerateSceneInfo()
         {
             Debug.Log("[SceneInfo.GenerateSceneInfo]");
@@ -13,45 +22,16 @@ namespace UnityJSONExporter
             var sceneInfo = new SceneInfo();
             sceneInfo.Name = SceneManager.GetActiveScene().name;
 
-            // var objectInfoList = new List<ObjectInfo>();
-
             var objectInfoList = RecursiveBuildGameObjectInfo();
-            // // シーンのルートオブジェクトを取得
-            // var rootObjects = SceneManager.GetActiveScene().GetRootGameObjects();
-
-            // foreach (var rootObject in rootObjects)
-            // {
-            //     Debug.Log($"[SceneInfo.GenerateSceneInfo] object name: {rootObject.name}");
-            //     var objectInfo = new ObjectInfo(rootObject);
-            //     objectInfo.Name = rootObject.name;
-
-            //     var componentInfoList = ParseComponents(rootObject);
-            //     objectInfo.Components = componentInfoList;
-
-            //     objectInfoList.Add(objectInfo);
-
-            //     // TODO: recursive exec
-
-            //     // // シーンのルートオブジェクトの子オブジェクトを取得
-            //     // var childObjects = rootObject.GetComponentsInChildren<Transform>();
-            //     // foreach (var childObject in childObjects)
-            //     // {
-            //     //     // 子オブジェクトの名前を表示
-            //     //     Debug.Log(childObject.name);
-
-            //     //     var go = childObject.gameObject;
-            //     //     var componentInfoList = ParseComponents(go);
-            //     // }
-            // }
-
-            // var hierarchy = new Hierarchy();
-            // sceneInfo.Hierarchy = hierarchy;
-            // hierarchy.Objects = objectInfoList;
 
             sceneInfo.Objects = objectInfoList;
 
             return sceneInfo;
         }
+        
+        // ---------------------------------------------------------------------------------------------
+        // private
+        // ---------------------------------------------------------------------------------------------
 
         /// <summary>
         /// 
@@ -115,7 +95,7 @@ namespace UnityJSONExporter
         /// </summary>
         /// <param name="go"></param>
         /// <returns></returns>
-        public static List<ComponentInfoBase> ParseComponents(GameObject go)
+        static List<ComponentInfoBase> ParseComponents(GameObject go)
         {
             var componentInfoList = new List<ComponentInfoBase>();
 
@@ -123,6 +103,12 @@ namespace UnityJSONExporter
             {
                 var lightComponentInfo = new LightComponentInfo(light);
                 componentInfoList.Add(lightComponentInfo);
+            }
+
+            if (go.TryGetComponent<PlayableDirector>(out PlayableDirector playableDirector))
+            {
+                var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector);
+                componentInfoList.Add(playableDirectorComponentInfo);
             }
 
             return componentInfoList;
