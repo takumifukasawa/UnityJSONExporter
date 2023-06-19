@@ -8,11 +8,10 @@ namespace UnityJSONExporter
 {
     public class UnityJSONExporterWindow : EditorWindow
     {
-        private string _exportDirectoryPath = "";
-
         private bool _dryRun = false;
-
+        private bool _prettyFormat = false;
         private string _fileName = "file_name";
+        private string _exportDirectoryPath = "";
 
         // private bool _groupEnabled;
         // private bool _myBool = true;
@@ -36,6 +35,7 @@ namespace UnityJSONExporter
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 
             _dryRun = EditorGUILayout.Toggle("Dry Run", _dryRun);
+            _prettyFormat = EditorGUILayout.Toggle("Pretty Format", _prettyFormat);
 
             _fileName = EditorGUILayout.TextField("File Name", _fileName);
 
@@ -77,7 +77,7 @@ namespace UnityJSONExporter
                 var sceneInfo = SceneInfoBuilder.GenerateSceneInfo();
 
                 // var jsonContent = JsonUtility.ToJson(sceneInfo);
-                var jsonContent = JsonConvert.SerializeObject(sceneInfo, Formatting.Indented);
+                var jsonContent = JsonConvert.SerializeObject(sceneInfo, _prettyFormat ? Formatting.Indented : Formatting.None);
 
                 Debug.Log($"[UnityJSONExporterWindow] json content: {jsonContent}");
 
