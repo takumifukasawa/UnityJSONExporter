@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Unity.VisualScripting;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.SceneManagement;
+using UnityEngine.Timeline;
 
 namespace UnityJSONExporter
 {
@@ -109,6 +109,42 @@ namespace UnityJSONExporter
 
             Duration = asset.duration;
             Name = asset.name;
+
+            var timelineAsset = playableDirector.playableAsset as TimelineAsset;
+
+            foreach (var output in timelineAsset.GetOutputTracks())
+            {
+                Debug.Log($"[PlayableDirectorComponentInfo] output ==============================");
+                Debug.Log($"[PlayableDirectorComponentInfo] output name: {output.name}");
+                Debug.Log($"[PlayableDirectorComponentInfo] output duration: {output.duration}");
+                Debug.Log($"[PlayableDirectorComponentInfo] output has clips: {output.hasClips}");
+                Debug.Log($"[PlayableDirectorComponentInfo] output curves: {output.curves}");
+                var timelineClips = output.GetClips();
+                Debug.Log($"[PlayableDirectorComponentInfo] output timeline clips count: {timelineClips.Count()}");
+                foreach (var timelineClip in timelineClips)
+                {
+                    Debug.Log($"[PlayableDirectorComponentInfo] timeline clip ------------------------------");
+                    var animationClip = timelineClip.animationClip;
+                    var bindings = AnimationUtility.GetCurveBindings(animationClip);
+                    foreach (var binding in bindings)
+                    {
+                        var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
+                        Debug.Log($"[PlayableDirectorComponentInfo] binding ------------------------------");
+                        Debug.Log($"[PlayableDirectorComponentInfo] binding type: {binding.type}, path: {binding.path}, property: {binding.propertyName}");
+                        var keys = curve.keys.ToList();
+                        for (var i = 0; i < keys.Count; i++)
+                        {
+                            var key = keys[i];
+                            Debug.Log($"[PlayableDirectorComponentInfo] curve in clip - index: {i}, t: {key.time}, value: {key.value}, in-t: {key.inTangent}, in-w: {key.inWeight}, out-t: {key.outTangent}, out-w: {key.outWeight}, weighted mode: {key.weightedMode}");
+                        }
+                    }
+                }
+                // Debug.Log($"[PlayableDirectorComponentInfo] output curves obj name: {output.curves.GameObject().name}");
+                // Debug.Log($"[PlayableDirectorComponentInfo] output curves obj name: {output.curves.}");
+                // output.curves.GameObject()
+                // AnimationUtility.
+                // output.curves
+            }
         }
     }
 
