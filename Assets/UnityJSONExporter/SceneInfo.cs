@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -115,27 +116,64 @@ namespace UnityJSONExporter
             foreach (var output in timelineAsset.GetOutputTracks())
             {
                 Debug.Log($"[PlayableDirectorComponentInfo] output ==============================");
-                Debug.Log($"[PlayableDirectorComponentInfo] output name: {output.name}");
-                Debug.Log($"[PlayableDirectorComponentInfo] output duration: {output.duration}");
-                Debug.Log($"[PlayableDirectorComponentInfo] output has clips: {output.hasClips}");
-                Debug.Log($"[PlayableDirectorComponentInfo] output curves: {output.curves}");
+                Debug.Log($"[PlayableDirectorComponentInfo] output name: {output.name}, start: {output.start}, end: {output.end}, duration: {output.duration}, has clip: {output.hasClips}, curves: {output.curves}");
+                Debug.Log($"[PlayableDirectorComponentInfo] output to string: {output.ToString()}, instance id: {output.GetInstanceID()}");
+                
                 var timelineClips = output.GetClips();
                 Debug.Log($"[PlayableDirectorComponentInfo] output timeline clips count: {timelineClips.Count()}");
                 foreach (var timelineClip in timelineClips)
                 {
                     Debug.Log($"[PlayableDirectorComponentInfo] timeline clip ------------------------------");
+                    Debug.Log($"[PlayableDirectorComponentInfo] timeline clip asset {timelineClip.asset}");
                     var animationClip = timelineClip.animationClip;
+                    var animationPlayableAsset = timelineClip.asset as AnimationPlayableAsset;
                     var bindings = AnimationUtility.GetCurveBindings(animationClip);
+                    
+                    bool hasLocalPosition = false;
+                    var localPosition = Vector3.zero;
+                    var hasLocalRotation = false;
+                    var localRotationEuler = Vector3.zero;
                     foreach (var binding in bindings)
                     {
                         var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
                         Debug.Log($"[PlayableDirectorComponentInfo] binding ------------------------------");
+                        Debug.Log($"[PlayableDirectorComponentInfo] binding type base type: {binding.type.FullName}, is transform: {binding.type.FullName == typeof(Transform).FullName}");
                         Debug.Log($"[PlayableDirectorComponentInfo] binding type: {binding.type}, path: {binding.path}, property: {binding.propertyName}");
+
+                        // animated transform
+                        if (binding.type.FullName == typeof(Transform).FullName)
+                        {
+                            switch (binding.path)
+                            {
+                                case "m_LocalPosition.x":
+                                    hasLocalPosition = true;
+                                    break;
+                                case "m_LocalPosition.y":
+                                    hasLocalPosition = true;
+                                    break;
+                                case "m_LocalPosition.z":
+                                    hasLocalPosition = true;
+                                    break;
+                                case "localEulerAnglesRaw.x":
+                                    hasLocalRotation = true;
+                                    break;
+                                case "localEulerAnglesRaw.y":
+                                    hasLocalRotation = true;
+                                    break;
+                                case "localEulerAnglesRaw.z":
+                                    hasLocalRotation = true;
+                                    break;
+                                default:
+                                    throw new Exception("invalid property");
+                            }
+                        }
+
                         var keys = curve.keys.ToList();
                         for (var i = 0; i < keys.Count; i++)
                         {
                             var key = keys[i];
-                            Debug.Log($"[PlayableDirectorComponentInfo] curve in clip - index: {i}, t: {key.time}, value: {key.value}, in-t: {key.inTangent}, in-w: {key.inWeight}, out-t: {key.outTangent}, out-w: {key.outWeight}, weighted mode: {key.weightedMode}");
+                            Debug.Log(
+                                $"[PlayableDirectorComponentInfo] curve in clip - index: {i}, t: {key.time}, value: {key.value}, in-t: {key.inTangent}, in-w: {key.inWeight}, out-t: {key.outTangent}, out-w: {key.outWeight}, weighted mode: {key.weightedMode}");
                         }
                     }
                 }
