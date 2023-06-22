@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
 using UnityEngine.Timeline;
 using UnityJSONExporter;
 
@@ -13,7 +14,7 @@ public class TestMain : MonoBehaviour
     public class TimelineBinding
     {
         public GameObject TargetObject;
-        public int outputIndex = 0;
+        public int trackIndex = 0;
     }
 
     [SerializeField]
@@ -28,38 +29,42 @@ public class TestMain : MonoBehaviour
 
         var timelineAsset = _playableDirector.playableAsset as TimelineAsset;
         var tracks = timelineAsset.GetOutputTracks();
+        Debug.Log($"[TestMain.Update] tracks count: {tracks.Count()}");
         for (int i = 0; i < _timelineBindings.Count; i++)
         {
             var timelineBinding = _timelineBindings[i];
-            var output = tracks.ToList()[timelineBinding.outputIndex];
+            var track = tracks.ToList()[timelineBinding.trackIndex];
 
             // for debug
-            // Debug.Log($"--- {output.name} --- ");
-            // Debug.Log(output.GetType());
-            // Debug.Log(output.GetType() == typeof(AnimationTrack));
-            // Debug.Log(output.GetType() == typeof(LightControlTrack));
+            Debug.Log($"--- track - index: {i}, name: {track.name}, muted: {track.muted}, type: {track.GetType()} --- ");
+            // Debug.Log(track.GetType());
+            // Debug.Log(track.GetType() == typeof(AnimationTrack));
+            // Debug.Log(track.GetType() == typeof(LightControlTrack));
 
             var currentTime = (float)_playableDirector.time;
 
-            if (output.muted)
+            if (track.muted)
             {
                 continue;
             }
 
             // animation track
-            if (output.GetType() == typeof(AnimationTrack))
+            if (track.GetType() == typeof(AnimationTrack))
             {
-                var animationTrack = output as AnimationTrack;
+                Debug.Log($"[TestMain] animation track");
+                var animationTrack = track as AnimationTrack;
                 var timelineClips = animationTrack.GetClips();
                 foreach (var timelineClip in timelineClips)
                 {
+                    // Debug.Log($"[TestMain] each timeline clip");
                     var animationClip = timelineClip.animationClip;
-                    // TODO: 要確認. animation clip になっている = transform の変更のはず
                     if (animationClip != null)
                     {
+                        var animator = _playableDirector.GetGenericBinding(track) as Animator;
+                        Debug.Log($"animator: {animator}");
                         var bindings = AnimationUtility.GetCurveBindings(animationClip);
-                        var timelinePropertyBinder = new TimelinePropertyBinder(animationClip, bindings, currentTime);
-                        timelinePropertyBinder.AssignProperty(timelineBinding.TargetObject.transform);
+                        var animationTrackBinder = new AnimationTrackBinder(animationClip, bindings, currentTime);
+                        animationTrackBinder.AssignProperty(timelineBinding.TargetObject.transform);
                     }
                 }
 
@@ -67,17 +72,24 @@ public class TestMain : MonoBehaviour
             }
 
             // light control track
-            if (output.GetType() == typeof(LightControlTrack))
+            if (track.GetType() == typeof(LightControlTrack))
             {
-                var lightControlTrack = output as LightControlTrack;
+                Debug.Log($"[TestMain] light control track");
+                var lightControlTrack = track as LightControlTrack;
                 var timelineClips = lightControlTrack.GetClips();
                 foreach (var timelineClip in timelineClips)
                 {
                     var animationClip = timelineClip.curves;
                     if (animationClip != null)
                     {
+                        var light = _playableDirector.GetGenericBinding(track) as Light;
+                        Debug.Log($"light: {light}");
+                        // Debug.Log(track.parent);
+                        // Debug.Log(track.GetInstanceID());
+                        // Debug.Log(GameObject.Find("Directional Light").GetInstanceID());
+                        // Debug.Log(track.ToString());
                         var bindings = AnimationUtility.GetCurveBindings(timelineClip.curves);
-                        var timelinePropertyBinder = new TimelinePropertyBinder(animationClip, bindings, currentTime);
+                        var lightControlTrackPropertyBinder = new LightControlTrackPropertyBinder(animationClip, bindings, currentTime);
                     }
                 }
             }

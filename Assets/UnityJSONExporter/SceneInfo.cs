@@ -191,33 +191,20 @@ namespace UnityJSONExporter
     /// </summary>
     public abstract class PropertyBinder
     {
-        public PropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time)
+        public PropertyBinder(
+            AnimationClip animationClip,
+            EditorCurveBinding[] bindings,
+            float time
+        )
         {
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public class LightControlPropertyBinder : PropertyBinder
-    {
-        public LightControlPropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time) : base(animationClip, bindings, time)
-        {
-            foreach (var binding in bindings)
-            {
-                Debug.Log($"binding type: {binding.type}, path: {binding.path}, property name: {binding.propertyName}");
-                // // animated transform
-                // if (binding.type.FullName == typeof(Transform).FullName)
-                // {
-                // }
-            }
-        }
-    }
 
     /// <summary>
     /// 
     /// </summary>
-    public class TimelinePropertyBinder : PropertyBinder
+    public class AnimationTrackBinder : PropertyBinder
     {
         // ---------------------------------------------------------------------------
         // constants
@@ -245,7 +232,11 @@ namespace UnityJSONExporter
         /// <param name="time"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public TimelinePropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time) : base(animationClip, bindings, time)
+        public AnimationTrackBinder(
+            AnimationClip animationClip,
+            EditorCurveBinding[] bindings,
+            float time
+        ) : base(animationClip, bindings, time)
         {
             foreach (var binding in bindings)
             {
@@ -261,39 +252,39 @@ namespace UnityJSONExporter
                     // {
                     switch (binding.propertyName)
                     {
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_X:
+                        case PROPERTY_LOCAL_POSITION_X:
                             _hasLocalPosition = true;
                             _localPosition.x = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_Y:
+                        case PROPERTY_LOCAL_POSITION_Y:
                             _hasLocalPosition = true;
                             _localPosition.y = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_Z:
+                        case PROPERTY_LOCAL_POSITION_Z:
                             _hasLocalPosition = true;
                             _localPosition.z = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
+                        case PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.x = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
+                        case PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.y = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
+                        case PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.z = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_X:
+                        case PROPERTY_LOCAL_SCALE_X:
                             _hasLocalScale = true;
                             _localScale.x = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_Y:
+                        case PROPERTY_LOCAL_SCALE_Y:
                             _hasLocalScale = true;
                             _localScale.y = value;
                             break;
-                        case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_Z:
+                        case PROPERTY_LOCAL_SCALE_Z:
                             _hasLocalScale = true;
                             _localScale.z = value;
                             break;
@@ -346,24 +337,22 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public static class ColorUtilities
+    public class LightControlTrackPropertyBinder : PropertyBinder
     {
-        public static string ConvertColorToHexString(Color color)
+        public LightControlTrackPropertyBinder(
+            AnimationClip animationClip,
+            EditorCurveBinding[] bindings,
+            float time
+        ) : base(animationClip, bindings, time)
         {
-            var r = Mathf.RoundToInt(color.r * 255);
-            var g = Mathf.RoundToInt(color.g * 255);
-            var b = Mathf.RoundToInt(color.b * 255);
-            var a = Mathf.RoundToInt(color.a * 255);
-
-            // for debug
-            // Debug.Log(r.ToString("X2"));
-            // Debug.Log(g.ToString("X2"));
-            // Debug.Log(b.ToString("X2"));
-            // Debug.Log(a.ToString("X2"));
-
-            string hexColor = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", r, g, b, a);
-
-            return hexColor;
+            foreach (var binding in bindings)
+            {
+                Debug.Log($"binding type: {binding.type}, path: {binding.path}, property name: {binding.propertyName}");
+                // // animated transform
+                // if (binding.type.FullName == typeof(Transform).FullName)
+                // {
+                // }
+            }
         }
     }
 }
