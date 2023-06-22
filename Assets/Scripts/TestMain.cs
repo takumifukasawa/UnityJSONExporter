@@ -90,6 +90,7 @@ public class TestMain : MonoBehaviour
                         // Debug.Log(track.ToString());
                         var bindings = AnimationUtility.GetCurveBindings(timelineClip.curves);
                         var lightControlTrackPropertyBinder = new LightControlTrackPropertyBinder(animationClip, bindings, currentTime);
+                        Debug.Log(lightControlTrackPropertyBinder.Color);
                     }
                 }
             }

@@ -113,14 +113,14 @@ namespace UnityJSONExporter
 
             var timelineAsset = playableDirector.playableAsset as TimelineAsset;
 
-            foreach (var output in timelineAsset.GetOutputTracks())
+            foreach (var track in timelineAsset.GetOutputTracks())
             {
-                Debug.Log($"[PlayableDirectorComponentInfo] output ==============================");
-                Debug.Log($"[PlayableDirectorComponentInfo] output name: {output.name}, start: {output.start}, end: {output.end}, duration: {output.duration}, has clip: {output.hasClips}, curves: {output.curves}");
-                Debug.Log($"[PlayableDirectorComponentInfo] output to string: {output.ToString()}, instance id: {output.GetInstanceID()}");
+                Debug.Log($"[PlayableDirectorComponentInfo] track ==============================");
+                Debug.Log($"[PlayableDirectorComponentInfo] track name: {track.name}, start: {track.start}, end: {track.end}, duration: {track.duration}, has clip: {track.hasClips}, curves: {track.curves}");
+                Debug.Log($"[PlayableDirectorComponentInfo] track to string: {track.ToString()}, instance id: {track.GetInstanceID()}");
 
-                var timelineClips = output.GetClips();
-                Debug.Log($"[PlayableDirectorComponentInfo] output timeline clips count: {timelineClips.Count()}");
+                var timelineClips = track.GetClips();
+                Debug.Log($"[PlayableDirectorComponentInfo] track timeline clips count: {timelineClips.Count()}");
                 foreach (var timelineClip in timelineClips)
                 {
                     Debug.Log($"[PlayableDirectorComponentInfo] timeline clip ------------------------------");
@@ -177,11 +177,11 @@ namespace UnityJSONExporter
                         }
                     }
                 }
-                // Debug.Log($"[PlayableDirectorComponentInfo] output curves obj name: {output.curves.GameObject().name}");
-                // Debug.Log($"[PlayableDirectorComponentInfo] output curves obj name: {output.curves.}");
-                // output.curves.GameObject()
+                // Debug.Log($"[PlayableDirectorComponentInfo] track curves obj name: {track.curves.GameObject().name}");
+                // Debug.Log($"[PlayableDirectorComponentInfo] track curves obj name: {track.curves.}");
+                // track.curves.GameObject()
                 // AnimationUtility.
-                // output.curves
+                // track.curves
             }
         }
     }
@@ -339,6 +339,24 @@ namespace UnityJSONExporter
     /// </summary>
     public class LightControlTrackPropertyBinder : PropertyBinder
     {
+        // ---------------------------------------------------------------------------
+        // constants
+        // ---------------------------------------------------------------------------
+
+        private const string PROPERTY_COLOR_R = "color.r";
+        private const string PROPERTY_COLOR_G = "color.g";
+        private const string PROPERTY_COLOR_B = "color.b";
+        private const string PROPERTY_COLOR_A = "color.a";
+        private const string PROPERTY_BOUNCE_INTENSITY = "bounceIntensity";
+        private const string PROPERTY_INTENSITY = "intensity";
+        private const string PROPERTY_RANGE = "range";
+
+        // ---------------------------------------------------------------------------
+        // public
+        // ---------------------------------------------------------------------------
+
+        public Color Color => _color;
+
         public LightControlTrackPropertyBinder(
             AnimationClip animationClip,
             EditorCurveBinding[] bindings,
@@ -347,12 +365,86 @@ namespace UnityJSONExporter
         {
             foreach (var binding in bindings)
             {
-                Debug.Log($"binding type: {binding.type}, path: {binding.path}, property name: {binding.propertyName}");
-                // // animated transform
-                // if (binding.type.FullName == typeof(Transform).FullName)
-                // {
-                // }
+                // for debug
+                // Debug.Log($"binding type: {binding.type}, path: {binding.path}, property name: {binding.propertyName}");
+                var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
+                var value = CurveUtilities.EvaluateCurve(time, curve);
+
+                switch (binding.propertyName)
+                {
+                    case PROPERTY_COLOR_R:
+                        _hasColor = true;
+                        _color.r = value;
+                        break;
+                    case PROPERTY_COLOR_G:
+                        _hasColor = true;
+                        _color.g = value;
+                        break;
+                    case PROPERTY_COLOR_B:
+                        _hasColor = true;
+                        _color.b = value;
+                        break;
+                    case PROPERTY_COLOR_A:
+                        _hasColor = true;
+                        _color.a = value;
+                        break;
+                    case PROPERTY_BOUNCE_INTENSITY:
+                        _hasBounceIntensity = true;
+                        _bounceIntensity = value;
+                        break;
+                    case PROPERTY_INTENSITY:
+                        _hasIntensity = true;
+                        _intensity = value;
+                        break;
+                    case PROPERTY_RANGE:
+                        _hasRange = true;
+                        _range = value;
+                        break;
+                    default:
+                        throw new Exception($"invalid property: {binding.propertyName}");
+                }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="light"></param>
+        public void AssignProperty(Light light)
+        {
+            if (_hasIntensity)
+            {
+                light.intensity = _intensity;
+            }
+
+            if (_hasBounceIntensity)
+            {
+                light.bounceIntensity = _bounceIntensity;
+            }
+
+            if (_hasRange)
+            {
+                light.range = _range;
+            }
+
+            if (_hasColor)
+            {
+                light.color = _color;
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        // private
+        // ---------------------------------------------------------------------------
+
+        private bool _hasIntensity;
+        private bool _hasBounceIntensity;
+        private bool _hasRange;
+        private bool _hasColor;
+
+        private float _intensity;
+        private float _bounceIntensity;
+        private float _range;
+        private Color _color = new Color();
     }
 }
