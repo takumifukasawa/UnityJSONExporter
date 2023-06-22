@@ -32,7 +32,7 @@ public class TestMain : MonoBehaviour
             var timelineBinding = _timelineBindings[i];
             var output = tracks.ToList()[timelineBinding.outputIndex];
             var timelineClips = output.GetClips();
-            
+
             foreach (var timelineClip in timelineClips)
             {
                 // Debug.Log($"[PlayableDirectorComponentInfo] timeline clip ------------------------------");
@@ -44,12 +44,14 @@ public class TestMain : MonoBehaviour
                 var localPosition = Vector3.zero;
                 var hasLocalRotation = false;
                 var localRotationEuler = Vector3.zero;
+                var hasLocalScale = false;
+                var localScale = Vector3.one;
 
                 foreach (var binding in bindings)
                 {
                     var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
                     var value = CurveUtilities.EvaluateCurve((float)_playableDirector.time, curve);
-                    
+
                     // animated transform
                     if (binding.type.FullName == typeof(Transform).FullName)
                     {
@@ -79,6 +81,18 @@ public class TestMain : MonoBehaviour
                                 hasLocalRotation = true;
                                 localRotationEuler.z = value;
                                 break;
+                            case "m_LocalScale.x":
+                                hasLocalScale = true;
+                                localScale.x = value;
+                                break;
+                            case "m_LocalScale.y":
+                                hasLocalScale = true;
+                                localScale.y = value;
+                                break;
+                            case "m_LocalScale.z":
+                                hasLocalScale = true;
+                                localScale.z = value;
+                                break;
                             default:
                                 throw new Exception($"invalid property: {binding.propertyName}");
                         }
@@ -93,6 +107,11 @@ public class TestMain : MonoBehaviour
                 if (hasLocalRotation)
                 {
                     timelineBinding.TargetObject.transform.localRotation = Quaternion.Euler(localRotationEuler);
+                }
+
+                if (hasLocalScale)
+                {
+                    timelineBinding.TargetObject.transform.localScale = localScale;
                 }
             }
             // }
