@@ -189,53 +189,40 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public class TimelineTransformPropertyBinder
+    public class TimelinePropertyBinder
     {
-        public const string LocalPositionX = "m_LocalPosition.x";
-        public const string LocalPositionY = "m_LocalPosition.y";
-        public const string LocalPositionZ = "m_LocalPosition.z";
-        public const string LocalEulerAnglesRawX = "localEulerAnglesRaw.x";
-        public const string LocalEulerAnglesRawY = "localEulerAnglesRaw.y";
-        public const string LocalEulerAnglesRawZ = "localEulerAnglesRaw.z";
-        public const string LocalScaleX = "m_LocalScale.x";
-        public const string LocalScaleY = "m_LocalScale.y";
-        public const string LocalScaleZ = "m_LocalScale.z";
+        // ---------------------------------------------------------------------------
+        // constants
+        // ---------------------------------------------------------------------------
+        
+        const string PROPERTY_LOCAL_POSITION_X = "m_LocalPosition.x";
+        const string PROPERTY_LOCAL_POSITION_Y = "m_LocalPosition.y";
+        const string PROPERTY_LOCAL_POSITION_Z = "m_LocalPosition.z";
+        const string PROPERTY_LOCAL_EULER_ANGLES_RAW_X = "localEulerAnglesRaw.x";
+        const string PROPERTY_LOCAL_EULER_ANGLES_RAW_Y = "localEulerAnglesRaw.y";
+        const string PROPERTY_LOCAL_EULER_ANGLES_RAW_Z = "localEulerAnglesRaw.z";
+        const string PROPERTY_LOCAL_SCALE_X = "m_LocalScale.x";
+        const string PROPERTY_LOCAL_SCALE_Y = "m_LocalScale.y";
+        const string PROPERTY_LOCAL_SCALE_Z = "m_LocalScale.z";
+        
+        // ---------------------------------------------------------------------------
+        // public
+        // ---------------------------------------------------------------------------
 
-        public bool HasLocalPosition;
-        public bool HasLocalRotationEuler;
-        public bool HasLocalScale;
         public Vector3 LocalPosition = Vector3.zero;
         public Vector3 LocalRotationEuler = Vector3.zero;
         public Vector3 LocalScale = Vector3.one;
 
-        public void AssignProperty(Transform t)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="animationClip"></param>
+        /// <param name="bindings"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public TimelinePropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time)
         {
-            // Debug.Log("==========");
-            // Debug.Log(LocalPosition);
-            // Debug.Log(LocalRotationEuler);
-            // Debug.Log(LocalScale);
-            if (HasLocalPosition)
-            {
-                t.localPosition = LocalPosition;
-            }
-
-            if (HasLocalRotationEuler)
-            {
-                t.localRotation = Quaternion.Euler(LocalRotationEuler);
-            }
-
-            if (HasLocalScale)
-            {
-                t.localScale = LocalScale;
-            }
-        }
-    }
-
-    public static class TimelineBindingUtilities
-    {
-        public static TimelineTransformPropertyBinder GetCurrentTransformPropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time)
-        {
-            var timelineTransformPropertyBinder = new TimelineTransformPropertyBinder();
             foreach (var binding in bindings)
             {
                 // animated transform
@@ -249,51 +236,82 @@ namespace UnityJSONExporter
                     // {
                     switch (binding.propertyName)
                     {
-                        case TimelineTransformPropertyBinder.LocalPositionX:
-                            timelineTransformPropertyBinder.HasLocalPosition = true;
-                            timelineTransformPropertyBinder.LocalPosition.x = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_X:
+                            _hasLocalPosition = true;
+                            LocalPosition.x = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalPositionY:
-                            timelineTransformPropertyBinder.HasLocalPosition = true;
-                            timelineTransformPropertyBinder.LocalPosition.y = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_Y:
+                            _hasLocalPosition = true;
+                            LocalPosition.y = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalPositionZ:
-                            timelineTransformPropertyBinder.HasLocalPosition = true;
-                            timelineTransformPropertyBinder.LocalPosition.z = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_Z:
+                            _hasLocalPosition = true;
+                            LocalPosition.z = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalEulerAnglesRawX:
-                            timelineTransformPropertyBinder.HasLocalRotationEuler = true;
-                            timelineTransformPropertyBinder.LocalRotationEuler.x = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
+                            _hasLocalRotationEuler = true;
+                            LocalRotationEuler.x = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalEulerAnglesRawY:
-                            timelineTransformPropertyBinder.HasLocalRotationEuler = true;
-                            timelineTransformPropertyBinder.LocalRotationEuler.y = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
+                            _hasLocalRotationEuler = true;
+                            LocalRotationEuler.y = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalEulerAnglesRawZ:
-                            timelineTransformPropertyBinder.HasLocalRotationEuler = true;
-                            timelineTransformPropertyBinder.LocalRotationEuler.z = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
+                            _hasLocalRotationEuler = true;
+                            LocalRotationEuler.z = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalScaleX:
-                            timelineTransformPropertyBinder.HasLocalScale = true;
-                            timelineTransformPropertyBinder.LocalScale.x = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_X:
+                            _hasLocalScale = true;
+                            LocalScale.x = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalScaleY:
-                            timelineTransformPropertyBinder.HasLocalScale = true;
-                            timelineTransformPropertyBinder.LocalScale.y = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_Y:
+                            _hasLocalScale = true;
+                            LocalScale.y = value;
                             break;
-                        case TimelineTransformPropertyBinder.LocalScaleZ:
-                            timelineTransformPropertyBinder.HasLocalScale = true;
-                            timelineTransformPropertyBinder.LocalScale.z = value;
+                        case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_Z:
+                            _hasLocalScale = true;
+                            LocalScale.z = value;
                             break;
                         default:
                             throw new Exception($"invalid property: {binding.propertyName}");
                     }
-                    // }
                 }
             }
-
-            return timelineTransformPropertyBinder;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        public void AssignProperty(Transform t)
+        {
+            // Debug.Log("==========");
+            // Debug.Log(LocalPosition);
+            // Debug.Log(LocalRotationEuler);
+            // Debug.Log(LocalScale);
+            if (_hasLocalPosition)
+            {
+                t.localPosition = LocalPosition;
+            }
+
+            if (_hasLocalRotationEuler)
+            {
+                t.localRotation = Quaternion.Euler(LocalRotationEuler);
+            }
+
+            if (_hasLocalScale)
+            {
+                t.localScale = LocalScale;
+            }
+        }
+        
+        // ---------------------------------------------------------------------------
+        // private
+        // ---------------------------------------------------------------------------
+        
+        private bool _hasLocalPosition;
+        private bool _hasLocalRotationEuler;
+        private bool _hasLocalScale;
     }
 
     /// <summary>

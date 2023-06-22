@@ -49,7 +49,7 @@ public class TestMain : MonoBehaviour
                 //         transformPropertyBinder.AssignProperty(timelineBinding.TargetObject.transform);
                 //     }
                 // }
-                var transformPropertyBinder = TimelineBindingUtilities.GetCurrentTransformPropertyBinder(animationClip, bindings, (float)_playableDirector.time);
+                var transformPropertyBinder = new TimelinePropertyBinder(animationClip, bindings, (float)_playableDirector.time);
                 transformPropertyBinder.AssignProperty(timelineBinding.TargetObject.transform);
             }
             // }
