@@ -209,10 +209,6 @@ namespace UnityJSONExporter
         // public
         // ---------------------------------------------------------------------------
 
-        public Vector3 LocalPosition = Vector3.zero;
-        public Vector3 LocalRotationEuler = Vector3.zero;
-        public Vector3 LocalScale = Vector3.one;
-
         /// <summary>
         /// 
         /// </summary>
@@ -238,39 +234,39 @@ namespace UnityJSONExporter
                     {
                         case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_X:
                             _hasLocalPosition = true;
-                            LocalPosition.x = value;
+                            _localPosition.x = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_Y:
                             _hasLocalPosition = true;
-                            LocalPosition.y = value;
+                            _localPosition.y = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_POSITION_Z:
                             _hasLocalPosition = true;
-                            LocalPosition.z = value;
+                            _localPosition.z = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
                             _hasLocalRotationEuler = true;
-                            LocalRotationEuler.x = value;
+                            _localRotationEuler.x = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
                             _hasLocalRotationEuler = true;
-                            LocalRotationEuler.y = value;
+                            _localRotationEuler.y = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
                             _hasLocalRotationEuler = true;
-                            LocalRotationEuler.z = value;
+                            _localRotationEuler.z = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_X:
                             _hasLocalScale = true;
-                            LocalScale.x = value;
+                            _localScale.x = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_Y:
                             _hasLocalScale = true;
-                            LocalScale.y = value;
+                            _localScale.y = value;
                             break;
                         case TimelinePropertyBinder.PROPERTY_LOCAL_SCALE_Z:
                             _hasLocalScale = true;
-                            LocalScale.z = value;
+                            _localScale.z = value;
                             break;
                         default:
                             throw new Exception($"invalid property: {binding.propertyName}");
@@ -291,17 +287,17 @@ namespace UnityJSONExporter
             // Debug.Log(LocalScale);
             if (_hasLocalPosition)
             {
-                t.localPosition = LocalPosition;
+                t.localPosition = _localPosition;
             }
 
             if (_hasLocalRotationEuler)
             {
-                t.localRotation = Quaternion.Euler(LocalRotationEuler);
+                t.localRotation = Quaternion.Euler(_localRotationEuler);
             }
 
             if (_hasLocalScale)
             {
-                t.localScale = LocalScale;
+                t.localScale = _localScale;
             }
         }
         
@@ -312,6 +308,10 @@ namespace UnityJSONExporter
         private bool _hasLocalPosition;
         private bool _hasLocalRotationEuler;
         private bool _hasLocalScale;
+
+        private Vector3 _localPosition = Vector3.zero;
+        private Vector3 _localRotationEuler = Vector3.zero;
+        private Vector3 _localScale = Vector3.one;
     }
 
     /// <summary>
