@@ -189,12 +189,40 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public class TimelinePropertyBinder
+    public abstract class PropertyBinder
+    {
+        public PropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time)
+        {
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class LightControlPropertyBinder : PropertyBinder
+    {
+        public LightControlPropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time) : base(animationClip, bindings, time)
+        {
+            foreach (var binding in bindings)
+            {
+                Debug.Log($"binding type: {binding.type}, path: {binding.path}, property name: {binding.propertyName}");
+                // // animated transform
+                // if (binding.type.FullName == typeof(Transform).FullName)
+                // {
+                // }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TimelinePropertyBinder : PropertyBinder
     {
         // ---------------------------------------------------------------------------
         // constants
         // ---------------------------------------------------------------------------
-        
+
         const string PROPERTY_LOCAL_POSITION_X = "m_LocalPosition.x";
         const string PROPERTY_LOCAL_POSITION_Y = "m_LocalPosition.y";
         const string PROPERTY_LOCAL_POSITION_Z = "m_LocalPosition.z";
@@ -204,7 +232,7 @@ namespace UnityJSONExporter
         const string PROPERTY_LOCAL_SCALE_X = "m_LocalScale.x";
         const string PROPERTY_LOCAL_SCALE_Y = "m_LocalScale.y";
         const string PROPERTY_LOCAL_SCALE_Z = "m_LocalScale.z";
-        
+
         // ---------------------------------------------------------------------------
         // public
         // ---------------------------------------------------------------------------
@@ -217,10 +245,11 @@ namespace UnityJSONExporter
         /// <param name="time"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public TimelinePropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time)
+        public TimelinePropertyBinder(AnimationClip animationClip, EditorCurveBinding[] bindings, float time) : base(animationClip, bindings, time)
         {
             foreach (var binding in bindings)
             {
+                // Debug.Log(binding.type.FullName);
                 // animated transform
                 if (binding.type.FullName == typeof(Transform).FullName)
                 {
@@ -300,11 +329,11 @@ namespace UnityJSONExporter
                 t.localScale = _localScale;
             }
         }
-        
+
         // ---------------------------------------------------------------------------
         // private
         // ---------------------------------------------------------------------------
-        
+
         private bool _hasLocalPosition;
         private bool _hasLocalRotationEuler;
         private bool _hasLocalScale;
