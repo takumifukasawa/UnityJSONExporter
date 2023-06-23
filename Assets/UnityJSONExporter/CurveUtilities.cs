@@ -58,6 +58,8 @@ namespace UnityJSONExporter
         /// <exception cref="Exception"></exception>
         public static float EvaluateCurve(float t, AnimationCurve curve)
         {
+            // TODO: t自体をclampしてもよいかもしれない
+            
             var keys = curve.keys;
 
             if (keys.Length == 0)
