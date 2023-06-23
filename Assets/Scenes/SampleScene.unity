@@ -618,10 +618,13 @@ MonoBehaviour:
   _playableDirector: {fileID: 637077398}
   _timelineBindings:
   - TargetObject: {fileID: 1361360380}
+    T: {fileID: 0}
     trackIndex: 0
   - TargetObject: {fileID: 932459700}
+    T: {fileID: 0}
     trackIndex: 1
   - TargetObject: {fileID: 2005444902}
+    T: {fileID: 0}
     trackIndex: 2
 --- !u!1 &832575517
 GameObject:

@@ -60,29 +60,43 @@ namespace UnityJSONExporter
         {
             var keys = curve.keys;
 
-            if (keys.Length < 2)
+            if (keys.Length == 0)
+            {
+                Debug.LogWarning("curve.keys.Length == 0");
+                return 0;
+            }
+
+            if (keys.Length == 1)
             {
                 return keys[0].value;
             }
 
             if (t < keys[0].time)
             {
-                return Evaluate(t, keys[0], keys[1]);
+                return keys[0].value;
             }
 
             if (t > keys[keys.Length - 1].time)
             {
-                return Evaluate(t, keys[keys.Length - 2], keys[keys.Length - 1]);
+                return keys[keys.Length - 1].value;
             }
 
             for (var i = 0; i < keys.Length - 1; i++)
             {
                 var k0 = keys[i];
-                var k1 = keys[i + 1];
-                if (k0.time <= t && t < k1.time)
+                if (t < k0.time)
                 {
-                    return Evaluate(t, k0, k1);
+                    continue;
                 }
+
+                var k1 = keys[i + 1];
+                return Evaluate(t, k0, k1);
+                // if (k0.time <= t && t < k1.time)
+                // {
+                //     return Evaluate(t, k0, k1);
+                // }
+                // var tt = Mathf.Clamp(t, k0.time, k1.time);
+                // return Evaluate(tt);
             }
 
             throw new Exception($"invalid curve or time. t: {t}, curve keyframe length: {curve.keys.Length}");

@@ -15,7 +15,7 @@ MonoBehaviour:
   m_Version: 3
   m_AnimClip: {fileID: 0}
   m_Locked: 0
-  m_Muted: 0
+  m_Muted: 1
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Version: 3
   m_AnimClip: {fileID: 0}
   m_Locked: 0
-  m_Muted: 0
+  m_Muted: 1
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
@@ -215,10 +215,10 @@ MonoBehaviour:
   m_Name: LightControlClip
   m_EditorClassIdentifier: 
   template:
-    color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 1
-    bounceIntensity: 1
-    range: 10
+    color: {r: 0.4398314, g: 0.6954632, b: 1, a: 1}
+    intensity: 1.0101779
+    bounceIntensity: 1.0131791
+    range: 1.0058904
 --- !u!74 &-1802988615271398625
 AnimationClip:
   m_ObjectHideFlags: 0

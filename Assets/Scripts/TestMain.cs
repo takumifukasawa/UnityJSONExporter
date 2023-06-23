@@ -14,6 +14,7 @@ public class TestMain : MonoBehaviour
     public class TimelineBinding
     {
         public GameObject TargetObject;
+        // public UnityEngine.Object T;
         public int trackIndex = 0;
     }
 
@@ -88,7 +89,7 @@ public class TestMain : MonoBehaviour
                         // Debug.Log(track.GetInstanceID());
                         // Debug.Log(GameObject.Find("Directional Light").GetInstanceID());
                         // Debug.Log(track.ToString());
-                        var bindings = AnimationUtility.GetCurveBindings(timelineClip.curves);
+                        var bindings = AnimationUtility.GetCurveBindings(animationClip);
                         var lightControlTrackPropertyBinder = new LightControlTrackPropertyBinder(animationClip, bindings, currentTime);
                         Debug.Log(lightControlTrackPropertyBinder.Color);
                     }
