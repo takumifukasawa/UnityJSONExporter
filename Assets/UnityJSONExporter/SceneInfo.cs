@@ -181,7 +181,7 @@ namespace UnityJSONExporter
         {
             var asset = playableDirector.playableAsset;
 
-            Debug.Log($"[PlayableDirectorComponentInfo] duration: {playableDirector.duration}");
+            // Debug.Log($"[PlayableDirectorComponentInfo] duration: {playableDirector.duration}");
 
             Duration = asset.duration;
             Name = asset.name;
@@ -200,15 +200,15 @@ namespace UnityJSONExporter
             foreach (var track in timelineAsset.GetOutputTracks())
             {
                 // for debug
-                Debug.Log($"--- track - name: {track.name}, muted: {track.muted}, type: {track.GetType()} --- ");
-                Debug.Log(track.GetType());
-                Debug.Log(track.GetType() == typeof(AnimationTrack));
-                Debug.Log(track.GetType() == typeof(LightControlTrack));
-                Debug.Log(track.GetType() == typeof(ControlTrack));
-                Debug.Log(track.parent);
-                Debug.Log(track.start);
-                Debug.Log(track.end);
-                Debug.Log(track.duration);
+                // Debug.Log($"--- track - name: {track.name}, muted: {track.muted}, type: {track.GetType()} --- ");
+                // Debug.Log(track.GetType());
+                // Debug.Log(track.GetType() == typeof(AnimationTrack));
+                // Debug.Log(track.GetType() == typeof(LightControlTrack));
+                // Debug.Log(track.GetType() == typeof(ControlTrack));
+                // Debug.Log(track.parent);
+                // Debug.Log(track.start);
+                // Debug.Log(track.end);
+                // Debug.Log(track.duration);
 
                 // var currentTime = (float)playableDirector.time;
 
@@ -223,7 +223,7 @@ namespace UnityJSONExporter
                 // animation track
                 if (track.GetType() == typeof(AnimationTrack))
                 {
-                    Debug.Log($"[TestMain] animation track");
+                    // Debug.Log($"[TestMain] animation track");
                     var animationTrack = track as AnimationTrack;
                     var timelineClips = animationTrack.GetClips();
                     foreach (var timelineClip in timelineClips)
@@ -271,7 +271,7 @@ namespace UnityJSONExporter
                 // light control track
                 if (track.GetType() == typeof(LightControlTrack))
                 {
-                    Debug.Log($"[TestMain] light control track");
+                    // Debug.Log($"[TestMain] light control track");
                     var lightControlTrack = track as LightControlTrack;
                     var timelineClips = lightControlTrack.GetClips();
                     foreach (var timelineClip in timelineClips)
