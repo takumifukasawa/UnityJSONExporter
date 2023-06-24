@@ -123,4 +123,4 @@ cmake-build-*/
 # Mongo Explorer plugin
 
 # websocket
-./Assets/Plugins/websocket-sharp.dll
+/[Aa]ssets/Plugins/websocket-sharp.dll
