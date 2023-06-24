@@ -62,48 +62,57 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "o")]
         public List<ObjectInfo> Children = new List<ObjectInfo>();
 
-        public ObjectInfo(GameObject obj)
+        public ObjectInfo(GameObject obj, ExportAxis axis)
         {
             Name = obj.name;
             var localPosition = obj.transform.localPosition;
             var localRotation = obj.transform.localRotation;
             var localScale = obj.transform.localScale;
-            Transform = new TransformInfo()
+            switch (axis)
             {
-                // for three js
-                LocalPosition = new Vector3Info(
-                    localPosition.x,
-                    localPosition.y,
-                    -localPosition.z
-                ),
-                LocalRotation = new Vector3Info(
-                    -localRotation.eulerAngles.x,
-                    -localRotation.eulerAngles.y,
-                    localRotation.eulerAngles.z
-                ),
-                LocalScale = new Vector3Info(
-                    localScale.x,
-                    localScale.y,
-                    localScale.z
-                )
+                case ExportAxis.RightHand:
+                    Transform = new TransformInfo()
+                    {
+                        LocalPosition = new Vector3Info(
+                            localPosition.x,
+                            localPosition.y,
+                            -localPosition.z
+                        ),
+                        LocalRotation = new Vector3Info(
+                            -localRotation.eulerAngles.x,
+                            -localRotation.eulerAngles.y,
+                            localRotation.eulerAngles.z
+                        ),
+                        LocalScale = new Vector3Info(
+                            localScale.x,
+                            localScale.y,
+                            localScale.z
+                        )
+                    };
+                    break;
 
-                // tmp: no axis flip
-                // LocalPosition = new Vector3Info(
-                //     localPosition.x,
-                //     localPosition.y,
-                //     localPosition.z
-                // ),
-                // LocalRotation = new Vector3Info(
-                //     localRotation.eulerAngles.x,
-                //     localRotation.eulerAngles.y,
-                //     localRotation.eulerAngles.z
-                // ),
-                // LocalScale = new Vector3Info(
-                //     localScale.x,
-                //     localScale.y,
-                //     localScale.z
-                // )
-            };
+                case ExportAxis.Default:
+                default:
+                    Transform = new TransformInfo()
+                    {
+                        LocalPosition = new Vector3Info(
+                            localPosition.x,
+                            localPosition.y,
+                            localPosition.z
+                        ),
+                        LocalRotation = new Vector3Info(
+                            localRotation.eulerAngles.x,
+                            localRotation.eulerAngles.y,
+                            localRotation.eulerAngles.z
+                        ),
+                        LocalScale = new Vector3Info(
+                            localScale.x,
+                            localScale.y,
+                            localScale.z
+                        )
+                    };
+                    break;
+            }
         }
 
         public void AddChild(ObjectInfo child)

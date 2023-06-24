@@ -5,17 +5,36 @@ using UnityEngine.SceneManagement;
 
 namespace UnityJSONExporter
 {
-    public static class SceneInfoBuilder
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ExportAxis
+    {
+        Default,
+        RightHand,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class SceneInfoBuilder
     {
         // ---------------------------------------------------------------------------------------------
         // public
         // ---------------------------------------------------------------------------------------------
-        
+
+        private ExportAxis _exportAxis;
+
+        public SceneInfoBuilder(ExportAxis exportAxis)
+        {
+            _exportAxis = exportAxis;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public static SceneInfo GenerateSceneInfo()
+        public SceneInfo GenerateSceneInfo()
         {
             Debug.Log("[SceneInfo.GenerateSceneInfo]");
 
@@ -28,7 +47,7 @@ namespace UnityJSONExporter
 
             return sceneInfo;
         }
-        
+
         // ---------------------------------------------------------------------------------------------
         // private
         // ---------------------------------------------------------------------------------------------
@@ -37,7 +56,7 @@ namespace UnityJSONExporter
         /// 
         /// </summary>
         /// <returns></returns>
-        static List<ObjectInfo> RecursiveBuildGameObjectInfo()
+        List<ObjectInfo> RecursiveBuildGameObjectInfo()
         {
             var objectInfoList = new List<ObjectInfo>();
 
@@ -65,22 +84,10 @@ namespace UnityJSONExporter
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="go"></param>
-        /// <returns></returns>
-        static ObjectInfo GenerateObjectInfo(GameObject go)
-        {
-            var objectInfo = new ObjectInfo(go);
-            objectInfo.Components = ParseComponents(go);
-            return objectInfo;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="parent"></param>
         /// <param name="go"></param>
         /// <returns></returns>
-        static void InternalRecursiveBuildGameObjectInfo(GameObject go, ref ObjectInfo parent)
+        void InternalRecursiveBuildGameObjectInfo(GameObject go, ref ObjectInfo parent)
         {
             var objectInfo = GenerateObjectInfo(go);
             parent.AddChild(objectInfo);
@@ -89,6 +96,18 @@ namespace UnityJSONExporter
             {
                 InternalRecursiveBuildGameObjectInfo(child.gameObject, ref objectInfo);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="go"></param>
+        /// <returns></returns>
+        ObjectInfo GenerateObjectInfo(GameObject go)
+        {
+            var objectInfo = new ObjectInfo(go, _exportAxis);
+            objectInfo.Components = ParseComponents(go);
+            return objectInfo;
         }
 
         /// <summary>
