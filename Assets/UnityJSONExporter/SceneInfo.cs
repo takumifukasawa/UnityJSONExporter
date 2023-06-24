@@ -53,6 +53,9 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "n")]
         public string Name;
 
+        [JsonProperty(PropertyName = "t")]
+        public TransformInfo Transform;
+
         [JsonProperty(PropertyName = "c")]
         public List<ComponentInfoBase> Components = new List<ComponentInfoBase>();
 
@@ -62,12 +65,78 @@ namespace UnityJSONExporter
         public ObjectInfo(GameObject obj)
         {
             Name = obj.name;
+            var localPosition = obj.transform.localPosition;
+            var localRotation = obj.transform.localRotation;
+            var localScale = obj.transform.localScale;
+            Transform = new TransformInfo()
+            {
+                // for three js
+                LocalPosition = new Vector3Info(
+                    localPosition.x,
+                    localPosition.y,
+                    -localPosition.z
+                ),
+                LocalRotation = new Vector3Info(
+                    -localRotation.eulerAngles.x,
+                    -localRotation.eulerAngles.y,
+                    localRotation.eulerAngles.z
+                ),
+                LocalScale = new Vector3Info(
+                    localScale.x,
+                    localScale.y,
+                    localScale.z
+                )
+
+                // tmp: no axis flip
+                // LocalPosition = new Vector3Info(
+                //     localPosition.x,
+                //     localPosition.y,
+                //     localPosition.z
+                // ),
+                // LocalRotation = new Vector3Info(
+                //     localRotation.eulerAngles.x,
+                //     localRotation.eulerAngles.y,
+                //     localRotation.eulerAngles.z
+                // ),
+                // LocalScale = new Vector3Info(
+                //     localScale.x,
+                //     localScale.y,
+                //     localScale.z
+                // )
+            };
         }
 
         public void AddChild(ObjectInfo child)
         {
             Children.Add(child);
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Vector3Info
+    {
+        public float X;
+        public float Y;
+        public float Z;
+
+        public Vector3Info(float x, float y, float z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TransformInfo
+    {
+        public Vector3Info LocalPosition;
+        public Vector3Info LocalRotation;
+        public Vector3Info LocalScale;
     }
 
     /// <summary>
