@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -21,11 +25,11 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class SceneInfo
     {
-        [JsonProperty("name")]
+        [JsonProperty(PropertyName = "n")]
         public string Name;
 
         // public Hierarchy Hierarchy;
-        [JsonProperty("objects")]
+        [JsonProperty(PropertyName = "o")]
         public List<ObjectInfo> Objects;
     }
 
@@ -46,13 +50,13 @@ namespace UnityJSONExporter
     {
         // [JsonIgnore]
         // public GameObject InternalGameObject;
-        [JsonProperty("name")]
+        [JsonProperty(PropertyName = "n")]
         public string Name;
 
-        [JsonProperty("components")]
+        [JsonProperty(PropertyName = "c")]
         public List<ComponentInfoBase> Components = new List<ComponentInfoBase>();
 
-        [JsonProperty("children")]
+        [JsonProperty(PropertyName = "o")]
         public List<ObjectInfo> Children = new List<ObjectInfo>();
 
         public ObjectInfo(GameObject obj)
@@ -72,10 +76,11 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class ComponentInfoBase
     {
-        [JsonProperty("type")]
-        public string Type;
+        [JsonProperty(PropertyName = "t")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ComponentType Type;
 
-        public ComponentInfoBase(string type)
+        public ComponentInfoBase(ComponentType type)
         {
             Type = type;
         }
@@ -96,52 +101,64 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class LightComponentInfo : ComponentInfoBase
     {
-        [JsonProperty("lightType")]
+        [JsonProperty(PropertyName = "l")]
         public string LightType;
 
-        [JsonProperty("color")]
+        [JsonProperty(PropertyName = "c")]
         public string Color;
 
-        public LightComponentInfo(Light light) : base(ComponentType.Light.ToString())
+        public LightComponentInfo(Light light) : base(ComponentType.Light)
         {
             LightType = light.type.ToString();
             Color = ColorUtilities.ConvertColorToHexString(light.color);
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class TrackInfo
     {
-        [JsonProperty("animationClips")]
+        [JsonProperty(PropertyName = "a")]
         public List<AnimationClipInfo> AnimationClips = new List<AnimationClipInfo>();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AnimationClipKeyframe
     {
-        [JsonProperty("time")]
+        [JsonProperty(PropertyName = "t")]
         public float Time;
 
-        [JsonProperty("value")]
+        [JsonProperty(PropertyName = "v")]
         public float Value;
 
-        [JsonProperty("inTangent")]
+        [JsonProperty(PropertyName = "i")]
         public float InTangent;
 
-        [JsonProperty("outTangent")]
+        [JsonProperty(PropertyName = "o")]
         public float OutTangent;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AnimationClipBinding
     {
-        [JsonProperty("propertyName")]
+        [JsonProperty(PropertyName = "n")]
         public string PropertyName;
 
-        [JsonProperty("keyframes")]
+        [JsonProperty(PropertyName = "k")]
         public List<AnimationClipKeyframe> Keyframes = new List<AnimationClipKeyframe>();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AnimationClipInfo
     {
-        [JsonProperty("bindings")]
+        [JsonProperty(PropertyName = "b")]
         public List<AnimationClipBinding> Bindings = new List<AnimationClipBinding>();
     }
 
@@ -151,16 +168,16 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class PlayableDirectorComponentInfo : ComponentInfoBase
     {
-        [JsonProperty("name")]
+        [JsonProperty(PropertyName = "n")]
         public string Name;
 
-        [JsonProperty("duration")]
+        [JsonProperty(PropertyName = "d")]
         public double Duration;
 
-        [JsonProperty("tracks")]
+        [JsonProperty(PropertyName = "t")]
         public List<TrackInfo> Tracks = new List<TrackInfo>();
 
-        public PlayableDirectorComponentInfo(PlayableDirector playableDirector) : base(ComponentType.PlayableDirector.ToString())
+        public PlayableDirectorComponentInfo(PlayableDirector playableDirector) : base(ComponentType.PlayableDirector)
         {
             var asset = playableDirector.playableAsset;
 
@@ -325,6 +342,43 @@ namespace UnityJSONExporter
                 //     }
                 // }
             }
+        }
+    }
+
+
+    public class PropertyNameSwitchResolver : DefaultContractResolver
+    {
+        private bool _minifyNameEnabled;
+
+        public PropertyNameSwitchResolver(bool minifyNameEnabled)
+        {
+            _minifyNameEnabled = minifyNameEnabled;
+            NamingStrategy = new CamelCaseNamingStrategy();
+            // {
+            //     // OverrideSpecifiedNames = overrideSpecifiedNames
+            //     OverrideSpecifiedNames = true
+            // };
+        }
+
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+        {
+            var property = base.CreateProperty(member, memberSerialization);
+            var originalPropertyName = member.Name;
+            var propertyName = property.PropertyName;
+            var jsonProperty = member.GetCustomAttributes<JsonPropertyAttribute>();
+            
+            if (jsonProperty != null && _minifyNameEnabled)
+            {
+                propertyName = propertyName;
+            }
+            else
+            {
+                propertyName = Char.ToLowerInvariant(originalPropertyName[0]) + originalPropertyName.Substring(1);
+            }
+
+            // for debug
+            // Debug.Log($"[PropertyNameSwitchResolver] old name: {originalPropertyName} -> new name: {propertyName}");
+            return property;
         }
     }
 }

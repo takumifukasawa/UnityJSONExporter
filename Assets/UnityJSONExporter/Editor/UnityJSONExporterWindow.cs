@@ -28,6 +28,7 @@ namespace UnityJSONExporter
 
         private bool _dryRun = false;
         private bool _prettyFormat = false;
+        private bool _minifyPropertyName = false;
         private string _fileName = "file_name";
         private string _exportDirectoryPath = "";
 
@@ -44,6 +45,7 @@ namespace UnityJSONExporter
 
             _dryRun = EditorGUILayout.Toggle("Dry Run", _dryRun);
             _prettyFormat = EditorGUILayout.Toggle("Pretty Format", _prettyFormat);
+            _minifyPropertyName = EditorGUILayout.Toggle("Minify Property Name", _minifyPropertyName);
 
             _fileName = EditorGUILayout.TextField("File Name", _fileName);
 
@@ -85,7 +87,12 @@ namespace UnityJSONExporter
                 var sceneInfo = SceneInfoBuilder.GenerateSceneInfo();
 
                 // var jsonContent = JsonUtility.ToJson(sceneInfo);
-                var jsonContent = JsonConvert.SerializeObject(sceneInfo, _prettyFormat ? Formatting.Indented : Formatting.None);
+                // var jsonContent = JsonConvert.SerializeObject(sceneInfo, _prettyFormat ? Formatting.Indented : Formatting.None);
+                var jsonContent = JsonConvert.SerializeObject(sceneInfo, new JsonSerializerSettings()
+                {
+                    ContractResolver = new PropertyNameSwitchResolver(_minifyPropertyName),
+                    Formatting = _prettyFormat ? Formatting.Indented : Formatting.None
+                });
 
                 if (_dryRun)
                 {
