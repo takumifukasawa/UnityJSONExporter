@@ -121,3 +121,6 @@ crashlytics-build.properties
 cmake-build-*/
 
 # Mongo Explorer plugin
+
+# websocket
+./Assets/Plugins/websocket-sharp.dll
