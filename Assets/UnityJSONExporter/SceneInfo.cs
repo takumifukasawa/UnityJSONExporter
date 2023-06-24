@@ -366,18 +366,19 @@ namespace UnityJSONExporter
             var originalPropertyName = member.Name;
             var propertyName = property.PropertyName;
             var jsonProperty = member.GetCustomAttributes<JsonPropertyAttribute>();
-            
+
             if (jsonProperty != null && _minifyNameEnabled)
             {
-                propertyName = propertyName;
+                property.PropertyName = propertyName;
             }
             else
             {
-                propertyName = Char.ToLowerInvariant(originalPropertyName[0]) + originalPropertyName.Substring(1);
+                property.PropertyName = Char.ToLowerInvariant(originalPropertyName[0]) + originalPropertyName.Substring(1);
             }
 
             // for debug
-            // Debug.Log($"[PropertyNameSwitchResolver] old name: {originalPropertyName} -> new name: {propertyName}");
+            // Debug.Log($"[PropertyNameSwitchResolver] old name: {originalPropertyName} -> new name: {property.PropertyName}");
+
             return property;
         }
     }
