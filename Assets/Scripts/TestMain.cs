@@ -20,6 +20,9 @@ public class TestMain : MonoBehaviour
     }
 
     [SerializeField]
+    private bool _syncTimeline;
+
+    [SerializeField]
     private PlayableDirector _playableDirector;
 
     [SerializeField]
@@ -28,6 +31,11 @@ public class TestMain : MonoBehaviour
     private void Update()
     {
         // Debug.Log("[TestMain.Update]");
+
+        if (!_syncTimeline)
+        {
+            return;
+        }
         
         var timelineAsset = _playableDirector.playableAsset as TimelineAsset;
         var tracks = timelineAsset.GetOutputTracks();
