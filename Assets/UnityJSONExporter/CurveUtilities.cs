@@ -58,8 +58,8 @@ namespace UnityJSONExporter
         /// <exception cref="Exception"></exception>
         public static float EvaluateCurve(float t, AnimationCurve curve)
         {
-            // TODO: t自体をclampしてもよいかもしれない
-            
+            // TODO: infinite前提の場合はt自体をclampしてもよいかもしれない
+
             var keys = curve.keys;
 
             if (keys.Length == 0)
@@ -78,27 +78,23 @@ namespace UnityJSONExporter
                 return keys[0].value;
             }
 
-            if (t > keys[keys.Length - 1].time)
+            if (t >= keys[keys.Length - 1].time)
             {
                 return keys[keys.Length - 1].value;
             }
 
+            // TODO: keyframeが多いとループ数が増えるのでtimeをbinarysearchかけるとよい
             for (var i = 0; i < keys.Length - 1; i++)
             {
                 var k0 = keys[i];
-                if (t < k0.time)
-                {
-                    continue;
-                }
-
                 var k1 = keys[i + 1];
-                return Evaluate(t, k0, k1);
-                // if (k0.time <= t && t < k1.time)
-                // {
-                //     return Evaluate(t, k0, k1);
-                // }
-                // var tt = Mathf.Clamp(t, k0.time, k1.time);
-                // return Evaluate(tt);
+                if (k0.time <= t && t < k1.time)
+                {
+                    // for debug
+                    //Debug.Log($"time: {t}, k0.time: {k0.time}");
+                    //Debug.Log($"{i} -> {i + 1}");
+                    return Evaluate(t, k0, k1);
+                }
             }
 
             throw new Exception($"invalid curve or time. t: {t}, curve keyframe length: {curve.keys.Length}");

@@ -46,7 +46,8 @@ namespace UnityJSONExporter
 
             foreach (var rootObject in rootObjects)
             {
-                Debug.Log($"[SceneInfo.GenerateSceneInfo] object name: {rootObject.name}");
+                // for debug
+                // Debug.Log($"[SceneInfo.GenerateSceneInfo] object name: {rootObject.name}");
                 var objectInfo = GenerateObjectInfo(rootObject);
                 foreach (Transform child in rootObject.transform)
                 {

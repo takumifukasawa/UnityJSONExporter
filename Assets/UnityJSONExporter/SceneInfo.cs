@@ -201,9 +201,14 @@ namespace UnityJSONExporter
             {
                 // for debug
                 Debug.Log($"--- track - name: {track.name}, muted: {track.muted}, type: {track.GetType()} --- ");
-                // Debug.Log(track.GetType());
-                // Debug.Log(track.GetType() == typeof(AnimationTrack));
-                // Debug.Log(track.GetType() == typeof(LightControlTrack));
+                Debug.Log(track.GetType());
+                Debug.Log(track.GetType() == typeof(AnimationTrack));
+                Debug.Log(track.GetType() == typeof(LightControlTrack));
+                Debug.Log(track.GetType() == typeof(ControlTrack));
+                Debug.Log(track.parent);
+                Debug.Log(track.start);
+                Debug.Log(track.end);
+                Debug.Log(track.duration);
 
                 // var currentTime = (float)playableDirector.time;
 
@@ -301,6 +306,13 @@ namespace UnityJSONExporter
                             }
                         }
                     }
+
+                    continue;
+                }
+
+                // control track
+                if (track.GetType() == typeof(ControlTrack))
+                {
                 }
 
                 // tmp
