@@ -1393,7 +1393,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _webSocketConnector: {fileID: 1534495653}
   _playableDirector: {fileID: 637077398}
-  _sendInterval: 0.5
+  _sendInterval: 1
+  _showLog: 0
 --- !u!1 &1572664198
 GameObject:
   m_ObjectHideFlags: 0

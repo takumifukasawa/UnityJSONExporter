@@ -12,6 +12,7 @@ namespace TimelineSynthesizer
     public class TimelineSynthesizerData
     {
         public string Type = "seekTimeline";
+
         // [JsonProperty(PropertyName = "currentTime")]
         public float CurrentTime;
     }
@@ -26,15 +27,18 @@ namespace TimelineSynthesizer
         // serialize
         // ----------------------------------------------------------------------------
 
-
         [SerializeField]
         private WebSocketConnector _webSocketConnector;
 
         [SerializeField]
         private PlayableDirector _playableDirector;
 
+        [Space(13)]
         [SerializeField]
         private float _sendInterval = 1f;
+
+        [SerializeField]
+        private bool _showLog = false;
 
         // ----------------------------------------------------------------------------
         // unity engine
@@ -91,8 +95,11 @@ namespace TimelineSynthesizer
                 Formatting = Formatting.None
             });
 
-            Debug.Log("[WebSocketConnector.SendCurrentTime] sending...");
-            Debug.Log($"[WebSocketConnector.SendCurrentTime] send json: {jsonContent}");
+            if (_showLog)
+            {
+                Debug.Log("[WebSocketConnector.SendCurrentTime] sending...");
+                Debug.Log($"[WebSocketConnector.SendCurrentTime] send json: {jsonContent}");
+            }
 
             _webSocketConnector.TrySendText(jsonContent);
         }
