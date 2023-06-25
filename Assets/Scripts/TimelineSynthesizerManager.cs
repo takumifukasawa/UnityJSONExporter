@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityJSONExporter;
 
 namespace TimelineSynthesizer
 {
@@ -10,6 +11,7 @@ namespace TimelineSynthesizer
     /// </summary>
     public class TimelineSynthesizerData
     {
+        // [JsonProperty(PropertyName = "currentTime")]
         public float CurrentTime;
     }
 
@@ -36,7 +38,7 @@ namespace TimelineSynthesizer
         // ----------------------------------------------------------------------------
         // unity engine
         // ----------------------------------------------------------------------------
-        
+
         void Update()
         {
 #if UNITY_EDITOR
@@ -82,12 +84,16 @@ namespace TimelineSynthesizer
             var data = new TimelineSynthesizerData();
             data.CurrentTime = (float)_playableDirector.time;
 
-            var json = JsonConvert.SerializeObject(data);
+            var jsonContent = JsonConvert.SerializeObject(data, new JsonSerializerSettings()
+            {
+                ContractResolver = new PropertyNameSwitchResolver(false),
+                Formatting = Formatting.None
+            });
 
             Debug.Log("[WebSocketConnector.SendCurrentTime] sending...");
-            Debug.Log($"[WebSocketConnector.SendCurrentTime] send json: {json}");
+            Debug.Log($"[WebSocketConnector.SendCurrentTime] send json: {jsonContent}");
 
-            _webSocketConnector.TrySendText(json);
+            _webSocketConnector.TrySendText(jsonContent);
         }
     }
 }
