@@ -13,8 +13,8 @@ namespace UnityJSONExporter
         public const string ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X = "m_LocalScale.x";
         public const string ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y = "m_LocalScale.y";
         public const string ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z = "m_LocalScale.z";
-        
-        
+
+
         public const string LIGHT_CONTROL_CLIP_PROPERTY_COLOR_R = "color.r";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_COLOR_G = "color.g";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_COLOR_B = "color.b";
@@ -22,6 +22,14 @@ namespace UnityJSONExporter
         public const string LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY = "bounceIntensity";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_INTENSITY = "intensity";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_RANGE = "range";
+    }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ConvertAxis
+    {
+        Default,
+        RightHand,
     }
 }

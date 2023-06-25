@@ -35,7 +35,7 @@ namespace UnityJSONExporter
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public static float ConvertValue(
-            ExportAxis convertAxis,
+            ConvertAxis convertAxis,
             TransformType transformType,
             AxisDirection axisDirection,
             float value
@@ -43,7 +43,7 @@ namespace UnityJSONExporter
         {
             switch (convertAxis)
             {
-                case ExportAxis.RightHand:
+                case ConvertAxis.RightHand:
                     if (transformType == TransformType.Position)
                     {
                         if (axisDirection == AxisDirection.Z)
@@ -65,7 +65,7 @@ namespace UnityJSONExporter
 
                     return value;
 
-                case ExportAxis.Default:
+                case ConvertAxis.Default:
                     return value;
 
                 default:
@@ -81,7 +81,7 @@ namespace UnityJSONExporter
         /// <param name="axis"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static Vector3Info ConvertPosition(ExportAxis axis, Vector3 p)
+        public static Vector3Info ConvertPosition(ConvertAxis axis, Vector3 p)
         {
             return new Vector3Info(
                 ConvertValue(axis, TransformType.Position, AxisDirection.X, p.x),
@@ -96,7 +96,7 @@ namespace UnityJSONExporter
         /// <param name="axis"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static Vector3Info ConvertRotation(ExportAxis axis, Vector3 eulerAngles)
+        public static Vector3Info ConvertRotation(ConvertAxis axis, Vector3 eulerAngles)
         {
             return new Vector3Info(
                 ConvertValue(axis, TransformType.Rotation, AxisDirection.X, eulerAngles.x),
@@ -111,7 +111,7 @@ namespace UnityJSONExporter
         /// <param name="axis"></param>
         /// <param name="scale"></param>
         /// <returns></returns>
-        public static Vector3Info ConvertScale(ExportAxis axis, Vector3 scale)
+        public static Vector3Info ConvertScale(ConvertAxis axis, Vector3 scale)
         {
             return new Vector3Info(
                 ConvertValue(axis, TransformType.Scale, AxisDirection.X, scale.x),

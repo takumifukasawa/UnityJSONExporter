@@ -24,7 +24,7 @@ namespace UnityJSONExporter
             _dryRun = EditorGUILayout.Toggle("Dry Run", _dryRun);
             _prettyFormat = EditorGUILayout.Toggle("Pretty Format", _prettyFormat);
             _minifyPropertyName = EditorGUILayout.Toggle("Minify Property Name", _minifyPropertyName);
-            _exportAxis = (ExportAxis)EditorGUILayout.EnumPopup("Export Axis", _exportAxis);
+            _convertAxis = (ConvertAxis)EditorGUILayout.EnumPopup("Convert Axis", _convertAxis);
 
             GUILayout.Space(13);
 
@@ -112,7 +112,7 @@ namespace UnityJSONExporter
         private bool _dryRun = false;
         private bool _prettyFormat = false;
         private bool _minifyPropertyName = false;
-        private ExportAxis _exportAxis = ExportAxis.Default;
+        private ConvertAxis _convertAxis = ConvertAxis.Default;
         private string _fileName = "file_name";
         private string _exportDirectoryPath = "";
         private bool _autoRun = false;
@@ -139,7 +139,7 @@ namespace UnityJSONExporter
             // for debug
             // Debug.Log($"[UnityJSONExporterWindow] write file path: {writeFilePath}");
 
-            var sceneInfo = (new SceneInfoBuilder(_exportAxis)).GenerateSceneInfo();
+            var sceneInfo = (new SceneInfoBuilder(_convertAxis)).GenerateSceneInfo();
 
             // var jsonContent = JsonUtility.ToJson(sceneInfo);
             // var jsonContent = JsonConvert.SerializeObject(sceneInfo, _prettyFormat ? Formatting.Indented : Formatting.None);

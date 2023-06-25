@@ -5,14 +5,6 @@ using UnityEngine.SceneManagement;
 
 namespace UnityJSONExporter
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum ExportAxis
-    {
-        Default,
-        RightHand,
-    }
 
     /// <summary>
     /// 
@@ -23,11 +15,9 @@ namespace UnityJSONExporter
         // public
         // ---------------------------------------------------------------------------------------------
 
-        private ExportAxis _exportAxis;
-
-        public SceneInfoBuilder(ExportAxis exportAxis)
+        public SceneInfoBuilder(ConvertAxis exportAxis)
         {
-            _exportAxis = exportAxis;
+            _convertAxis = exportAxis;
         }
 
         /// <summary>
@@ -52,6 +42,8 @@ namespace UnityJSONExporter
         // ---------------------------------------------------------------------------------------------
         // private
         // ---------------------------------------------------------------------------------------------
+
+        private ConvertAxis _convertAxis;
 
         /// <summary>
         /// 
@@ -106,7 +98,7 @@ namespace UnityJSONExporter
         /// <returns></returns>
         ObjectInfo GenerateObjectInfo(GameObject go)
         {
-            var objectInfo = new ObjectInfo(go, _exportAxis);
+            var objectInfo = new ObjectInfo(go, _convertAxis);
             objectInfo.Components = ParseComponents(go);
             return objectInfo;
         }
@@ -128,7 +120,7 @@ namespace UnityJSONExporter
 
             if (go.TryGetComponent<PlayableDirector>(out PlayableDirector playableDirector))
             {
-                var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector, _exportAxis);
+                var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector, _convertAxis);
                 componentInfoList.Add(playableDirectorComponentInfo);
             }
 

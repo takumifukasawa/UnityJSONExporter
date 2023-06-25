@@ -62,7 +62,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "o")]
         public List<ObjectInfo> Children = new List<ObjectInfo>();
 
-        public ObjectInfo(GameObject obj, ExportAxis axis)
+        public ObjectInfo(GameObject obj, ConvertAxis axis)
         {
             Name = obj.name;
             var localPosition = obj.transform.localPosition;
@@ -78,7 +78,7 @@ namespace UnityJSONExporter
 
             // switch (axis)
             // {
-            //     case ExportAxis.RightHand:
+            //     case ConvertAxis.RightHand:
             //         Transform = new TransformInfo()
             //         {
             //             LocalPosition = new Vector3Info(
@@ -99,7 +99,7 @@ namespace UnityJSONExporter
             //         };
             //         break;
 
-            //     case ExportAxis.Default:
+            //     case ConvertAxis.Default:
             //     default:
             //         Transform = new TransformInfo()
             //         {

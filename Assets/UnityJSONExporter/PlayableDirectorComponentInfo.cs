@@ -71,7 +71,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "t")]
         public List<TrackInfo> Tracks = new List<TrackInfo>();
 
-        public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ExportAxis convertAxis) : base(ComponentType.PlayableDirector)
+        public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ConvertAxis convertAxis) : base(ComponentType.PlayableDirector)
         {
             var asset = playableDirector.playableAsset;
 
