@@ -5,6 +5,9 @@ namespace UnityJSONExporter
 {
     public static class TransformConverter
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public enum TransformType
         {
             Position,
@@ -12,6 +15,9 @@ namespace UnityJSONExporter
             Scale,
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public enum AxisDirection
         {
             X,

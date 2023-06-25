@@ -25,20 +25,6 @@ namespace UnityJSONExporter
     public class AnimationTrackBinder : PropertyBinder
     {
         // ---------------------------------------------------------------------------
-        // constants
-        // ---------------------------------------------------------------------------
-
-        const string PROPERTY_LOCAL_POSITION_X = "m_LocalPosition.x";
-        const string PROPERTY_LOCAL_POSITION_Y = "m_LocalPosition.y";
-        const string PROPERTY_LOCAL_POSITION_Z = "m_LocalPosition.z";
-        const string PROPERTY_LOCAL_EULER_ANGLES_RAW_X = "localEulerAnglesRaw.x";
-        const string PROPERTY_LOCAL_EULER_ANGLES_RAW_Y = "localEulerAnglesRaw.y";
-        const string PROPERTY_LOCAL_EULER_ANGLES_RAW_Z = "localEulerAnglesRaw.z";
-        const string PROPERTY_LOCAL_SCALE_X = "m_LocalScale.x";
-        const string PROPERTY_LOCAL_SCALE_Y = "m_LocalScale.y";
-        const string PROPERTY_LOCAL_SCALE_Z = "m_LocalScale.z";
-
-        // ---------------------------------------------------------------------------
         // public
         // ---------------------------------------------------------------------------
 
@@ -72,39 +58,39 @@ namespace UnityJSONExporter
                     // {
                     switch (binding.propertyName)
                     {
-                        case PROPERTY_LOCAL_POSITION_X:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:
                             _hasLocalPosition = true;
                             _localPosition.x = value;
                             break;
-                        case PROPERTY_LOCAL_POSITION_Y:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y:
                             _hasLocalPosition = true;
                             _localPosition.y = value;
                             break;
-                        case PROPERTY_LOCAL_POSITION_Z:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z:
                             _hasLocalPosition = true;
                             _localPosition.z = value;
                             break;
-                        case PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.x = value;
                             break;
-                        case PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.y = value;
                             break;
-                        case PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.z = value;
                             break;
-                        case PROPERTY_LOCAL_SCALE_X:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X:
                             _hasLocalScale = true;
                             _localScale.x = value;
                             break;
-                        case PROPERTY_LOCAL_SCALE_Y:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y:
                             _hasLocalScale = true;
                             _localScale.y = value;
                             break;
-                        case PROPERTY_LOCAL_SCALE_Z:
+                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z:
                             _hasLocalScale = true;
                             _localScale.z = value;
                             break;
@@ -160,18 +146,6 @@ namespace UnityJSONExporter
     public class LightControlTrackPropertyBinder : PropertyBinder
     {
         // ---------------------------------------------------------------------------
-        // constants
-        // ---------------------------------------------------------------------------
-
-        private const string PROPERTY_COLOR_R = "color.r";
-        private const string PROPERTY_COLOR_G = "color.g";
-        private const string PROPERTY_COLOR_B = "color.b";
-        private const string PROPERTY_COLOR_A = "color.a";
-        private const string PROPERTY_BOUNCE_INTENSITY = "bounceIntensity";
-        private const string PROPERTY_INTENSITY = "intensity";
-        private const string PROPERTY_RANGE = "range";
-
-        // ---------------------------------------------------------------------------
         // public
         // ---------------------------------------------------------------------------
 
@@ -195,31 +169,31 @@ namespace UnityJSONExporter
 
                 switch (binding.propertyName)
                 {
-                    case PROPERTY_COLOR_R:
+                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_R:
                         _hasColor = true;
                         _color.r = value;
                         break;
-                    case PROPERTY_COLOR_G:
+                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_G:
                         _hasColor = true;
                         _color.g = value;
                         break;
-                    case PROPERTY_COLOR_B:
+                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_B:
                         _hasColor = true;
                         _color.b = value;
                         break;
-                    case PROPERTY_COLOR_A:
+                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A:
                         _hasColor = true;
                         _color.a = value;
                         break;
-                    case PROPERTY_BOUNCE_INTENSITY:
+                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY:
                         _hasBounceIntensity = true;
                         _bounceIntensity = value;
                         break;
-                    case PROPERTY_INTENSITY:
+                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_INTENSITY:
                         _hasIntensity = true;
                         _intensity = value;
                         break;
-                    case PROPERTY_RANGE:
+                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_RANGE:
                         _hasRange = true;
                         _range = value;
                         break;
