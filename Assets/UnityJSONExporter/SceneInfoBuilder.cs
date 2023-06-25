@@ -116,7 +116,7 @@ namespace UnityJSONExporter
         /// </summary>
         /// <param name="go"></param>
         /// <returns></returns>
-        static List<ComponentInfoBase> ParseComponents(GameObject go)
+        List<ComponentInfoBase> ParseComponents(GameObject go)
         {
             var componentInfoList = new List<ComponentInfoBase>();
 
@@ -128,7 +128,7 @@ namespace UnityJSONExporter
 
             if (go.TryGetComponent<PlayableDirector>(out PlayableDirector playableDirector))
             {
-                var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector);
+                var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector, _exportAxis);
                 componentInfoList.Add(playableDirectorComponentInfo);
             }
 

@@ -68,51 +68,59 @@ namespace UnityJSONExporter
             var localPosition = obj.transform.localPosition;
             var localRotation = obj.transform.localRotation;
             var localScale = obj.transform.localScale;
-            switch (axis)
-            {
-                case ExportAxis.RightHand:
-                    Transform = new TransformInfo()
-                    {
-                        LocalPosition = new Vector3Info(
-                            localPosition.x,
-                            localPosition.y,
-                            -localPosition.z
-                        ),
-                        LocalRotation = new Vector3Info(
-                            -localRotation.eulerAngles.x,
-                            -localRotation.eulerAngles.y,
-                            localRotation.eulerAngles.z
-                        ),
-                        LocalScale = new Vector3Info(
-                            localScale.x,
-                            localScale.y,
-                            localScale.z
-                        )
-                    };
-                    break;
 
-                case ExportAxis.Default:
-                default:
-                    Transform = new TransformInfo()
-                    {
-                        LocalPosition = new Vector3Info(
-                            localPosition.x,
-                            localPosition.y,
-                            localPosition.z
-                        ),
-                        LocalRotation = new Vector3Info(
-                            localRotation.eulerAngles.x,
-                            localRotation.eulerAngles.y,
-                            localRotation.eulerAngles.z
-                        ),
-                        LocalScale = new Vector3Info(
-                            localScale.x,
-                            localScale.y,
-                            localScale.z
-                        )
-                    };
-                    break;
-            }
+            Transform = new TransformInfo()
+            {
+                LocalPosition = TransformConverter.ConvertPosition(axis, localPosition),
+                LocalRotation = TransformConverter.ConvertRotation(axis, localRotation.eulerAngles),
+                LocalScale = TransformConverter.ConvertScale(axis, localScale)
+            };
+
+            // switch (axis)
+            // {
+            //     case ExportAxis.RightHand:
+            //         Transform = new TransformInfo()
+            //         {
+            //             LocalPosition = new Vector3Info(
+            //                 localPosition.x,
+            //                 localPosition.y,
+            //                 -localPosition.z
+            //             ),
+            //             LocalRotation = new Vector3Info(
+            //                 -localRotation.eulerAngles.x,
+            //                 -localRotation.eulerAngles.y,
+            //                 localRotation.eulerAngles.z
+            //             ),
+            //             LocalScale = new Vector3Info(
+            //                 localScale.x,
+            //                 localScale.y,
+            //                 localScale.z
+            //             )
+            //         };
+            //         break;
+
+            //     case ExportAxis.Default:
+            //     default:
+            //         Transform = new TransformInfo()
+            //         {
+            //             LocalPosition = new Vector3Info(
+            //                 localPosition.x,
+            //                 localPosition.y,
+            //                 localPosition.z
+            //             ),
+            //             LocalRotation = new Vector3Info(
+            //                 localRotation.eulerAngles.x,
+            //                 localRotation.eulerAngles.y,
+            //                 localRotation.eulerAngles.z
+            //             ),
+            //             LocalScale = new Vector3Info(
+            //                 localScale.x,
+            //                 localScale.y,
+            //                 localScale.z
+            //             )
+            //         };
+            //         break;
+            // }
         }
 
         public void AddChild(ObjectInfo child)
@@ -255,7 +263,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "t")]
         public List<TrackInfo> Tracks = new List<TrackInfo>();
 
-        public PlayableDirectorComponentInfo(PlayableDirector playableDirector) : base(ComponentType.PlayableDirector)
+        public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ExportAxis axis) : base(ComponentType.PlayableDirector)
         {
             var asset = playableDirector.playableAsset;
 

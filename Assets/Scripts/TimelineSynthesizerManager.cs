@@ -11,6 +11,7 @@ namespace TimelineSynthesizer
     /// </summary>
     public class TimelineSynthesizerData
     {
+        public string Type = "seekTimeline";
         // [JsonProperty(PropertyName = "currentTime")]
         public float CurrentTime;
     }
