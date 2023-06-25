@@ -36,7 +36,8 @@ namespace UnityJSONExporter
         /// <returns></returns>
         public SceneInfo GenerateSceneInfo()
         {
-            Debug.Log("[SceneInfo.GenerateSceneInfo]");
+            // for debug
+            // Debug.Log("[SceneInfo.GenerateSceneInfo]");
 
             var sceneInfo = new SceneInfo();
             sceneInfo.Name = SceneManager.GetActiveScene().name;
