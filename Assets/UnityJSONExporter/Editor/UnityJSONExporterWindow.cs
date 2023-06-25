@@ -20,6 +20,7 @@ namespace UnityJSONExporter
         {
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 
+            _webSocketConnector = (WebSocketConnector)EditorGUILayout.ObjectField("WebSocket Connector", _webSocketConnector, typeof(WebSocketConnector), true);
             _showExportLog = EditorGUILayout.Toggle("Show Export Log", _showExportLog);
             _dryRun = EditorGUILayout.Toggle("Dry Run", _dryRun);
             _prettyFormat = EditorGUILayout.Toggle("Pretty Format", _prettyFormat);
@@ -99,7 +100,7 @@ namespace UnityJSONExporter
             }
 
             _prevAutoExportTime = DateTime.Now;
-            
+
             Export();
         }
 
@@ -109,6 +110,7 @@ namespace UnityJSONExporter
         // private
         // ---------------------------------------------------------------------------------------------
 
+        private WebSocketConnector _webSocketConnector;
         private bool _dryRun = false;
         private bool _prettyFormat = false;
         private bool _minifyPropertyName = false;
@@ -122,7 +124,7 @@ namespace UnityJSONExporter
         /// <summary>
         /// 
         /// </summary>
-        void Export()
+        async void Export()
         {
             // var projectPath = System.IO.Path.GetDirectoryName(Application.dataPath);
             // Debug.Log($"[UnityJSONExporterWindow] persistent data path: {Application.persistentDataPath}");
@@ -162,6 +164,16 @@ namespace UnityJSONExporter
 
             File.WriteAllText(writeFilePath, jsonContent);
 
+            if (_webSocketConnector)
+            {
+                var exportSceneMessageContent = JsonConvert.SerializeObject(new ExportSceneMessage(), new JsonSerializerSettings()
+                {
+                    ContractResolver = new PropertyNameSwitchResolver(false),
+                    Formatting = Formatting.None
+                });
+                _webSocketConnector.TrySendText(exportSceneMessageContent);
+            }
+
             if (_showExportLog)
             {
                 Debug.Log($"[UnityJSONExporterWindow] complete write: {writeFilePath}");
@@ -171,5 +183,10 @@ namespace UnityJSONExporter
         // private bool _groupEnabled;
         // private bool _myBool = true;
         // private float _myFloat = 1.23f;
+    }
+
+    public class ExportSceneMessage
+    {
+        public string Type = "exportScene";
     }
 }
