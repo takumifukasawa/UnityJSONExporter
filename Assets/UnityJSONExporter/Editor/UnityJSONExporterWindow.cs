@@ -10,6 +10,40 @@ namespace UnityJSONExporter
     public class UnityJSONExporterWindow : EditorWindow
     {
         // ---------------------------------------------------------------------------------------------
+        // serialize
+        // ---------------------------------------------------------------------------------------------
+
+        [SerializeField]
+        private WebSocketConnector _webSocketConnector;
+
+        [SerializeField]
+        private bool _dryRun = false;
+
+        [SerializeField]
+        private bool _prettyFormat = false;
+
+        [SerializeField]
+        private bool _minifyPropertyName = false;
+
+        [SerializeField]
+        private ConvertAxis _convertAxis = ConvertAxis.Default;
+
+        [SerializeField]
+        private string _fileName = "file_name";
+
+        [SerializeField]
+        private string _exportDirectoryPath = "";
+
+        [SerializeField]
+        private bool _autoRun = false;
+
+        [SerializeField]
+        private float _autoRunInterval = 1f;
+
+        [SerializeField]
+        private bool _showExportLog = false;
+
+        // ---------------------------------------------------------------------------------------------
         // unity engine
         // ---------------------------------------------------------------------------------------------
 
@@ -72,14 +106,29 @@ namespace UnityJSONExporter
             GetWindow<UnityJSONExporterWindow>("Unity JSON Exporter Window");
         }
 
+        private string SAVE_KEY = "UnityJSONExporterWindowSaveData";
+
         private void OnEnable()
         {
             EditorApplication.update += OnUpdateEditor;
+            // var defaultSaveData = JsonConvert.SerializeObject(this, new JsonSerializerSettings()
+            // {
+            //     ContractResolver = new PropertyNameSwitchResolver(false),
+            //     Formatting = Formatting.None
+            // });
+            // var saveDataString = EditorPrefs.GetString(SAVE_KEY, defaultSaveData);
+            // var saveData = JsonConvert.DeserializeObject<UnityJSONExporterWindow>(saveDataString);
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= OnUpdateEditor;
+            // var saveData = JsonConvert.SerializeObject(this, new JsonSerializerSettings()
+            // {
+            //     ContractResolver = new PropertyNameSwitchResolver(false),
+            //     Formatting = Formatting.None
+            // });
+            // EditorPrefs.SetString(SAVE_KEY, saveData);
         }
 
         void OnUpdateEditor()
@@ -110,16 +159,6 @@ namespace UnityJSONExporter
         // private
         // ---------------------------------------------------------------------------------------------
 
-        private WebSocketConnector _webSocketConnector;
-        private bool _dryRun = false;
-        private bool _prettyFormat = false;
-        private bool _minifyPropertyName = false;
-        private ConvertAxis _convertAxis = ConvertAxis.Default;
-        private string _fileName = "file_name";
-        private string _exportDirectoryPath = "";
-        private bool _autoRun = false;
-        private float _autoRunInterval = 1f;
-        private bool _showExportLog = false;
 
         /// <summary>
         /// 
@@ -183,10 +222,13 @@ namespace UnityJSONExporter
         // private bool _groupEnabled;
         // private bool _myBool = true;
         // private float _myFloat = 1.23f;
-    }
 
-    public class ExportSceneMessage
+    /// <summary>
+    /// 
+    /// </summary>
+    private class ExportSceneMessage
     {
         public string Type = "exportScene";
+    }
     }
 }

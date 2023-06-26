@@ -52,8 +52,20 @@ namespace UnityJSONExporter
     /// </summary>
     public class AnimationClipInfo
     {
+        [JsonProperty(PropertyName = "s")]
+        public float start;
+
+        [JsonProperty(PropertyName = "d")]
+        public float duration;
+
         [JsonProperty(PropertyName = "b")]
         public List<AnimationClipBinding> Bindings = new List<AnimationClipBinding>();
+
+        public AnimationClipInfo(float s, float d)
+        {
+            start = s;
+            duration = d;
+        }
     }
 
     /// <summary>
@@ -166,7 +178,10 @@ namespace UnityJSONExporter
                     continue;
                 }
 
-                var animationClipInfo = new AnimationClipInfo();
+                var animationClipInfo = new AnimationClipInfo(
+                    (float)timelineClip.start,
+                    (float)timelineClip.duration
+                );
                 animationClipInfoList.Add(animationClipInfo);
                 // trackInfo.AnimationClips.Add(animationClipInfo);
 
@@ -189,8 +204,8 @@ namespace UnityJSONExporter
                     foreach (var key in curve.keys)
                     {
                         float keyValue = convertTransformValue
-                                             ? ConvertTransformCurveValue(binding, key.value, convertAxis)
-                                             : key.value;
+                            ? ConvertTransformCurveValue(binding, key.value, convertAxis)
+                            : key.value;
 
                         var animationClipKeyframe = new AnimationClipKeyframe();
                         animationClipKeyframe.Time = key.time;
