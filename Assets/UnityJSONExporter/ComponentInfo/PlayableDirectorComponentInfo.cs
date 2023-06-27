@@ -14,7 +14,7 @@ namespace UnityJSONExporter
     public class TrackInfo
     {
         [JsonProperty(PropertyName = "a")]
-        public List<AnimationClipInfo> AnimationClips = new List<AnimationClipInfo>();
+        public List<AnimationClipInfoBase> AnimationClips = new List<AnimationClipInfoBase>();
     }
 
     /// <summary>
@@ -50,21 +50,53 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public class AnimationClipInfo
+    public class AnimationClipInfoBase
     {
         [JsonProperty(PropertyName = "s")]
-        public float start;
+        public float Start;
 
         [JsonProperty(PropertyName = "d")]
-        public float duration;
+        public float Duration;
 
         [JsonProperty(PropertyName = "b")]
         public List<AnimationClipBinding> Bindings = new List<AnimationClipBinding>();
+        
+                public AnimationClipInfoBase(float s, float d)
+                {
+                    Start = s;
+                    Duration = d;
+                }
 
-        public AnimationClipInfo(float s, float d)
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class AnimationClipInfo : AnimationClipInfoBase
+    {
+        // [JsonProperty(PropertyName = "s")]
+        // public float Start;
+
+        // [JsonProperty(PropertyName = "d")]
+        // public float Duration;
+
+        [JsonProperty(PropertyName = "op")]
+        public Vector3 OffsetPosition;
+
+        [JsonProperty(PropertyName = "or")]
+        public Vector3 OffsetRotation;
+
+        // [JsonProperty(PropertyName = "b")]
+        // public List<AnimationClipBinding> Bindings = new List<AnimationClipBinding>();
+
+        public AnimationClipInfo(float s, float d) : base(s, d)
         {
-            start = s;
-            duration = d;
+        }
+
+        public AnimationClipInfo(float s, float d, Vector3 op, Vector3 or) : base(s, d)
+        {
+            OffsetPosition = op;
+            OffsetRotation = or;
         }
     }
 
@@ -161,14 +193,14 @@ namespace UnityJSONExporter
         /// <param name="checkType"></param>
         /// <param name="convertTransformValue"></param>
         /// <returns></returns>
-        List<AnimationClipInfo> GenerateAnimationClipInfoList(
+        List<AnimationClipInfoBase> GenerateAnimationClipInfoList(
             IEnumerable<TimelineClip> timelineClips,
             ConvertAxis convertAxis,
             Type checkType = null,
             bool convertTransformValue = false
         )
         {
-            var animationClipInfoList = new List<AnimationClipInfo>();
+            var animationClipInfoList = new List<AnimationClipInfoBase>();
             foreach (var timelineClip in timelineClips)
             {
                 // Debug.Log($"[TestMain] each timeline clip");
@@ -177,6 +209,17 @@ namespace UnityJSONExporter
                 {
                     continue;
                 }
+
+                // check timeline clip offset
+                var animationPlayableAsset = timelineClip.asset as AnimationPlayableAsset;
+                // Debug.Log($"hogehoge: {pa.position}");
+                // Debug.Log($"fugafuga: {pa.rotation}");
+                var offsetMatrix = new Matrix4x4();
+                offsetMatrix.SetTRS(
+                    animationPlayableAsset.position,
+                    animationPlayableAsset.rotation,
+                    Vector3.one
+                );
 
                 var animationClipInfo = new AnimationClipInfo(
                     (float)timelineClip.start,
@@ -204,8 +247,8 @@ namespace UnityJSONExporter
                     foreach (var key in curve.keys)
                     {
                         float keyValue = convertTransformValue
-                            ? ConvertTransformCurveValue(binding, key.value, convertAxis)
-                            : key.value;
+                                             ? ConvertTransformCurveValue(binding, key.value, convertAxis)
+                                             : key.value;
 
                         var animationClipKeyframe = new AnimationClipKeyframe();
                         animationClipKeyframe.Time = key.time;

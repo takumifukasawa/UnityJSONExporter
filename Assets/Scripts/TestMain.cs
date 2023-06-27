@@ -15,6 +15,7 @@ public class TestMain : MonoBehaviour
     public class TimelineBinding
     {
         public GameObject TargetObject;
+
         // public UnityEngine.Object T;
         public int trackIndex = 0;
     }
@@ -36,7 +37,7 @@ public class TestMain : MonoBehaviour
         {
             return;
         }
-        
+
         var timelineAsset = _playableDirector.playableAsset as TimelineAsset;
         var tracks = timelineAsset.GetOutputTracks();
         // Debug.Log($"[TestMain.Update] tracks count: {tracks.Count()}");
