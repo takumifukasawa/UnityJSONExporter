@@ -13,6 +13,9 @@ public class WebSocketConnector : MonoBehaviour
     [SerializeField]
     private int _port;
 
+    [SerializeField]
+    private bool _connectOnAwake = false;
+
     // ----------------------------------------------------------------------------
     // unity engine
     // ----------------------------------------------------------------------------
@@ -22,7 +25,10 @@ public class WebSocketConnector : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        Connect();
+        if (_connectOnAwake)
+        {
+            Connect();
+        }
     }
 
     /// <summary>

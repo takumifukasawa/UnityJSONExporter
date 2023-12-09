@@ -78,6 +78,18 @@ namespace UnityJSONExporter
             // _myBool = EditorGUILayout.Toggle("Toggle", _myBool);
             // _myFloat = EditorGUILayout.Slider("Slider", _myFloat, -3, 3);
             // EditorGUILayout.EndToggleGroup();
+            
+            GUILayout.Space(13);
+
+            if (GUILayout.Button("Connect WebSocket"))
+            {
+                _webSocketConnector.Connect();
+            }
+
+            if (GUILayout.Button("Close WebSocket"))
+            {
+                _webSocketConnector.Close();
+            }
 
             GUILayout.Space(13);
 
@@ -187,7 +199,8 @@ namespace UnityJSONExporter
             var jsonContent = JsonConvert.SerializeObject(sceneInfo, new JsonSerializerSettings()
             {
                 ContractResolver = new PropertyNameSwitchResolver(_minifyPropertyName),
-                Formatting = _prettyFormat ? Formatting.Indented : Formatting.None
+                Formatting = _prettyFormat ? Formatting.Indented : Formatting.None,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore // vector3のnormalizedの無限参照対策
             });
 
             if (_dryRun)

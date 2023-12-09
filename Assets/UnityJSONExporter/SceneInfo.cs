@@ -75,52 +75,6 @@ namespace UnityJSONExporter
                 LocalRotation = TransformConverter.ConvertRotation(axis, localRotation.eulerAngles),
                 LocalScale = TransformConverter.ConvertScale(axis, localScale)
             };
-
-            // switch (axis)
-            // {
-            //     case ConvertAxis.RightHand:
-            //         Transform = new TransformInfo()
-            //         {
-            //             LocalPosition = new Vector3Info(
-            //                 localPosition.x,
-            //                 localPosition.y,
-            //                 -localPosition.z
-            //             ),
-            //             LocalRotation = new Vector3Info(
-            //                 -localRotation.eulerAngles.x,
-            //                 -localRotation.eulerAngles.y,
-            //                 localRotation.eulerAngles.z
-            //             ),
-            //             LocalScale = new Vector3Info(
-            //                 localScale.x,
-            //                 localScale.y,
-            //                 localScale.z
-            //             )
-            //         };
-            //         break;
-
-            //     case ConvertAxis.Default:
-            //     default:
-            //         Transform = new TransformInfo()
-            //         {
-            //             LocalPosition = new Vector3Info(
-            //                 localPosition.x,
-            //                 localPosition.y,
-            //                 localPosition.z
-            //             ),
-            //             LocalRotation = new Vector3Info(
-            //                 localRotation.eulerAngles.x,
-            //                 localRotation.eulerAngles.y,
-            //                 localRotation.eulerAngles.z
-            //             ),
-            //             LocalScale = new Vector3Info(
-            //                 localScale.x,
-            //                 localScale.y,
-            //                 localScale.z
-            //             )
-            //         };
-            //         break;
-            // }
         }
 
         public void AddChild(ObjectInfo child)
@@ -144,6 +98,13 @@ namespace UnityJSONExporter
             Y = y;
             Z = z;
         }
+
+        public Vector3Info(Vector3 v)
+        {
+            X = v.x;
+            Y = v.y;
+            Z = v.z;
+        }
     }
 
     /// <summary>
@@ -151,8 +112,11 @@ namespace UnityJSONExporter
     /// </summary>
     public class TransformInfo
     {
+        [JsonProperty(PropertyName = "lp")]
         public Vector3Info LocalPosition;
+        [JsonProperty(PropertyName = "lr")]
         public Vector3Info LocalRotation;
+        [JsonProperty(PropertyName = "ls")]
         public Vector3Info LocalScale;
     }
 }

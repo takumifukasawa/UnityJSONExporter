@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 namespace UnityJSONExporter
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -104,7 +103,7 @@ namespace UnityJSONExporter
         }
 
         /// <summary>
-        /// 
+        /// parseしたいcomponentを列挙
         /// </summary>
         /// <param name="go"></param>
         /// <returns></returns>
@@ -112,13 +111,19 @@ namespace UnityJSONExporter
         {
             var componentInfoList = new List<ComponentInfoBase>();
 
-            if (go.TryGetComponent<Light>(out Light light))
+            //
+            // light
+            //
+            if (go.TryGetComponent(out Light light))
             {
                 var lightComponentInfo = new LightComponentInfo(light);
                 componentInfoList.Add(lightComponentInfo);
             }
 
-            if (go.TryGetComponent<PlayableDirector>(out PlayableDirector playableDirector))
+            //
+            // playable director
+            //
+            if (go.TryGetComponent(out PlayableDirector playableDirector))
             {
                 var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector, _convertAxis);
                 componentInfoList.Add(playableDirectorComponentInfo);
