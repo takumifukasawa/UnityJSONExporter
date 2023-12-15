@@ -27,7 +27,7 @@ namespace UnityJSONExporter
     /// </summary>
     public enum ComponentType
     {
+        PlayableDirector,
         Light,
-        PlayableDirector
     }
 }
