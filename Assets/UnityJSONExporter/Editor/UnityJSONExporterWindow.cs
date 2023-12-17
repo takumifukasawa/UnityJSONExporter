@@ -32,6 +32,9 @@ namespace UnityJSONExporter
         private string _fileName = "file_name";
 
         [SerializeField]
+        private string _hotReloadFileName = "hot_reload_file_name";
+
+        [SerializeField]
         private string _exportDirectoryPath = "";
 
         [SerializeField]
@@ -69,6 +72,7 @@ namespace UnityJSONExporter
             GUILayout.Space(13);
 
             _fileName = EditorGUILayout.TextField("File Name", _fileName);
+            _hotReloadFileName = EditorGUILayout.TextField("Hot Reload File Name", _hotReloadFileName);
 
             EditorGUI.BeginDisabledGroup(true);
             _exportDirectoryPath = EditorGUILayout.TextField("Export Path", _exportDirectoryPath);
@@ -78,7 +82,7 @@ namespace UnityJSONExporter
             // _myBool = EditorGUILayout.Toggle("Toggle", _myBool);
             // _myFloat = EditorGUILayout.Slider("Slider", _myFloat, -3, 3);
             // EditorGUILayout.EndToggleGroup();
-            
+
             GUILayout.Space(13);
 
             if (GUILayout.Button("Connect WebSocket"))
@@ -102,9 +106,16 @@ namespace UnityJSONExporter
                 _exportDirectoryPath = selectedPath;
             }
 
-            if (GUILayout.Button("Export"))
+            GUILayout.Space(13);
+
+            if (GUILayout.Button("Export Scene"))
             {
-                Export();
+                ExportSceneJson();
+            }
+
+            if (GUILayout.Button("Export Hot Reload Scene"))
+            {
+                ExportHotReloadSceneJson();
             }
         }
 
@@ -120,6 +131,9 @@ namespace UnityJSONExporter
 
         private string SAVE_KEY = "UnityJSONExporterWindowSaveData";
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void OnEnable()
         {
             EditorApplication.update += OnUpdateEditor;
@@ -132,6 +146,9 @@ namespace UnityJSONExporter
             // var saveData = JsonConvert.DeserializeObject<UnityJSONExporterWindow>(saveDataString);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void OnDisable()
         {
             EditorApplication.update -= OnUpdateEditor;
@@ -143,6 +160,9 @@ namespace UnityJSONExporter
             // EditorPrefs.SetString(SAVE_KEY, saveData);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         void OnUpdateEditor()
         {
             if (!_autoRun)
@@ -162,20 +182,69 @@ namespace UnityJSONExporter
 
             _prevAutoExportTime = DateTime.Now;
 
-            Export();
+            ExportSceneJson();
         }
-
-        private DateTime _prevAutoExportTime;
 
         // ---------------------------------------------------------------------------------------------
         // private
         // ---------------------------------------------------------------------------------------------
 
+        private DateTime _prevAutoExportTime;
 
         /// <summary>
         /// 
         /// </summary>
-        async void Export()
+        async void ExportSceneJson()
+        {
+            Debug.Log($"[UnityJSONExporterWindow] export scene json");
+
+            ExportInternal(_fileName);
+
+            if (_dryRun)
+            {
+                return;
+            }
+
+            if (_webSocketConnector)
+            {
+                var exportSceneMessageContent = JsonConvert.SerializeObject(new ExportSceneMessage(), new JsonSerializerSettings()
+                {
+                    ContractResolver = new PropertyNameSwitchResolver(false),
+                    Formatting = Formatting.None
+                });
+                _webSocketConnector.TrySendText(exportSceneMessageContent);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        async void ExportHotReloadSceneJson()
+        {
+            Debug.Log($"[UnityJSONExporterWindow] export hot reload scene json");
+
+            ExportInternal(_hotReloadFileName);
+
+            if (_dryRun)
+            {
+                return;
+            }
+
+            if (_webSocketConnector)
+            {
+                var exportSceneMessageContent = JsonConvert.SerializeObject(new ExportHotReloadSceneMessage(), new JsonSerializerSettings()
+                {
+                    ContractResolver = new PropertyNameSwitchResolver(false),
+                    Formatting = Formatting.None
+                });
+                _webSocketConnector.TrySendText(exportSceneMessageContent);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        async void ExportInternal(string fileName)
         {
             // var projectPath = System.IO.Path.GetDirectoryName(Application.dataPath);
             // Debug.Log($"[UnityJSONExporterWindow] persistent data path: {Application.persistentDataPath}");
@@ -186,7 +255,7 @@ namespace UnityJSONExporter
             // var filePath = $"{fileName}.txt";
             // var writeFilePath = $"{projectPath}/../{filePath}";
 
-            var filePath = $"{_fileName}.json";
+            var filePath = $"{fileName}.json";
             var writeFilePath = Path.Combine(_exportDirectoryPath, filePath);
 
             // for debug
@@ -216,32 +285,26 @@ namespace UnityJSONExporter
 
             File.WriteAllText(writeFilePath, jsonContent);
 
-            if (_webSocketConnector)
-            {
-                var exportSceneMessageContent = JsonConvert.SerializeObject(new ExportSceneMessage(), new JsonSerializerSettings()
-                {
-                    ContractResolver = new PropertyNameSwitchResolver(false),
-                    Formatting = Formatting.None
-                });
-                _webSocketConnector.TrySendText(exportSceneMessageContent);
-            }
-
             if (_showExportLog)
             {
                 Debug.Log($"[UnityJSONExporterWindow] complete write: {writeFilePath}");
             }
         }
 
-        // private bool _groupEnabled;
-        // private bool _myBool = true;
-        // private float _myFloat = 1.23f;
+        /// <summary>
+        /// 
+        /// </summary>
+        private class ExportSceneMessage
+        {
+            public string Type = "exportScene";
+        }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    private class ExportSceneMessage
-    {
-        public string Type = "exportScene";
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        private class ExportHotReloadSceneMessage
+        {
+            public string Type = "exportHotReloadScene";
+        }
     }
 }
