@@ -658,8 +658,8 @@ MonoBehaviour:
   m_Name: LightControlClip
   m_EditorClassIdentifier: 
   template:
-    color: {r: 1.0011177, g: 1.0071561, b: 0.9898267, a: 1}
-    intensity: 1.0116137
+    color: {r: 1.3168365, g: 1.3618245, b: 0.14674592, a: 1}
+    intensity: 1.0073055
     bounceIntensity: 1.0131791
     range: 1.0058904
 --- !u!114 &-4756332100831397225
