@@ -14,16 +14,40 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
+    public enum TrackInfoType
+    {
+        AnimationTrack, // 0
+        LightControlTrack, // 1
+        ActivationTrack // 2
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ClipInfoType
+    {
+        AnimationClip,
+        LightControlClip,
+        ActivationControlClip
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TrackInfo
     {
+        [JsonProperty(PropertyName = "t")]
+        public TrackInfoType Type;
+
         [JsonProperty(PropertyName = "tn")]
         public string TargetName;
 
         [JsonProperty(PropertyName = "cs")]
         public List<ClipInfoBase> Clips = new List<ClipInfoBase>();
 
-        public TrackInfo(string targetName)
+        public TrackInfo(TrackInfoType type, string targetName)
         {
+            Type = type;
             TargetName = targetName;
         }
     }
@@ -61,15 +85,6 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public enum ClipInfoType
-    {
-        AnimationClip,
-        LightControlClip,
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public class ClipInfoBase
     {
         [JsonProperty(PropertyName = "t")]
@@ -80,9 +95,6 @@ namespace UnityJSONExporter
 
         [JsonProperty(PropertyName = "d")]
         public float Duration;
-
-        [JsonProperty(PropertyName = "b")]
-        public List<ClipBinding> Bindings = new List<ClipBinding>();
 
         public ClipInfoBase(ClipInfoType type, float s, float d)
         {
@@ -96,7 +108,7 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public class ClipInfo : ClipInfoBase
+    public class AnimationClipInfo : ClipInfoBase
     {
         // [JsonProperty(PropertyName = "s")]
         // public float Start;
@@ -110,16 +122,19 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "or")]
         public Vector3Info OffsetRotation;
 
+        [JsonProperty(PropertyName = "b")]
+        public List<ClipBinding> Bindings = new List<ClipBinding>();
+
         // [JsonProperty(PropertyName = "b")]
         // public List<AnimationClipBinding> Bindings = new List<AnimationClipBinding>();
 
-        public ClipInfo(float s, float d) : base(ClipInfoType.AnimationClip, s, d)
+        public AnimationClipInfo(float s, float d) : base(ClipInfoType.AnimationClip, s, d)
         {
             OffsetPosition = new Vector3Info(0, 0, 0);
             OffsetRotation = new Vector3Info(0, 0, 0);
         }
 
-        public ClipInfo(float s, float d, Vector3 op, Vector3 or) : base(ClipInfoType.AnimationClip, s, d)
+        public AnimationClipInfo(float s, float d, Vector3 op, Vector3 or) : base(ClipInfoType.AnimationClip, s, d)
         {
             OffsetPosition = new Vector3Info(op);
             OffsetRotation = new Vector3Info(or);
@@ -131,7 +146,20 @@ namespace UnityJSONExporter
     /// </summary>
     public class LightControlClipInfo : ClipInfoBase
     {
+        [JsonProperty(PropertyName = "b")]
+        public List<ClipBinding> Bindings = new List<ClipBinding>();
+
         public LightControlClipInfo(float s, float d) : base(ClipInfoType.LightControlClip, s, d)
+        {
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ActivationControlClipInfo : ClipInfoBase
+    {
+        public ActivationControlClipInfo(float s, float d) : base(ClipInfoType.ActivationControlClip, s, d)
         {
         }
     }
@@ -170,22 +198,15 @@ namespace UnityJSONExporter
             {
                 // for debug
                 Debug.Log($"[PlayableDirectorComponentInfo] ===== track name: {track.name}, muted: {track.muted}, type: {track.GetType()} =====");
-                // Debug.Log(track.GetType() == typeof(AnimationTrack));
-                // Debug.Log(track.GetType() == typeof(LightControlTrack));
-                // Debug.Log(track.GetType() == typeof(ControlTrack));
-                // Debug.Log(track.parent);
-                // Debug.Log(track.start);
-                // Debug.Log(track.end);
-                // Debug.Log(track.duration);
-                // var currentTime = (float)playableDirector.time;
 
                 var bindingObject = playableDirector.GetGenericBinding(track);
-                track.outputs.ToList().ForEach(o =>
-                {
-                    Debug.Log($"[PlayableDirectorComponentInfo] output source: {o.sourceObject}");
-                    Debug.Log($"[PlayableDirectorComponentInfo] output stream name: {o.streamName}");
-                    Debug.Log($"[PlayableDirectorComponentInfo] output target name: {o.outputTargetType}");
-                });
+                // for debug
+                // track.outputs.ToList().ForEach(o =>
+                // {
+                //     Debug.Log($"[PlayableDirectorComponentInfo] output source: {o.sourceObject}");
+                //     Debug.Log($"[PlayableDirectorComponentInfo] output stream name: {o.streamName}");
+                //     Debug.Log($"[PlayableDirectorComponentInfo] output target name: {o.outputTargetType}");
+                // });
 
                 // ミュート状態のtrackは使わないので書き出さない
                 if (track.muted)
@@ -193,7 +214,7 @@ namespace UnityJSONExporter
                     continue;
                 }
 
-                var trackInfo = new TrackInfo(bindingObject.name);
+                TrackInfo trackInfo = null;
 
                 //
                 // trackの種別によって処理を追加していく
@@ -204,48 +225,53 @@ namespace UnityJSONExporter
                 //
                 if (track.GetType() == typeof(AnimationTrack))
                 {
-                    Debug.Log($"[PlayableDirectorComponentInfo] animation track");
+                    Debug.Log($"[PlayableDirectorComponentInfo] animation track: {track.name}");
+                    trackInfo = new TrackInfo(TrackInfoType.AnimationTrack, bindingObject.name);
                     var animationTrack = track as AnimationTrack;
                     var timelineClips = animationTrack.GetClips();
                     // var animationClipInfoList = GenerateAnimationClipInfoList(track, timelineClips, convertAxis, typeof(Transform), true);
-                    var clipInfoList = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
-                    trackInfo.Clips = clipInfoList;
+                    trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
                 }
 
                 //
                 // light control track
                 //
-                if (track.GetType() == typeof(LightControlTrack))
+                else if (track.GetType() == typeof(LightControlTrack))
                 {
-                    Debug.Log($"[PlayableDirectorComponentInfo] light control track");
+                    Debug.Log($"[PlayableDirectorComponentInfo] light control track: {track.name}");
+                    trackInfo = new TrackInfo(TrackInfoType.LightControlTrack, bindingObject.name);
                     var lightControlTrack = track as LightControlTrack;
                     var timelineClips = lightControlTrack.GetClips();
                     // var animationClipInfoList = new List<AnimationClipInfoBase>();
-                    var animationClipInfoList = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Light), true);
-                    trackInfo.Clips = animationClipInfoList;
+                    trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Light), true);
                 }
 
                 //
                 // control track
                 //
-                if (track.GetType() == typeof(ControlTrack))
+                else if (track.GetType() == typeof(ControlTrack))
                 {
-                    Debug.Log($"[PlayableDirectorComponentInfo] control track");
+                    Debug.Log($"[PlayableDirectorComponentInfo] control track: {track.name}");
                     // TODO: 追加
                 }
 
                 //
                 // activation track
                 //
-                if (track.GetType() == typeof(ActivationTrack))
+                else if (track.GetType() == typeof(ActivationTrack))
                 {
-                    Debug.Log($"[PlayableDirectorComponentInfo] activation track");
-                    // var activationTrack = track as ActivationTrack;
+                    Debug.Log($"[PlayableDirectorComponentInfo] activation track: {track.name}");
+                    trackInfo = new TrackInfo(TrackInfoType.ActivationTrack, bindingObject.name);
+                    var activationTrack = track as ActivationTrack;
+                    var timelineClips = activationTrack.GetClips();
                     // TODO: 追加
+                    trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
                 }
 
-
-                Tracks.Add(trackInfo);
+                if (trackInfo != null)
+                {
+                    Tracks.Add(trackInfo);
+                }
             }
         }
 
@@ -271,19 +297,11 @@ namespace UnityJSONExporter
 
             foreach (var timelineClip in timelineClips)
             {
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] timeline clip: {timelineClip}");
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] timeline clip curves: {timelineClip.curves}");
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] timeline clip curves len: {timelineClip.curves.length}");
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] timeline clip curves empty: {timelineClip.curves.empty}");
-                // var animationClip = timelineClip.curves;
-                // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] test light controls clip: {timelineClip is TestLightControlClip}");
-                // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] animation clip: {timelineClip.animationClip}");
-                // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] app: {timelineClip.asset as AnimationPlayableAsset}");
-
-                // var bindings = AnimationUtility.GetCurveBindings(animationClip);
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] bindings: {bindings}");
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] bindings length: {bindings.Length}");
-
+                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] timeline clip : {timelineClip}");
+                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] animation clip : {timelineClip.animationClip}");
+                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset : {timelineClip.asset}");
+                // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {timelineClip.asset is UnityEngine.Timeline.ActivationPlayableAsset}");
+                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {typeof(timelineClip.asset)}");
                 var animationClip = timelineClip.animationClip;
 
                 //
@@ -312,7 +330,13 @@ namespace UnityJSONExporter
                     ));
                 }
 
-                // TODO: light control clip
+                //
+                // clip in activation track
+                // 
+                if (track is ActivationTrack)
+                {
+                    clipInfoList.Add(GenerateActivationControlClipInfo(timelineClip));
+                }
             }
 
             return clipInfoList;
@@ -343,7 +367,7 @@ namespace UnityJSONExporter
                 Vector3.one
             );
 
-            var clipInfo = new ClipInfo(
+            var clipInfo = new AnimationClipInfo(
                 (float)timelineClip.start,
                 (float)timelineClip.duration
             );
@@ -434,6 +458,21 @@ namespace UnityJSONExporter
             }
 
             return lightControlClipInfo;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clip"></param>
+        /// <returns></returns>
+        ClipInfoBase GenerateActivationControlClipInfo(TimelineClip timelineClip)
+        {
+            var clipInfo = new ActivationControlClipInfo(
+                (float)timelineClip.start,
+                (float)timelineClip.duration
+            );
+
+            return clipInfo;
         }
 
         /// <summary>

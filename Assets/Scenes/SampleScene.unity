@@ -892,7 +892,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -958,7 +958,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _webSocketConnector: {fileID: 1534495653}
   _playableDirector: {fileID: 637077398}
-  _sendInterval: 0.01666667
+  _sendInterval: 1
   _showLog: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

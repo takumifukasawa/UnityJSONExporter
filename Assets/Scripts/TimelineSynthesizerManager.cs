@@ -78,7 +78,7 @@ namespace TimelineSynthesizer
             }
 
             // guard by interval
-            if ((DateTime.Now - _prevDateTimeNow).TotalSeconds < _sendInterval)
+            if ((DateTime.Now - _prevDateTimeNow).TotalSeconds < Mathf.Max(_sendInterval, 1f / 60f))
             {
                 return;
             }
