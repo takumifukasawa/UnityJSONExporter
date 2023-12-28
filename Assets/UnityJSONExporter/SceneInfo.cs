@@ -33,15 +33,6 @@ namespace UnityJSONExporter
         public List<ObjectInfo> Objects;
     }
 
-    // /// <summary>
-    // /// 
-    // /// </summary>
-    // [System.Serializable]
-    // public class Hierarchy
-    // {
-    //     public List<ObjectInfo> Objects;
-    // }
-
     /// <summary>
     /// 
     /// </summary>

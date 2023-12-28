@@ -112,12 +112,39 @@ namespace UnityJSONExporter
             var componentInfoList = new List<ComponentInfoBase>();
 
             //
+            // camera
+            //
+            if (go.TryGetComponent(out Camera camera))
+            {
+                var cameraComponentInfo = new CameraComponentInfo(camera);
+                componentInfoList.Add(cameraComponentInfo);
+            }
+
+            //
             // light
             //
             if (go.TryGetComponent(out Light light))
             {
                 var lightComponentInfo = new LightComponentInfo(light);
                 componentInfoList.Add(lightComponentInfo);
+            }
+            
+            //
+            // mesh renderer
+            //
+            if (go.TryGetComponent(out MeshRenderer meshRenderer))
+            {
+                var meshRendererComponentInfo = new MeshRendererComponentInfo(meshRenderer);
+                componentInfoList.Add(meshRendererComponentInfo);
+            }
+            
+            //
+            // mesh filter
+            //
+            if (go.TryGetComponent(out MeshFilter meshFilter))
+            {
+                var meshFilterComponentInfo = new MeshFilterComponentInfo(meshFilter);
+                componentInfoList.Add(meshFilterComponentInfo);
             }
 
             //

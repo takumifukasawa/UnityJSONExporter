@@ -11,6 +11,9 @@ namespace UnityJSONExporter
     {
         [JsonProperty(PropertyName = "l")]
         public string LightType;
+        
+        [JsonProperty(PropertyName = "i")]
+        public float Intensity;
 
         [JsonProperty(PropertyName = "c")]
         public string Color;
@@ -18,6 +21,7 @@ namespace UnityJSONExporter
         public LightComponentInfo(Light light) : base(ComponentType.Light)
         {
             LightType = light.type.ToString();
+            Intensity = light.intensity;
             Color = ColorUtilities.ConvertColorToHexString(light.color);
         }
     }

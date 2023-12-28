@@ -148,7 +148,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "d")]
         public double Duration;
 
-        [JsonProperty(PropertyName = "t")]
+        [JsonProperty(PropertyName = "ts")]
         public List<TrackInfo> Tracks = new List<TrackInfo>();
 
         public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ConvertAxis convertAxis) : base(ComponentType.PlayableDirector)
