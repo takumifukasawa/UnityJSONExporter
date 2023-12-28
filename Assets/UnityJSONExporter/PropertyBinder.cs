@@ -44,18 +44,12 @@ namespace UnityJSONExporter
         {
             foreach (var binding in bindings)
             {
-                // Debug.Log(binding.type.FullName);
                 // animated transform
                 if (binding.type.FullName == typeof(Transform).FullName)
                 {
                     var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
-                    // for debug
-                    // Debug.Log(binding.propertyName);
                     var value = CurveUtilities.EvaluateCurve(time, curve);
 
-                    // // animated transform
-                    // if (binding.type.FullName == typeof(Transform).FullName)
-                    // {
                     switch (binding.propertyName)
                     {
                         case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:

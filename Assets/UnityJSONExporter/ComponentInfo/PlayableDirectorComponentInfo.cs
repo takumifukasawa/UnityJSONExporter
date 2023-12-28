@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using Object = UnityEngine.Object;
 
 namespace UnityJSONExporter
 {
@@ -17,10 +18,10 @@ namespace UnityJSONExporter
     {
         [JsonProperty(PropertyName = "tn")]
         public string TargetName;
-        
+
         [JsonProperty(PropertyName = "a")]
         public List<AnimationClipInfoBase> AnimationClips = new List<AnimationClipInfoBase>();
-        
+
         public TrackInfo(string targetName)
         {
             TargetName = targetName;
@@ -60,11 +61,12 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public enum AnimationClipInfoType {
+    public enum AnimationClipInfoType
+    {
         AnimationClip,
         LightControlClip,
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -72,7 +74,7 @@ namespace UnityJSONExporter
     {
         [JsonProperty(PropertyName = "t")]
         public AnimationClipInfoType Type;
-        
+
         [JsonProperty(PropertyName = "s")]
         public float Start;
 
@@ -184,7 +186,7 @@ namespace UnityJSONExporter
                     Debug.Log($"[PlayableDirectorComponentInfo] output stream name: {o.streamName}");
                     Debug.Log($"[PlayableDirectorComponentInfo] output target name: {o.outputTargetType}");
                 });
-                
+
                 if (track.muted)
                 {
                     continue;
@@ -205,7 +207,8 @@ namespace UnityJSONExporter
                     Debug.Log($"[PlayableDirectorComponentInfo] animation track");
                     var animationTrack = track as AnimationTrack;
                     var timelineClips = animationTrack.GetClips();
-                    var animationClipInfoList = GenerateAnimationClipInfoList(track, timelineClips, convertAxis, typeof(Transform), true);
+                    // var animationClipInfoList = GenerateAnimationClipInfoList(track, timelineClips, convertAxis, typeof(Transform), true);
+                    var animationClipInfoList = GenerateAnimationClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
                     trackInfo.AnimationClips = animationClipInfoList;
                     continue;
                 }
@@ -252,7 +255,9 @@ namespace UnityJSONExporter
         )
         {
             var animationClipInfoList = new List<AnimationClipInfoBase>();
+
             Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] clip len: {timelineClips.Count()}");
+
             foreach (var timelineClip in timelineClips)
             {
                 // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfoList] timeline clip: {timelineClip}");
@@ -340,16 +345,20 @@ namespace UnityJSONExporter
                 animationClipInfo.Bindings.Add(animationClipBinding);
                 animationClipBinding.PropertyName = binding.propertyName; // TODO: property name はそのまま入っちゃうので短縮化したい
 
-                if (checkType != null && binding.type.FullName != checkType.FullName)
-                {
-                    continue;
-                }
+                // for debug
+                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}");
+
+                // NOTE: AnimationClipの場合はいろんなpropertyの可能性があるのでガードしない（transform, material, ...)
+                // if (checkType != null && binding.type.FullName != checkType.FullName)
+                // {
+                //     continue;
+                // }
 
                 var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
 
                 foreach (var key in curve.keys)
                 {
-                    float keyValue = convertTransformValue
+                    float keyValue = convertTransformValue && IsTransformProperty(binding.propertyName)
                         ? ConvertTransformCurveValue(binding, key.value, convertAxis)
                         : key.value;
 
@@ -416,6 +425,24 @@ namespace UnityJSONExporter
             return lightControlClipInfo;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        bool IsTransformProperty(string propertyName)
+        {
+            return
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z;
+        }
 
         /// <summary>
         /// 
@@ -427,6 +454,9 @@ namespace UnityJSONExporter
         /// <exception cref="Exception"></exception>
         float ConvertTransformCurveValue(EditorCurveBinding binding, float keyValue, ConvertAxis convertAxis)
         {
+            // for debug
+            // Debug.Log($"[PlayableDirectorComponentInfo.ConvertTransformCurveValue] binding propertyName: {binding.propertyName}, keyValue: {keyValue}");
+
             switch (binding.propertyName)
             {
                 case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:
@@ -448,7 +478,7 @@ namespace UnityJSONExporter
                 case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Scale, TransformConverter.AxisDirection.Z, keyValue);
                 default:
-                    throw new Exception("invalid params");
+                    throw new Exception($"[PlayableDirectorComponentInfo.ConvertTransformCurveValue] invalid property: {binding.propertyName}");
             }
         }
     }
