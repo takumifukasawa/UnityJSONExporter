@@ -10,6 +10,8 @@ namespace UnityJSONExporter
     /// </summary>
     public class SceneInfoBuilder
     {
+        public const string EXCLUDE_TAG = "ExcludeExport";
+
         // ---------------------------------------------------------------------------------------------
         // public
         // ---------------------------------------------------------------------------------------------
@@ -60,12 +62,14 @@ namespace UnityJSONExporter
                 // for debug
                 // Debug.Log($"[SceneInfo.GenerateSceneInfo] object name: {rootObject.name}");
                 var objectInfo = GenerateObjectInfo(rootObject);
+
                 foreach (Transform child in rootObject.transform)
                 {
-                    InternalRecursiveBuildGameObjectInfo(child.gameObject, ref objectInfo);
+                    if (!child.gameObject.tag.Equals(EXCLUDE_TAG))
+                    {
+                        InternalRecursiveBuildGameObjectInfo(child.gameObject, ref objectInfo);
+                    }
                 }
-
-                // InternalRecursiveBuildGameObjectInfo(rootObject, ref objectInfo);
 
                 objectInfoList.Add(objectInfo);
             }
@@ -128,7 +132,7 @@ namespace UnityJSONExporter
                 var lightComponentInfo = new LightComponentInfo(light);
                 componentInfoList.Add(lightComponentInfo);
             }
-            
+
             //
             // mesh renderer
             //
@@ -137,7 +141,7 @@ namespace UnityJSONExporter
                 var meshRendererComponentInfo = new MeshRendererComponentInfo(meshRenderer);
                 componentInfoList.Add(meshRendererComponentInfo);
             }
-            
+
             //
             // mesh filter
             //
