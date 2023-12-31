@@ -58,6 +58,9 @@ namespace UnityJSONExporter
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
 
             _webSocketConnector = (WebSocketConnector)EditorGUILayout.ObjectField("WebSocket Connector", _webSocketConnector, typeof(WebSocketConnector), true);
+
+            GUILayout.Space(13);
+            
             _showExportLog = EditorGUILayout.Toggle("Show Export Log", _showExportLog);
             _dryRun = EditorGUILayout.Toggle("Dry Run", _dryRun);
             _prettyFormat = EditorGUILayout.Toggle("Pretty Format", _prettyFormat);
