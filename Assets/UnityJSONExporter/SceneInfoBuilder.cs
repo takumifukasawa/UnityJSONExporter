@@ -59,19 +59,21 @@ namespace UnityJSONExporter
 
             foreach (var rootObject in rootObjects)
             {
-                // for debug
-                // Debug.Log($"[SceneInfo.GenerateSceneInfo] object name: {rootObject.name}");
-                var objectInfo = GenerateObjectInfo(rootObject);
-
-                foreach (Transform child in rootObject.transform)
+                if (!rootObject.tag.Equals(EXCLUDE_TAG))
                 {
-                    if (!child.gameObject.tag.Equals(EXCLUDE_TAG))
-                    {
-                        InternalRecursiveBuildGameObjectInfo(child.gameObject, ref objectInfo);
-                    }
-                }
+                    // シーン直下のオブジェクト
+                    var objectInfo = GenerateObjectInfo(rootObject);
 
-                objectInfoList.Add(objectInfo);
+                    foreach (Transform child in rootObject.transform)
+                    {
+                        if (!child.gameObject.tag.Equals(EXCLUDE_TAG))
+                        {
+                            InternalRecursiveBuildGameObjectInfo(child.gameObject, ref objectInfo);
+                        }
+                    }
+
+                    objectInfoList.Add(objectInfo);
+                }
             }
 
             return objectInfoList;
@@ -108,6 +110,7 @@ namespace UnityJSONExporter
 
         /// <summary>
         /// parseしたいcomponentを列挙
+        /// 対象となるcomponentが増えた場合はここに追加する
         /// </summary>
         /// <param name="go"></param>
         /// <returns></returns>
@@ -129,7 +132,7 @@ namespace UnityJSONExporter
             //
             if (go.TryGetComponent(out Light light))
             {
-                var lightComponentInfo = new LightComponentInfo(light);
+                var lightComponentInfo = LightComponentInfo.BuildLightComponentInfo(light);
                 componentInfoList.Add(lightComponentInfo);
             }
 

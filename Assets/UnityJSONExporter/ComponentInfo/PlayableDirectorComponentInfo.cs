@@ -16,9 +16,10 @@ namespace UnityJSONExporter
     /// </summary>
     public enum TrackInfoType
     {
-        AnimationTrack, // 0
-        LightControlTrack, // 1
-        ActivationTrack // 2
+        None,
+        AnimationTrack, // 1
+        LightControlTrack, // 2
+        ActivationTrack // 3
     }
 
     /// <summary>
@@ -26,6 +27,7 @@ namespace UnityJSONExporter
     /// </summary>
     public enum ClipInfoType
     {
+        None,
         AnimationClip,
         LightControlClip,
         ActivationControlClip
@@ -293,15 +295,18 @@ namespace UnityJSONExporter
         {
             var clipInfoList = new List<ClipInfoBase>();
 
-            Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] clip len: {timelineClips.Count()}");
+            // for debug
+            // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] ==================================");
+            // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] clip len: {timelineClips.Count()}");
 
             foreach (var timelineClip in timelineClips)
             {
+                // for debug
                 // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] timeline clip : {timelineClip}");
                 // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] animation clip : {timelineClip.animationClip}");
                 // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset : {timelineClip.asset}");
                 // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {timelineClip.asset is UnityEngine.Timeline.ActivationPlayableAsset}");
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {typeof(timelineClip.asset)}");
+                // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {typeof(timelineClip.asset)}");
                 var animationClip = timelineClip.animationClip;
 
                 //
@@ -379,9 +384,11 @@ namespace UnityJSONExporter
                 var clipBinding = new ClipBinding();
                 clipInfo.Bindings.Add(clipBinding);
                 clipBinding.PropertyName = binding.propertyName; // TODO: property name はそのまま入っちゃうので短縮化したい
+                
+                Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}");
 
                 // for debug
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}");
+                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}");
 
                 // NOTE: AnimationClipの場合はいろんなpropertyの可能性があるのでガードしない（transform, material, ...)
                 // if (checkType != null && binding.type.FullName != checkType.FullName)

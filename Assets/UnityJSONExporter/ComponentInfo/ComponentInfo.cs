@@ -23,14 +23,15 @@ namespace UnityJSONExporter
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public enum ComponentType
     {
-        PlayableDirector, // 0
-        Light, // 1
-        Camera, // 2
-        MeshRenderer, // 3
-        MeshFilter, // 4
+        None, // 0,
+        PlayableDirector, // 1
+        Light, // 2
+        Camera, // 3
+        MeshRenderer, // 4
+        MeshFilter, // 5
     }
 }

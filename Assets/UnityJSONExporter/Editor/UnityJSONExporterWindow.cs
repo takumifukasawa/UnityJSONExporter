@@ -35,7 +35,10 @@ namespace UnityJSONExporter
         private string _hotReloadFileName = "hot_reload_file_name";
 
         [SerializeField]
-        private string _exportDirectoryPath = "";
+        private string _exportSceneFileDirectoryPath = "";
+
+        [SerializeField]
+        private string _exportHotReloadSceneFileDirectoryPath = "";
 
         [SerializeField]
         private bool _autoRun = false;
@@ -78,7 +81,11 @@ namespace UnityJSONExporter
             _hotReloadFileName = EditorGUILayout.TextField("Hot Reload File Name", _hotReloadFileName);
 
             EditorGUI.BeginDisabledGroup(true);
-            _exportDirectoryPath = EditorGUILayout.TextField("Export Path", _exportDirectoryPath);
+            _exportSceneFileDirectoryPath = EditorGUILayout.TextField("Export Path for Scene File", _exportSceneFileDirectoryPath);
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUI.BeginDisabledGroup(true);
+            _exportHotReloadSceneFileDirectoryPath = EditorGUILayout.TextField("Export Path for Hot Reload Scene File", _exportHotReloadSceneFileDirectoryPath);
             EditorGUI.EndDisabledGroup();
 
             // _groupEnabled = EditorGUILayout.BeginToggleGroup("Optional Settings", _groupEnabled);
@@ -100,13 +107,22 @@ namespace UnityJSONExporter
 
             GUILayout.Space(13);
 
-            if (GUILayout.Button("Open Folder"))
+            if (GUILayout.Button("Open Folder for Scene File"))
             {
                 var selectedPath = EditorUtility.OpenFolderPanel("Select Folder", "", "");
                 // for debug
                 // Debug.Log($"[UnityJSONExporterWindow] selected path name: {selectedPath}");
                 // Debug.Log($"[UnityJSONExporterWindow] click cancel button: {string.IsNullOrEmpty(selectedPath)}");
-                _exportDirectoryPath = selectedPath;
+                _exportSceneFileDirectoryPath = selectedPath;
+            }
+            
+            if (GUILayout.Button("Open Folder for Hot Reload Scene File"))
+            {
+                var selectedPath = EditorUtility.OpenFolderPanel("Select Folder", "", "");
+                // for debug
+                // Debug.Log($"[UnityJSONExporterWindow] selected path name: {selectedPath}");
+                // Debug.Log($"[UnityJSONExporterWindow] click cancel button: {string.IsNullOrEmpty(selectedPath)}");
+                _exportHotReloadSceneFileDirectoryPath = selectedPath;
             }
 
             GUILayout.Space(13);
@@ -201,7 +217,7 @@ namespace UnityJSONExporter
         {
             Debug.Log($"[UnityJSONExporterWindow] export scene json");
 
-            ExportInternal(_fileName);
+            ExportInternal(_exportSceneFileDirectoryPath, _fileName);
 
             if (_dryRun)
             {
@@ -226,7 +242,7 @@ namespace UnityJSONExporter
         {
             Debug.Log($"[UnityJSONExporterWindow] export hot reload scene json");
 
-            ExportInternal(_hotReloadFileName);
+            ExportInternal(_exportHotReloadSceneFileDirectoryPath, _hotReloadFileName);
 
             if (_dryRun)
             {
@@ -247,7 +263,7 @@ namespace UnityJSONExporter
         /// <summary>
         /// 
         /// </summary>
-        async void ExportInternal(string fileName)
+        async void ExportInternal(string directoryPath, string fileName)
         {
             // var projectPath = System.IO.Path.GetDirectoryName(Application.dataPath);
             // Debug.Log($"[UnityJSONExporterWindow] persistent data path: {Application.persistentDataPath}");
@@ -259,7 +275,7 @@ namespace UnityJSONExporter
             // var writeFilePath = $"{projectPath}/../{filePath}";
 
             var filePath = $"{fileName}.json";
-            var writeFilePath = Path.Combine(_exportDirectoryPath, filePath);
+            var writeFilePath = Path.Combine(directoryPath, filePath);
 
             // for debug
             // Debug.Log($"[UnityJSONExporterWindow] write file path: {writeFilePath}");

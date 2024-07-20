@@ -96,13 +96,30 @@ namespace UnityJSONExporter
         /// <param name="axis"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static Vector3Info ConvertRotation(ConvertAxis axis, Vector3 eulerAngles)
+        public static Vector3Info ConvertRotationEuler(ConvertAxis axis, Vector3 eulerAngles)
         {
             return new Vector3Info(
                 ConvertValue(axis, TransformType.Rotation, AxisDirection.X, eulerAngles.x),
                 ConvertValue(axis, TransformType.Rotation, AxisDirection.Y, eulerAngles.y),
                 ConvertValue(axis, TransformType.Rotation, AxisDirection.Z, eulerAngles.z)
             );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="axis"></param>
+        /// <param name="quaternion"></param>
+        /// <returns></returns>
+        public static Vector4Info ConvertRotationQuaternion(ConvertAxis axis, Quaternion quaternion)
+        {
+            switch (axis)
+            {
+                case ConvertAxis.RightHand:
+                    return new Vector4Info(quaternion.x, quaternion.y, -quaternion.z, -quaternion.w);
+                default:
+                    return new Vector4Info(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+            }
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using UnityEngine;
 
 namespace UnityJSONExporter
 {
@@ -25,6 +26,9 @@ namespace UnityJSONExporter
             var originalPropertyName = member.Name;
             var propertyName = property.PropertyName;
             var jsonProperty = member.GetCustomAttributes<JsonPropertyAttribute>();
+           
+            // for debug
+            // Debug.Log($"property name: ${property.PropertyName}, minify name enabled: {_minifyNameEnabled}, original property name: {originalPropertyName[0]}");
 
             if (jsonProperty != null && _minifyNameEnabled)
             {

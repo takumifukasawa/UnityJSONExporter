@@ -59,11 +59,14 @@ namespace UnityJSONExporter
             var localPosition = obj.transform.localPosition;
             var localRotation = obj.transform.localRotation;
             var localScale = obj.transform.localScale;
+            
+            Debug.Log("object info name: " + Name);
 
             Transform = new TransformInfo()
             {
                 LocalPosition = TransformConverter.ConvertPosition(axis, localPosition),
-                LocalRotation = TransformConverter.ConvertRotation(axis, localRotation.eulerAngles),
+                // LocalRotation = TransformConverter.ConvertRotationEuler(axis, localRotation.eulerAngles),
+                LocalRotation = TransformConverter.ConvertRotationQuaternion(axis, localRotation),
                 LocalScale = TransformConverter.ConvertScale(axis, localScale)
             };
         }
@@ -101,12 +104,31 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
+    public class Vector4Info
+    {
+        public float X;
+        public float Y;
+        public float Z;
+        public float W;
+        
+        public Vector4Info(float x, float y, float z, float w)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TransformInfo
     {
         [JsonProperty(PropertyName = "lp")]
         public Vector3Info LocalPosition;
         [JsonProperty(PropertyName = "lr")]
-        public Vector3Info LocalRotation;
+        public Vector4Info LocalRotation;
         [JsonProperty(PropertyName = "ls")]
         public Vector3Info LocalScale;
     }
