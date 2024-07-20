@@ -33,9 +33,13 @@ namespace TimelineSynthesizer
         [SerializeField]
         private PlayableDirector _playableDirector;
 
+        // [Space(13)]
+        // [SerializeField]
+        // private float _sendInterval = 1f;
+
         [Space(13)]
         [SerializeField]
-        private float _sendInterval = 1f;
+        private float _sendIntervalFps = 5f;
 
         [SerializeField]
         private bool _showLog = false;
@@ -78,7 +82,7 @@ namespace TimelineSynthesizer
             }
 
             // guard by interval
-            if ((DateTime.Now - _prevDateTimeNow).TotalSeconds < Mathf.Max(_sendInterval, 1f / 60f))
+            if ((DateTime.Now - _prevDateTimeNow).TotalSeconds < Mathf.Max(1f / Mathf.Max(0.1f, _sendIntervalFps), 1f / 60f))
             {
                 return;
             }
