@@ -55,11 +55,20 @@ namespace UnityJSONExporter
 
         public ObjectInfo(GameObject obj, ConvertAxis axis)
         {
+            // NOTE: spotlightの場合はぐるっと一周させた状態をつくるテスト
+            var needsFacingAwayY = false;
+            if (obj.TryGetComponent(out Light light) && light.type == LightType.Spot)
+            {
+                // needsFacingAwayY = true;
+            }
+
             Name = obj.name;
             var localPosition = obj.transform.localPosition;
-            var localRotation = obj.transform.localRotation;
+            var localRotation = needsFacingAwayY
+                ? Quaternion.AngleAxis(180f, Vector3.up) * obj.transform.localRotation
+                : obj.transform.localRotation;
             var localScale = obj.transform.localScale;
-            
+
             Debug.Log("object info name: " + Name);
 
             Transform = new TransformInfo()
@@ -110,7 +119,7 @@ namespace UnityJSONExporter
         public float Y;
         public float Z;
         public float W;
-        
+
         public Vector4Info(float x, float y, float z, float w)
         {
             X = x;
@@ -127,8 +136,10 @@ namespace UnityJSONExporter
     {
         [JsonProperty(PropertyName = "lp")]
         public Vector3Info LocalPosition;
+
         [JsonProperty(PropertyName = "lr")]
         public Vector4Info LocalRotation;
+
         [JsonProperty(PropertyName = "ls")]
         public Vector3Info LocalScale;
     }
