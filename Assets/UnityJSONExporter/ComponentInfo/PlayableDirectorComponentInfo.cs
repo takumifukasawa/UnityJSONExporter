@@ -195,7 +195,7 @@ namespace UnityJSONExporter
             var fps = 60f;
             var spf = 1f / fps;
             var frameCount = playableDirector.duration / spf;
-
+            
             foreach (var track in timelineAsset.GetOutputTracks())
             {
                 // for debug
@@ -221,6 +221,24 @@ namespace UnityJSONExporter
                 //
                 // trackの種別によって処理を追加していく
                 //
+                
+                //
+                // marker track
+                //
+                if (track.GetType() == typeof(MarkerTrack))
+                {
+                    Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}");
+                    var markerTrack = track as MarkerTrack;
+                    var outputs = markerTrack.outputs;
+                    var markers = markerTrack.GetMarkers();
+                    Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}, marker track output count: {markerTrack.outputs.Count()}, outputs count: {outputs.Count()}, marker count: {markers.Count()}");
+                    foreach (var marker in markers)
+                    {
+                        var signalEmitter = marker as SignalEmitter;
+                        Debug.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
+                    }
+                }
+                
 
                 //
                 // animation track
