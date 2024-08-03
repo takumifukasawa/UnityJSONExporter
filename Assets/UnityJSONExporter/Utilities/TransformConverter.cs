@@ -52,16 +52,17 @@ namespace UnityJSONExporter
                         }
                     }
 
-                    if (transformType == TransformType.Rotation)
-                    {
-                        if (
-                            axisDirection == AxisDirection.X ||
-                            axisDirection == AxisDirection.Y
-                        )
-                        {
-                            return -value;
-                        }
-                    }
+                    // TODO: 本当はc#側でxyを反転させて渡したいが、なぜかうまくいかないのでここだけフロント側で反転
+                    // if (transformType == TransformType.Rotation)
+                    // {
+                    //     if (
+                    //         axisDirection == AxisDirection.X ||
+                    //         axisDirection == AxisDirection.Y
+                    //     )
+                    //     {
+                    //         return -value;
+                    //     }
+                    // }
 
                     return value;
 
@@ -90,20 +91,20 @@ namespace UnityJSONExporter
             );
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="axis"></param>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        public static Vector3Info ConvertRotationEuler(ConvertAxis axis, Vector3 eulerAngles)
-        {
-            return new Vector3Info(
-                ConvertValue(axis, TransformType.Rotation, AxisDirection.X, eulerAngles.x),
-                ConvertValue(axis, TransformType.Rotation, AxisDirection.Y, eulerAngles.y),
-                ConvertValue(axis, TransformType.Rotation, AxisDirection.Z, eulerAngles.z)
-            );
-        }
+        // /// <summary>
+        // /// 
+        // /// </summary>
+        // /// <param name="axis"></param>
+        // /// <param name="p"></param>
+        // /// <returns></returns>
+        // public static Vector3Info ConvertRotationEuler(ConvertAxis axis, Vector3 eulerAngles)
+        // {
+        //     return new Vector3Info(
+        //         ConvertValue(axis, TransformType.Rotation, AxisDirection.X, eulerAngles.x),
+        //         ConvertValue(axis, TransformType.Rotation, AxisDirection.Y, eulerAngles.y),
+        //         ConvertValue(axis, TransformType.Rotation, AxisDirection.Z, eulerAngles.z)
+        //     );
+        // }
 
         /// <summary>
         /// 
@@ -117,6 +118,7 @@ namespace UnityJSONExporter
             {
                 case ConvertAxis.RightHand:
                     return new Vector4Info(quaternion.x, quaternion.y, -quaternion.z, -quaternion.w);
+                    // return new Vector4Info(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
                 default:
                     return new Vector4Info(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
             }
