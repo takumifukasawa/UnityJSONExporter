@@ -19,7 +19,8 @@ namespace UnityJSONExporter
         None,
         AnimationTrack, // 1
         LightControlTrack, // 2
-        ActivationTrack // 3
+        ActivationTrack, // 3
+        MarkerTrack // 4
     }
 
     /// <summary>
@@ -36,24 +37,56 @@ namespace UnityJSONExporter
     /// <summary>
     /// 
     /// </summary>
-    public class TrackInfo
+    public class TrackInfoBase
     {
         [JsonProperty(PropertyName = "t")]
         public TrackInfoType Type;
 
-        [JsonProperty(PropertyName = "tn")]
-        public string TargetName;
-
-        [JsonProperty(PropertyName = "cs")]
-        public List<ClipInfoBase> Clips = new List<ClipInfoBase>();
-
-        public TrackInfo(TrackInfoType type, string targetName)
+        public TrackInfoBase(TrackInfoType type)
         {
             Type = type;
-            TargetName = targetName;
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DefaultTrackInfo : TrackInfoBase
+    {
+        [JsonProperty(PropertyName = "cs")]
+        public List<ClipInfoBase> Clips = new List<ClipInfoBase>();
+
+        [JsonProperty(PropertyName = "tn")]
+        public string TargetName;
+
+        public DefaultTrackInfo(TrackInfoType type, string targetName, List<ClipInfoBase> clips) : base(type)
+        {
+            TargetName = targetName;
+            Clips = clips;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class SignalEmitterInfo
+    {
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MarkerTrackInfo : TrackInfoBase
+    {
+        [JsonProperty(PropertyName = "sc")]
+        public List<SignalEmitterInfo> SignalEmitterInfos = new List<SignalEmitterInfo>();
+
+        public MarkerTrackInfo(TrackInfoType type) : base(type)
+        {
+        }
+    }
+
+    
     /// <summary>
     /// 
     /// </summary>
@@ -179,7 +212,7 @@ namespace UnityJSONExporter
         public double Duration;
 
         [JsonProperty(PropertyName = "ts")]
-        public List<TrackInfo> Tracks = new List<TrackInfo>();
+        public List<TrackInfoBase> Tracks = new List<TrackInfoBase>();
 
         public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ConvertAxis convertAxis) : base(ComponentType.PlayableDirector)
         {
@@ -216,7 +249,7 @@ namespace UnityJSONExporter
                     continue;
                 }
 
-                TrackInfo trackInfo = null;
+                TrackInfoBase trackInfo = null;
 
                 //
                 // trackの種別によって処理を追加していく
@@ -232,11 +265,15 @@ namespace UnityJSONExporter
                     var outputs = markerTrack.outputs;
                     var markers = markerTrack.GetMarkers();
                     Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}, marker track output count: {markerTrack.outputs.Count()}, outputs count: {outputs.Count()}, marker count: {markers.Count()}");
+                    trackInfo = new MarkerTrackInfo(TrackInfoType.MarkerTrack);
+                    var signalEmitterInfo = new List<SignalEmitterInfo>();
                     foreach (var marker in markers)
                     {
                         var signalEmitter = marker as SignalEmitter;
                         Debug.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
+                        signalEmitterInfo.Add(new SignalEmitterInfo());
                     }
+                    (trackInfo as MarkerTrackInfo).SignalEmitterInfos = signalEmitterInfo;
                 }
                 
 
@@ -246,11 +283,11 @@ namespace UnityJSONExporter
                 if (track.GetType() == typeof(AnimationTrack))
                 {
                     Debug.Log($"[PlayableDirectorComponentInfo] animation track: {track.name}");
-                    trackInfo = new TrackInfo(TrackInfoType.AnimationTrack, bindingObject.name);
                     var animationTrack = track as AnimationTrack;
                     var timelineClips = animationTrack.GetClips();
                     // var animationClipInfoList = GenerateAnimationClipInfoList(track, timelineClips, convertAxis, typeof(Transform), true);
-                    trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
+                    trackInfo = new DefaultTrackInfo(TrackInfoType.AnimationTrack, bindingObject.name, GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true));
+                    // trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
                 }
 
                 //
@@ -259,11 +296,11 @@ namespace UnityJSONExporter
                 else if (track.GetType() == typeof(LightControlTrack))
                 {
                     Debug.Log($"[PlayableDirectorComponentInfo] light control track: {track.name}");
-                    trackInfo = new TrackInfo(TrackInfoType.LightControlTrack, bindingObject.name);
                     var lightControlTrack = track as LightControlTrack;
                     var timelineClips = lightControlTrack.GetClips();
                     // var animationClipInfoList = new List<AnimationClipInfoBase>();
-                    trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Light), true);
+                    trackInfo = new DefaultTrackInfo(TrackInfoType.LightControlTrack, bindingObject.name, GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Light), true));
+                    // trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Light), true);
                 }
 
                 //
@@ -281,11 +318,12 @@ namespace UnityJSONExporter
                 else if (track.GetType() == typeof(ActivationTrack))
                 {
                     Debug.Log($"[PlayableDirectorComponentInfo] activation track: {track.name}");
-                    trackInfo = new TrackInfo(TrackInfoType.ActivationTrack, bindingObject.name);
+                    // trackInfo = new TrackInfo(TrackInfoType.ActivationTrack, bindingObject.name);
                     var activationTrack = track as ActivationTrack;
                     var timelineClips = activationTrack.GetClips();
                     // TODO: 追加
-                    trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
+                    // trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
+                    trackInfo = new DefaultTrackInfo(TrackInfoType.ActivationTrack, bindingObject.name, GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true));
                 }
 
                 if (trackInfo != null)
