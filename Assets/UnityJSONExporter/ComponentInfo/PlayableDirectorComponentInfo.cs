@@ -16,7 +16,7 @@ namespace UnityJSONExporter
     /// </summary>
     public enum TrackInfoType
     {
-        None,
+        None, // 0
         AnimationTrack, // 1
         LightControlTrack, // 2
         ActivationTrack, // 3
@@ -28,10 +28,11 @@ namespace UnityJSONExporter
     /// </summary>
     public enum ClipInfoType
     {
-        None,
-        AnimationClip,
-        LightControlClip,
-        ActivationControlClip
+        None, // 0
+        AnimationClip, // 1
+        LightControlClip, // 2
+        ActivationControlClip, // 3
+        SignalEmitter // 4
     }
 
     /// <summary>
@@ -71,6 +72,17 @@ namespace UnityJSONExporter
     /// </summary>
     public class SignalEmitterInfo
     {
+        [JsonProperty(PropertyName = "n")]
+        public string Name;
+        
+        [JsonProperty(PropertyName = "t")]
+        public float Time;
+
+        public SignalEmitterInfo(string name, float time)
+        {
+            Name = name;
+            Time = time;
+        }
     }
     
     /// <summary>
@@ -78,11 +90,12 @@ namespace UnityJSONExporter
     /// </summary>
     public class MarkerTrackInfo : TrackInfoBase
     {
-        [JsonProperty(PropertyName = "sc")]
-        public List<SignalEmitterInfo> SignalEmitterInfos = new List<SignalEmitterInfo>();
+        [JsonProperty(PropertyName = "ses")]
+        public List<SignalEmitterInfo> SignalEmitters = new List<SignalEmitterInfo>();
 
-        public MarkerTrackInfo(TrackInfoType type) : base(type)
+        public MarkerTrackInfo(List<SignalEmitterInfo> signalEmitterInfos) : base(TrackInfoType.MarkerTrack)
         {
+            SignalEmitters = signalEmitterInfos;
         }
     }
 
@@ -265,15 +278,14 @@ namespace UnityJSONExporter
                     var outputs = markerTrack.outputs;
                     var markers = markerTrack.GetMarkers();
                     Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}, marker track output count: {markerTrack.outputs.Count()}, outputs count: {outputs.Count()}, marker count: {markers.Count()}");
-                    trackInfo = new MarkerTrackInfo(TrackInfoType.MarkerTrack);
                     var signalEmitterInfo = new List<SignalEmitterInfo>();
                     foreach (var marker in markers)
                     {
                         var signalEmitter = marker as SignalEmitter;
                         Debug.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
-                        signalEmitterInfo.Add(new SignalEmitterInfo());
+                        signalEmitterInfo.Add(new SignalEmitterInfo(signalEmitter.name, (float)signalEmitter.time));
                     }
-                    (trackInfo as MarkerTrackInfo).SignalEmitterInfos = signalEmitterInfo;
+                    trackInfo = new MarkerTrackInfo(signalEmitterInfo);
                 }
                 
 

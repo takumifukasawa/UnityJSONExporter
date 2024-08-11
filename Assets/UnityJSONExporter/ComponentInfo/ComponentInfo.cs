@@ -8,6 +8,20 @@ using UnityEngine.Timeline;
 namespace UnityJSONExporter
 {
     /// <summary>
+    ///
+    /// </summary>
+    public enum ComponentType
+    {
+        None, // 0,
+        PlayableDirector, // 1
+        Light, // 2
+        Camera, // 3
+        MeshRenderer, // 4
+        MeshFilter, // 5
+        Volume, // 6
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     [System.Serializable]
@@ -20,18 +34,5 @@ namespace UnityJSONExporter
         {
             Type = type;
         }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public enum ComponentType
-    {
-        None, // 0,
-        PlayableDirector, // 1
-        Light, // 2
-        Camera, // 3
-        MeshRenderer, // 4
-        MeshFilter, // 5
     }
 }

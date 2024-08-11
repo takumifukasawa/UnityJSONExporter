@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace UnityJSONExporter
@@ -161,6 +162,15 @@ namespace UnityJSONExporter
             {
                 var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector, _convertAxis);
                 componentInfoList.Add(playableDirectorComponentInfo);
+            }
+            
+            //
+            // volume (post processing)
+            //
+            if (go.TryGetComponent(out Volume volume))
+            {
+                var volumeComponentInfo = new VolumeComponentInfo(volume);
+                componentInfoList.Add(volumeComponentInfo);
             }
 
             return componentInfoList;
