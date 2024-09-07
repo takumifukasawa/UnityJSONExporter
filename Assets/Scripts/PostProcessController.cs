@@ -63,10 +63,12 @@ public class PostProcessController : MonoBehaviour
     /// </summary>
     void Update()
     {
-        Debug.Log("============");
-        Debug.Log(volumeProfile);
-        Debug.Log(bloomComponent);
-        Debug.Log(depthOfFieldComponent);
+        // for debug
+        // Debug.Log("============");
+        // Debug.Log(volumeProfile);
+        // Debug.Log(bloomComponent);
+        // Debug.Log(depthOfFieldComponent);
+        
         //
         // update bloom
         //

@@ -60,7 +60,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "isa")]
         public float InnerSpotAngle;
 
-        [JsonProperty(PropertyName = "oa")]
+        [JsonProperty(PropertyName = "sa")]
         public float SpotAngle;
 
         public SpotLightComponentInfo(Light light) : base(light)

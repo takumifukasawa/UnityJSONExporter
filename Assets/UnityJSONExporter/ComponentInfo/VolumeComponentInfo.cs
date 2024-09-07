@@ -20,7 +20,7 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class VolumeComponentInfo : ComponentInfoBase
     {
-        [JsonProperty(PropertyName = "b")]
+        [JsonProperty(PropertyName = "vl")]
         public List<VolumeLayerBase> VolumeLayers = new List<VolumeLayerBase>();
         
         public VolumeComponentInfo(Volume volume) : base(ComponentType.Volume)
@@ -43,11 +43,11 @@ namespace UnityJSONExporter
     public class VolumeLayerBase
     {
         [JsonProperty (PropertyName = "v")]
-        public string VolumeLayerType;
+        public string LayerType;
         
-        public VolumeLayerBase(VolumeLayerType volumeLayerType)
+        public VolumeLayerBase(VolumeLayerType layerType)
         {
-            VolumeLayerType = volumeLayerType.ToString();
+            LayerType = layerType.ToString();
         }
     }
     

@@ -15,7 +15,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "im")]
         public bool IsMain = false;
 
-        [JsonProperty(PropertyName = "fov")]
+        [JsonProperty(PropertyName = "f")]
         public float Fov;
 
         public CameraComponentInfo(Camera camera) : base(ComponentType.Camera)
