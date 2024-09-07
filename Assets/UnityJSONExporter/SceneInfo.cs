@@ -47,10 +47,10 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "t")]
         public TransformInfo Transform;
 
-        [JsonProperty(PropertyName = "c")]
+        [JsonProperty(PropertyName = "co")]
         public List<ComponentInfoBase> Components = new List<ComponentInfoBase>();
 
-        [JsonProperty(PropertyName = "o")]
+        [JsonProperty(PropertyName = "ch")]
         public List<ObjectInfo> Children = new List<ObjectInfo>();
 
         public ObjectInfo(GameObject obj, ConvertAxis axis)
