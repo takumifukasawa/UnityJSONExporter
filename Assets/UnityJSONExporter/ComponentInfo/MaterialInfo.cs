@@ -37,11 +37,15 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "r")]
         public float Roughness;
 
-        public LitMaterialInfo(string name, Color color, float metallic, float roughness) : base(name, MaterialType.Lit)
+        [JsonProperty(PropertyName = "rs")]
+        public int ReceiveShadow;
+
+        public LitMaterialInfo(string name, Color color, float metallic, float roughness, int receiveShadow) : base(name, MaterialType.Lit)
         {
             Color = ColorUtilities.ConvertColorToHexString(color);
             Metallic = metallic;
             Roughness = roughness;
+            ReceiveShadow = receiveShadow;
         }
     }
 }
