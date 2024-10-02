@@ -32,7 +32,7 @@ namespace UnityJSONExporter
             // Debug.Log("[SceneInfo.GenerateSceneInfo]");
 
             var sceneInfo = new SceneInfo();
-            sceneInfo.Name = SceneManager.GetActiveScene().name;
+            // sceneInfo.Name = SceneManager.GetActiveScene().name;
 
             var objectInfoList = RecursiveBuildGameObjectInfo();
 

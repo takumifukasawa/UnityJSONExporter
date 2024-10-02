@@ -20,15 +20,14 @@ namespace UnityJSONExporter
     // ---------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// 
+    /// 一個だけプロパティを持たせる
     /// </summary>
     [System.Serializable]
     public class SceneInfo
     {
-        [JsonProperty(PropertyName = "n")]
-        public string Name;
+        // [JsonProperty(PropertyName = "n")]
+        // public string Name;
 
-        // public Hierarchy Hierarchy;
         [JsonProperty(PropertyName = "o")]
         public List<ObjectInfo> Objects;
     }
