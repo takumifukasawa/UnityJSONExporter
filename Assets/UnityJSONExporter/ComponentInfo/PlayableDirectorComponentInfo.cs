@@ -1,217 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-using Object = UnityEngine.Object;
 
 namespace UnityJSONExporter
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum TrackInfoType
-    {
-        None, // 0
-        AnimationTrack, // 1
-        LightControlTrack, // 2
-        ActivationTrack, // 3
-        MarkerTrack // 4
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum ClipInfoType
-    {
-        None, // 0
-        AnimationClip, // 1
-        LightControlClip, // 2
-        ActivationControlClip, // 3
-        SignalEmitter // 4
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class TrackInfoBase
-    {
-        [JsonProperty(PropertyName = "t")]
-        public TrackInfoType Type;
-
-        public TrackInfoBase(TrackInfoType type)
-        {
-            Type = type;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DefaultTrackInfo : TrackInfoBase
-    {
-        [JsonProperty(PropertyName = "cs")]
-        public List<ClipInfoBase> Clips = new List<ClipInfoBase>();
-
-        [JsonProperty(PropertyName = "tn")]
-        public string TargetName;
-
-        public DefaultTrackInfo(TrackInfoType type, string targetName, List<ClipInfoBase> clips) : base(type)
-        {
-            TargetName = targetName;
-            Clips = clips;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class SignalEmitterInfo
-    {
-        [JsonProperty(PropertyName = "n")]
-        public string Name;
-
-        [JsonProperty(PropertyName = "t")]
-        public float Time;
-
-        public SignalEmitterInfo(string name, float time)
-        {
-            Name = name;
-            Time = time;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class MarkerTrackInfo : TrackInfoBase
-    {
-        [JsonProperty(PropertyName = "ses")]
-        public List<SignalEmitterInfo> SignalEmitters = new List<SignalEmitterInfo>();
-
-        public MarkerTrackInfo(List<SignalEmitterInfo> signalEmitterInfos) : base(TrackInfoType.MarkerTrack)
-        {
-            SignalEmitters = signalEmitterInfos;
-        }
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ClipKeyframe
-    {
-        [JsonProperty(PropertyName = "t")]
-        public float Time;
-
-        [JsonProperty(PropertyName = "v")]
-        public float Value;
-
-        [JsonProperty(PropertyName = "i")]
-        public float InTangent;
-
-        [JsonProperty(PropertyName = "o")]
-        public float OutTangent;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ClipBinding
-    {
-        [JsonProperty(PropertyName = "n")]
-        public string PropertyName;
-
-        [JsonProperty(PropertyName = "k")]
-        public List<ClipKeyframe> Keyframes = new List<ClipKeyframe>();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ClipInfoBase
-    {
-        [JsonProperty(PropertyName = "t")]
-        public ClipInfoType Type;
-
-        [JsonProperty(PropertyName = "s")]
-        public float Start;
-
-        [JsonProperty(PropertyName = "d")]
-        public float Duration;
-
-        public ClipInfoBase(ClipInfoType type, float s, float d)
-        {
-            Type = type;
-            Start = s;
-            Duration = d;
-        }
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class AnimationClipInfo : ClipInfoBase
-    {
-        // [JsonProperty(PropertyName = "s")]
-        // public float Start;
-
-        // [JsonProperty(PropertyName = "d")]
-        // public float Duration;
-
-        [JsonProperty(PropertyName = "op")]
-        public Vector3Info OffsetPosition;
-
-        [JsonProperty(PropertyName = "or")]
-        public Vector3Info OffsetRotation;
-
-        [JsonProperty(PropertyName = "b")]
-        public List<ClipBinding> Bindings = new List<ClipBinding>();
-
-        // [JsonProperty(PropertyName = "b")]
-        // public List<AnimationClipBinding> Bindings = new List<AnimationClipBinding>();
-
-        public AnimationClipInfo(float s, float d) : base(ClipInfoType.AnimationClip, s, d)
-        {
-            OffsetPosition = new Vector3Info(0, 0, 0);
-            OffsetRotation = new Vector3Info(0, 0, 0);
-        }
-
-        public AnimationClipInfo(float s, float d, Vector3 op, Vector3 or) : base(ClipInfoType.AnimationClip, s, d)
-        {
-            OffsetPosition = new Vector3Info(op);
-            OffsetRotation = new Vector3Info(or);
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class LightControlClipInfo : ClipInfoBase
-    {
-        [JsonProperty(PropertyName = "b")]
-        public List<ClipBinding> Bindings = new List<ClipBinding>();
-
-        public LightControlClipInfo(float s, float d) : base(ClipInfoType.LightControlClip, s, d)
-        {
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ActivationControlClipInfo : ClipInfoBase
-    {
-        public ActivationControlClipInfo(float s, float d) : base(ClipInfoType.ActivationControlClip, s, d)
-        {
-        }
-    }
 
     /// <summary>
     /// 
@@ -308,7 +105,7 @@ namespace UnityJSONExporter
                             timelineClips,
                             convertAxis,
                             minifyPropertyName,
-                            typeof(Object),
+                            typeof(UnityEngine.Object),
                             true
                         )
                     );
@@ -367,10 +164,36 @@ namespace UnityJSONExporter
                             timelineClips,
                             convertAxis,
                             minifyPropertyName,
-                            typeof(Object),
+                            typeof(UnityEngine.Object),
                             true
                         )
                     );
+                }
+
+                // object move and look at track
+                else if (track.GetType() == typeof(ObjectMoveAndLookAtTrack))
+                {
+                    Debug.Log($"[PlayableDirectorComponentInfo] object move and look at track: {track.name}");
+                    // trackInfo = new TrackInfo(TrackInfoType.ActivationTrack, bindingObject.name);
+                    var objectMoveAndLookAtTrack = track as ObjectMoveAndLookAtTrack;
+                    var timelineClips = track.GetClips();
+                    trackInfo = new DefaultTrackInfo(
+                        TrackInfoType.ObjectMoveAndLookAtTrack,
+                        bindingObject.name,
+                        GenerateClipInfoList(
+                            track,
+                            timelineClips,
+                            convertAxis,
+                            minifyPropertyName,
+                            typeof(UnityEngine.Object),
+                            true
+                        )
+                    );
+                }
+
+                else
+                {
+                    Debug.LogError($"[PlayableDirectorComponentInfo] unknown track type: {track.GetType()}");
                 }
 
                 if (trackInfo != null)

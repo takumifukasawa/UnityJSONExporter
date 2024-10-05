@@ -10,53 +10,42 @@ using UnityEngine.Rendering.Universal;
 [ExecuteAlways]
 public class PostProcessController : MonoBehaviour
 {
-    [SerializeField, Range(0, 10)]
-    [JsonProperty(PropertyName = "bli")]
-    public float bloomIntensity;
-
-    [SerializeField, Range(0, 10)]
-    [JsonProperty(PropertyName = "dofd")]
-    public float depthOfFieldFocusDistance;
+    [Space(13)]
+    [Header("Bloom")]
+    [Range(0, 10)]
+    [JsonProperty(PropertyName = "bl_i")]
+    public float BloomIntensity;
 
     [Space(13)]
-    [SerializeField]
-    private VolumeProfile volumeProfile;
-
-    [SerializeField]
-    private Bloom bloomComponent;
-
-    [SerializeField]
-    private DepthOfField depthOfFieldComponent;
+    [Header("Depth of Field")]
+    [Range(0, 10)]
+    [JsonProperty(PropertyName = "dof_fd")]
+    public float DepthOfFieldFocusDistance;
 
     [Space(13)]
-    private float bloomIntensityCache;
+    [Header("Vignette")]
+    [Range(0, 1)]
+    [JsonProperty(PropertyName = "vi_i")]
+    public float VignetteIntensity;
 
-    private float depthOfFieldFocusDistanceCache;
+    [Header("Components")]
+    [SerializeField]
+    private VolumeProfile _volumeProfile;
 
-    // /// <summary>
-    // /// 
-    // /// </summary>
-    // void OnValidate()
-    // {
-    //     if (volumeProfile == null)
-    //     {
-    //         return;
-    //     }
+    [SerializeField]
+    private Bloom _bloomComponent;
 
-    //     // 不必要にループが回るので効率は良くないがエディター側のみなのでよしとする
-    //     foreach (var item in volumeProfile.components)
-    //     {
-    //         if (bloomComponent == null && item is Bloom bloom)
-    //         {
-    //             bloomComponent = bloom;
-    //         }
+    [SerializeField]
+    private DepthOfField _depthOfFieldComponent;
 
-    //         if (depthOfFieldComponent == null && item is DepthOfField dof)
-    //         {
-    //             depthOfFieldComponent = dof;
-    //         }
-    //     }
-    // }
+    [SerializeField]
+    private Vignette _vignetteComponent;
+
+    private float _bloomIntensityCache;
+
+    private float _depthOfFieldFocusDistanceCache;
+
+    private float _vignetteIntensityCache;
 
     /// <summary>
     /// 
@@ -65,46 +54,65 @@ public class PostProcessController : MonoBehaviour
     {
         // for debug
         // Debug.Log("============");
-        // Debug.Log(volumeProfile);
-        // Debug.Log(bloomComponent);
-        // Debug.Log(depthOfFieldComponent);
-        
+        // Debug.Log(_volumeProfile);
+        // Debug.Log(_bloomComponent);
+        // Debug.Log(_depthOfFieldComponent);
+
         //
         // update bloom
         //
 
-        if (bloomComponent != null)
+        if (_bloomComponent != null)
         {
-            if (bloomComponent.intensity.value != bloomIntensityCache)
+            if (_bloomComponent.intensity.value != _bloomIntensityCache)
             {
-                bloomIntensityCache = bloomComponent.intensity.value;
+                _bloomIntensityCache = _bloomComponent.intensity.value;
             }
-            else if (bloomIntensity != bloomIntensityCache)
+            else if (BloomIntensity != _bloomIntensityCache)
             {
-                bloomIntensityCache = bloomIntensity;
+                _bloomIntensityCache = BloomIntensity;
             }
 
-            bloomIntensity = bloomIntensityCache;
-            bloomComponent.intensity.value = bloomIntensityCache;
+            BloomIntensity = _bloomIntensityCache;
+            _bloomComponent.intensity.value = _bloomIntensityCache;
         }
 
         //
         // update dof
         //
 
-        if (depthOfFieldComponent != null)
+        if (_depthOfFieldComponent != null)
         {
-            if (depthOfFieldComponent.focusDistance.value != depthOfFieldFocusDistanceCache)
+            if (_depthOfFieldComponent.focusDistance.value != _depthOfFieldFocusDistanceCache)
             {
-                depthOfFieldFocusDistanceCache = depthOfFieldComponent.focusDistance.value;
+                _depthOfFieldFocusDistanceCache = _depthOfFieldComponent.focusDistance.value;
             }
-            else if (depthOfFieldFocusDistance != depthOfFieldFocusDistanceCache)
+            else if (DepthOfFieldFocusDistance != _depthOfFieldFocusDistanceCache)
             {
-                depthOfFieldFocusDistanceCache = depthOfFieldFocusDistance;
+                _depthOfFieldFocusDistanceCache = DepthOfFieldFocusDistance;
             }
 
-            depthOfFieldFocusDistance = depthOfFieldFocusDistanceCache;
-            depthOfFieldComponent.focusDistance.value = depthOfFieldFocusDistanceCache;
+            DepthOfFieldFocusDistance = _depthOfFieldFocusDistanceCache;
+            _depthOfFieldComponent.focusDistance.value = _depthOfFieldFocusDistanceCache;
+        }
+
+        //
+        // update vignette
+        //
+
+        if (_vignetteComponent != null)
+        {
+            if (_vignetteComponent.intensity.value != _vignetteIntensityCache)
+            {
+                _vignetteIntensityCache = _vignetteComponent.intensity.value;
+            }
+            else if (VignetteIntensity != _vignetteIntensityCache)
+            {
+                _vignetteIntensityCache = VignetteIntensity;
+            }
+
+            VignetteIntensity = _vignetteIntensityCache;
+            _vignetteComponent.intensity.value = _vignetteIntensityCache;
         }
     }
 
@@ -113,25 +121,31 @@ public class PostProcessController : MonoBehaviour
     /// </summary>
     public void CacheComponents()
     {
-        volumeProfile = null;
-        bloomComponent = null;
-        depthOfFieldComponent = null;
+        _volumeProfile = null;
+        _bloomComponent = null;
+        _depthOfFieldComponent = null;
+        _vignetteComponent = null;
 
-        volumeProfile = GetComponent<Volume>()?.profile;
+        _volumeProfile = GetComponent<Volume>()?.profile;
 
-        if (volumeProfile != null)
+        if (_volumeProfile != null)
         {
             // 不必要にループが回るので効率は良くないがエディター側のみなのでよしとする
-            foreach (var item in volumeProfile.components)
+            foreach (var item in _volumeProfile.components)
             {
-                if (bloomComponent == null && item is Bloom bloom)
+                if (_bloomComponent == null && item is Bloom bloom)
                 {
-                    bloomComponent = bloom;
+                    _bloomComponent = bloom;
                 }
 
-                if (depthOfFieldComponent == null && item is DepthOfField dof)
+                if (_depthOfFieldComponent == null && item is DepthOfField dof)
                 {
-                    depthOfFieldComponent = dof;
+                    _depthOfFieldComponent = dof;
+                }
+
+                if (_vignetteComponent == null && item is Vignette vignette)
+                {
+                    _vignetteComponent = vignette;
                 }
             }
         }
