@@ -3,18 +3,10 @@ using Newtonsoft.Json;
 
 namespace UnityJSONExporter
 {
-    public class DefaultTrackInfo : TrackInfoBase
+    public class DefaultTrackInfo : ClipTrackInfoBase
     {
-        [JsonProperty(PropertyName = "cs")]
-        public List<ClipInfoBase> Clips = new List<ClipInfoBase>();
-
-        [JsonProperty(PropertyName = "tn")]
-        public string TargetName;
-
-        public DefaultTrackInfo(TrackInfoType type, string targetName, List<ClipInfoBase> clips) : base(type)
+        public DefaultTrackInfo(TrackInfoType type, string targetName) : base(type, targetName)
         {
-            TargetName = targetName;
-            Clips = clips;
         }
     }
 }

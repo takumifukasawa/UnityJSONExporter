@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Playables;
+using UnityJSONExporter;
 
 public class ObjectMoveAndLookAtMixerBehaviour : PlayableBehaviour
 {
@@ -23,7 +24,7 @@ public class ObjectMoveAndLookAtMixerBehaviour : PlayableBehaviour
 
         if (!m_FirstFrameHappened)
         {
-            m_DefaultLocalPosition = m_TrackBinding.LocalPosition;
+            m_DefaultLocalPosition = RawVector3.toVector3(m_TrackBinding.LocalPosition);
             m_DefaultLookAtTarget = m_TrackBinding.LookAtTarget;
             m_FirstFrameHappened = true;
         }
@@ -58,7 +59,7 @@ public class ObjectMoveAndLookAtMixerBehaviour : PlayableBehaviour
         }
 
         m_AssignedLocalPosition = blendedLocalPosition + m_DefaultLocalPosition * (1f - totalWeight);
-        m_TrackBinding.LocalPosition = m_AssignedLocalPosition;
+        m_TrackBinding.LocalPosition = RawVector3.fromVector3(m_AssignedLocalPosition);
 
         m_AssignedLookAtTarget = specifiedLookAtTarget;
         m_TrackBinding.LookAtTarget = m_AssignedLookAtTarget;

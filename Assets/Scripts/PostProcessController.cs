@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 /// </summary>
 [RequireComponent(typeof(Animator))]
 [ExecuteAlways]
-public class PostProcessController : MonoBehaviour
+public class PostProcessController : TimelineBindingObjectBase
 {
     [Space(13)]
     [Header("Bloom")]

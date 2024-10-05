@@ -9,7 +9,8 @@ namespace UnityJSONExporter
         AnimationClip, // 1
         LightControlClip, // 2
         ActivationControlClip, // 3
-        SignalEmitter // 4
+        SignalEmitter, // 4
+        ObjectMoveAndLookAtClip // 5
     }
     
     public class ClipKeyframe

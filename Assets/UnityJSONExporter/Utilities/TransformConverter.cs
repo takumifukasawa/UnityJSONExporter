@@ -1,8 +1,37 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace UnityJSONExporter
 {
+    public class RawVector3
+    {
+        public float x;
+        public float y;
+        public float z;
+        public RawVector3(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public static RawVector3 zero
+        {
+            get { return new RawVector3(0, 0, 0); }
+        }
+        
+        public static RawVector3 fromVector3(Vector3 v)
+        {
+            return new RawVector3(v.x, v.y, v.z);
+        }
+        
+        public static Vector3 toVector3(RawVector3 v)
+        {
+            return new Vector3(v.x, v.y, v.z);
+        }
+    }
+    
     public static class TransformConverter
     {
         /// <summary>
@@ -137,6 +166,63 @@ namespace UnityJSONExporter
                 ConvertValue(axis, TransformType.Scale, AxisDirection.Y, scale.y),
                 ConvertValue(axis, TransformType.Scale, AxisDirection.Z, scale.z)
             );
+        }
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public static bool IsTransformProperty(string propertyName)
+        {
+            return
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y ||
+                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <param name="keyValue"></param>
+        /// <param name="convertAxis"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static float ConvertTransformCurveValue(EditorCurveBinding binding, float keyValue, ConvertAxis convertAxis)
+        {
+            // for debug
+            // Debug.Log($"[PlayableDirectorComponentInfo.ConvertTransformCurveValue] binding propertyName: {binding.propertyName}, keyValue: {keyValue}");
+
+            switch (binding.propertyName)
+            {
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.X, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Y, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Z, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Rotation, TransformConverter.AxisDirection.X, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Rotation, TransformConverter.AxisDirection.Y, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Rotation, TransformConverter.AxisDirection.Z, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Scale, TransformConverter.AxisDirection.X, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Scale, TransformConverter.AxisDirection.Y, keyValue);
+                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z:
+                    return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Scale, TransformConverter.AxisDirection.Z, keyValue);
+                default:
+                    throw new Exception($"[PlayableDirectorComponentInfo.ConvertTransformCurveValue] invalid property: {binding.propertyName}");
+            }
         }
     }
 }
