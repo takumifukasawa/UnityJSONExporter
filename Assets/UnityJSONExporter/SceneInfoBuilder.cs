@@ -17,9 +17,10 @@ namespace UnityJSONExporter
         // public
         // ---------------------------------------------------------------------------------------------
 
-        public SceneInfoBuilder(ConvertAxis exportAxis)
+        public SceneInfoBuilder(ConvertAxis exportAxis, bool minifyPropertyName)
         {
             _convertAxis = exportAxis;
+            _minifyPropertyName = minifyPropertyName;
         }
 
         /// <summary>
@@ -46,6 +47,7 @@ namespace UnityJSONExporter
         // ---------------------------------------------------------------------------------------------
 
         private ConvertAxis _convertAxis;
+        private bool _minifyPropertyName;
 
         /// <summary>
         /// 
@@ -110,6 +112,7 @@ namespace UnityJSONExporter
         }
 
         /// <summary>
+        /// TODO: genericsにしたい
         /// parseしたいcomponentを列挙
         /// 対象となるcomponentが増えた場合はここに追加する
         /// </summary>
@@ -160,10 +163,14 @@ namespace UnityJSONExporter
             //
             if (go.TryGetComponent(out PlayableDirector playableDirector))
             {
-                var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(playableDirector, _convertAxis);
+                var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(
+                    playableDirector,
+                    _convertAxis,
+                    _minifyPropertyName
+                );
                 componentInfoList.Add(playableDirectorComponentInfo);
             }
-            
+
             //
             // volume (post processing)
             //
@@ -171,6 +178,17 @@ namespace UnityJSONExporter
             {
                 var volumeComponentInfo = new VolumeComponentInfo(volume);
                 componentInfoList.Add(volumeComponentInfo);
+            }
+            
+            // custom components
+            
+            //
+            // object move and look at controller
+            //
+            if (go.TryGetComponent(out ObjectMoveAndLookAtController objectMoveAndLookAtController))
+            {
+                var objectMoveAndLookAtControllerComponentInfo = new ObjectMoveAndLookAtControllerComponentInfo(objectMoveAndLookAtController);
+                componentInfoList.Add(objectMoveAndLookAtControllerComponentInfo);
             }
 
             return componentInfoList;

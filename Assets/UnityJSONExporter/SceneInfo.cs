@@ -68,7 +68,8 @@ namespace UnityJSONExporter
                 : obj.transform.localRotation;
             var localScale = obj.transform.localScale;
 
-            Debug.Log("object info name: " + Name);
+            // for debug
+            // Debug.Log("object info name: " + Name);
 
             Transform = new TransformInfo()
             {

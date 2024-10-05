@@ -280,7 +280,7 @@ namespace UnityJSONExporter
             // for debug
             // Debug.Log($"[UnityJSONExporterWindow] write file path: {writeFilePath}");
 
-            var sceneInfo = (new SceneInfoBuilder(_convertAxis)).GenerateSceneInfo();
+            var sceneInfo = (new SceneInfoBuilder(_convertAxis, _minifyPropertyName)).GenerateSceneInfo();
 
             // var jsonContent = JsonUtility.ToJson(sceneInfo);
             // var jsonContent = JsonConvert.SerializeObject(sceneInfo, _prettyFormat ? Formatting.Indented : Formatting.None);

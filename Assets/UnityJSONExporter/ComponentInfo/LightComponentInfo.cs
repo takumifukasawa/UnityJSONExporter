@@ -29,7 +29,6 @@ namespace UnityJSONExporter
         public static LightComponentInfo BuildLightComponentInfo(Light light)
         {
             var lightType = light.type.ToString();
-            Debug.Log($"hogehoge: light type: {lightType}, inner angle: {light.innerSpotAngle}, outer angle: {light.spotAngle}");
 
             switch (lightType)
             {

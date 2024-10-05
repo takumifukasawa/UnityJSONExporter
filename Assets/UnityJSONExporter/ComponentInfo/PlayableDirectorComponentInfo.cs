@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -74,7 +75,7 @@ namespace UnityJSONExporter
     {
         [JsonProperty(PropertyName = "n")]
         public string Name;
-        
+
         [JsonProperty(PropertyName = "t")]
         public float Time;
 
@@ -84,7 +85,7 @@ namespace UnityJSONExporter
             Time = time;
         }
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -99,7 +100,7 @@ namespace UnityJSONExporter
         }
     }
 
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -227,7 +228,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "ts")]
         public List<TrackInfoBase> Tracks = new List<TrackInfoBase>();
 
-        public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ConvertAxis convertAxis) : base(ComponentType.PlayableDirector)
+        public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ConvertAxis convertAxis, bool minifyPropertyName) : base(ComponentType.PlayableDirector)
         {
             var asset = playableDirector.playableAsset;
 
@@ -241,7 +242,7 @@ namespace UnityJSONExporter
             var fps = 60f;
             var spf = 1f / fps;
             var frameCount = playableDirector.duration / spf;
-            
+
             foreach (var track in timelineAsset.GetOutputTracks())
             {
                 // for debug
@@ -267,7 +268,7 @@ namespace UnityJSONExporter
                 //
                 // trackの種別によって処理を追加していく
                 //
-                
+
                 //
                 // marker track
                 //
@@ -285,9 +286,10 @@ namespace UnityJSONExporter
                         Debug.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
                         signalEmitterInfo.Add(new SignalEmitterInfo(signalEmitter.name, (float)signalEmitter.time));
                     }
+
                     trackInfo = new MarkerTrackInfo(signalEmitterInfo);
                 }
-                
+
 
                 //
                 // animation track
@@ -298,7 +300,18 @@ namespace UnityJSONExporter
                     var animationTrack = track as AnimationTrack;
                     var timelineClips = animationTrack.GetClips();
                     // var animationClipInfoList = GenerateAnimationClipInfoList(track, timelineClips, convertAxis, typeof(Transform), true);
-                    trackInfo = new DefaultTrackInfo(TrackInfoType.AnimationTrack, bindingObject.name, GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true));
+                    trackInfo = new DefaultTrackInfo(
+                        TrackInfoType.AnimationTrack,
+                        bindingObject.name,
+                        GenerateClipInfoList(
+                            track,
+                            timelineClips,
+                            convertAxis,
+                            minifyPropertyName,
+                            typeof(Object),
+                            true
+                        )
+                    );
                     // trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
                 }
 
@@ -311,7 +324,18 @@ namespace UnityJSONExporter
                     var lightControlTrack = track as LightControlTrack;
                     var timelineClips = lightControlTrack.GetClips();
                     // var animationClipInfoList = new List<AnimationClipInfoBase>();
-                    trackInfo = new DefaultTrackInfo(TrackInfoType.LightControlTrack, bindingObject.name, GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Light), true));
+                    trackInfo = new DefaultTrackInfo(
+                        TrackInfoType.LightControlTrack,
+                        bindingObject.name,
+                        GenerateClipInfoList(
+                            track,
+                            timelineClips,
+                            convertAxis,
+                            minifyPropertyName,
+                            typeof(Light),
+                            true
+                        )
+                    );
                     // trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Light), true);
                 }
 
@@ -335,7 +359,18 @@ namespace UnityJSONExporter
                     var timelineClips = activationTrack.GetClips();
                     // TODO: 追加
                     // trackInfo.Clips = GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true);
-                    trackInfo = new DefaultTrackInfo(TrackInfoType.ActivationTrack, bindingObject.name, GenerateClipInfoList(track, timelineClips, convertAxis, typeof(Object), true));
+                    trackInfo = new DefaultTrackInfo(
+                        TrackInfoType.ActivationTrack,
+                        bindingObject.name,
+                        GenerateClipInfoList(
+                            track,
+                            timelineClips,
+                            convertAxis,
+                            minifyPropertyName,
+                            typeof(Object),
+                            true
+                        )
+                    );
                 }
 
                 if (trackInfo != null)
@@ -357,6 +392,7 @@ namespace UnityJSONExporter
             TrackAsset track,
             IEnumerable<TimelineClip> timelineClips,
             ConvertAxis convertAxis,
+            bool minifyPropertyName,
             Type checkType = null,
             bool convertTransformValue = false
         )
@@ -386,6 +422,7 @@ namespace UnityJSONExporter
                         timelineClip,
                         animationClip,
                         convertAxis,
+                        minifyPropertyName,
                         checkType,
                         convertTransformValue
                     ));
@@ -427,6 +464,7 @@ namespace UnityJSONExporter
             TimelineClip timelineClip,
             AnimationClip animationClip,
             ConvertAxis convertAxis,
+            bool minifyPropertyName,
             Type checkType = null,
             bool convertTransformValue = false
         )
@@ -451,9 +489,23 @@ namespace UnityJSONExporter
             {
                 var clipBinding = new ClipBinding();
                 clipInfo.Bindings.Add(clipBinding);
-                clipBinding.PropertyName = binding.propertyName; // TODO: property name はそのまま入っちゃうので短縮化したい
-                
-                Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}");
+
+                var targetComponent = FindComponentInScene(binding.type);
+                Debug.Log(
+                    $"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}, target component: {targetComponent}");
+
+                if (targetComponent is PostProcessController)
+                {
+                    clipBinding.PropertyName = ResolveJsonProperty(
+                        targetComponent as PostProcessController,
+                        binding.propertyName,
+                        minifyPropertyName
+                    );
+                }
+                else
+                {
+                    clipBinding.PropertyName = binding.propertyName;
+                }
 
                 // for debug
                 // Debug.Log($"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}");
@@ -605,6 +657,54 @@ namespace UnityJSONExporter
                 default:
                     throw new Exception($"[PlayableDirectorComponentInfo.ConvertTransformCurveValue] invalid property: {binding.propertyName}");
             }
+        }
+
+        Component FindComponentInScene(Type componentType)
+        {
+            var allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+            foreach (var obj in allObjects)
+            {
+                var component = obj.GetComponent(componentType);
+                if (component != null)
+                {
+                    return component;
+                }
+            }
+
+            return null;
+        }
+
+        string ResolveJsonProperty<T>(
+            T component,
+            string targetProperty,
+            bool needsMinify
+        ) where T : Component
+        {
+            if (!needsMinify)
+            {
+                return targetProperty;
+            }
+
+            var type = typeof(T);
+            var fields = type.GetFields();
+            // for debug
+            // Debug.Log($"[PlayableDirectorComponentInfo.ResolveJsonProperty] type: {type}, type2: {type2}, properties count: {properties.Length}");
+            foreach (var field in fields)
+            {
+                var jsonProperty = field
+                    .GetCustomAttributes(typeof(JsonPropertyAttribute), false)
+                    .Cast<JsonPropertyAttribute>()
+                    .FirstOrDefault();
+                // for debug
+                // Debug.Log($"[PlayableDirectorComponentInfo.ResolveJsonProperty] property name: {property.Name}, target property: {targetProperty}, jsonProperty: {jsonProperty}, jsonPropertyName: {jsonProperty.PropertyName}");
+                if (field.Name == targetProperty && needsMinify)
+                {
+                    return jsonProperty.PropertyName;
+                }
+            }
+
+            // fallback
+            return targetProperty;
         }
     }
 }

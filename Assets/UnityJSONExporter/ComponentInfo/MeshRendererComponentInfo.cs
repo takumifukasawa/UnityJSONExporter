@@ -28,7 +28,7 @@ namespace UnityJSONExporter
                         srcMaterial.GetColor("_BaseColor"),
                         srcMaterial.GetFloat("_Metallic"),
                         srcMaterial.GetFloat("_Glossiness"),
-                        srcMaterial.GetInt("_ReceiveShadwo")
+                        srcMaterial.GetInt("_ReceiveShadows")
                     );
                     return;
                 default:

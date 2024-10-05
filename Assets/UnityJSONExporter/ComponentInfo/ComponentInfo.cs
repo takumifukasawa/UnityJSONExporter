@@ -19,6 +19,7 @@ namespace UnityJSONExporter
         MeshRenderer, // 4
         MeshFilter, // 5
         Volume, // 6
+        ObjectMoveAndLookAtController // 7
     }
 
     /// <summary>

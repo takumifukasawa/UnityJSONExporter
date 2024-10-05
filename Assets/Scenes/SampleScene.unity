@@ -239,8 +239,9 @@ GameObject:
   - component: {fileID: 46435829}
   - component: {fileID: 46435828}
   - component: {fileID: 46435831}
+  - component: {fileID: 46435832}
   m_Layer: 0
-  m_Name: SpotLight
+  m_Name: SpotLightA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -283,8 +284,8 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1.5
   m_Range: 8.310608
-  m_SpotAngle: 45
-  m_InnerSpotAngle: 20
+  m_SpotAngle: 29.66809
+  m_InnerSpotAngle: 25.06852
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -339,13 +340,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46435827}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5838468, y: 0.24579294, z: -0.087225735, w: 0.76883054}
-  m_LocalPosition: {x: 0, y: 3.84, z: 0}
+  m_LocalRotation: {x: 0.38641346, y: 0.59218633, z: -0.38641346, w: 0.5921864}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 109.841, y: -125.56601, z: -153.228}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &46435831
 Animator:
   serializedVersion: 5
@@ -367,6 +368,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &46435832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46435827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20fc6eb0d7874a0abc7175521dc36263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LocalPosition: {x: 0, y: 0, z: 0}
+  LookAtTarget: {fileID: 0}
 --- !u!1 &58226985
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +393,7 @@ GameObject:
   - component: {fileID: 58226986}
   - component: {fileID: 58226987}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: TestMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -424,6 +439,52 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &317220045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01700fd266d6914ababb731e09af2eb, type: 3}
+  m_Name: DepthOfField(Clone)
+  m_EditorClassIdentifier: 
+  active: 0
+  mode:
+    m_OverrideState: 1
+    m_Value: 2
+  gaussianStart:
+    m_OverrideState: 0
+    m_Value: 10
+  gaussianEnd:
+    m_OverrideState: 0
+    m_Value: 30
+  gaussianMaxRadius:
+    m_OverrideState: 0
+    m_Value: 1
+  highQualitySampling:
+    m_OverrideState: 0
+    m_Value: 0
+  focusDistance:
+    m_OverrideState: 1
+    m_Value: 4.7194276
+  aperture:
+    m_OverrideState: 1
+    m_Value: 5.2
+  focalLength:
+    m_OverrideState: 1
+    m_Value: 231
+  bladeCount:
+    m_OverrideState: 0
+    m_Value: 5
+  bladeCurvature:
+    m_OverrideState: 0
+    m_Value: 1
+  bladeRotation:
+    m_OverrideState: 0
+    m_Value: 0
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +655,7 @@ GameObject:
   - component: {fileID: 410087041}
   - component: {fileID: 410087040}
   - component: {fileID: 410087042}
+  - component: {fileID: 410087043}
   m_Layer: 0
   m_Name: DirectionalLight
   m_TagString: Untagged
@@ -671,13 +733,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,46 +763,27 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
---- !u!114 &443831506
-MonoBehaviour:
+--- !u!95 &410087043
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 410087039}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
-  m_Name: Tonemapping(Clone)
-  m_EditorClassIdentifier: 
-  active: 1
-  mode:
-    m_OverrideState: 1
-    m_Value: 1
-  neutralHDRRangeReductionMode:
-    m_OverrideState: 0
-    m_Value: 2
-  acesPreset:
-    m_OverrideState: 0
-    m_Value: 3
-  hueShiftAmount:
-    m_OverrideState: 0
-    m_Value: 0
-  detectPaperWhite:
-    m_OverrideState: 0
-    m_Value: 0
-  paperWhite:
-    m_OverrideState: 0
-    m_Value: 300
-  detectBrightnessLimits:
-    m_OverrideState: 0
-    m_Value: 1
-  minNits:
-    m_OverrideState: 0
-    m_Value: 0.005
-  maxNits:
-    m_OverrideState: 0
-    m_Value: 1000
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &453084665
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,6 +889,59 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 453084665}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &519834280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 519834281}
+  - component: {fileID: 519834282}
+  m_Layer: 0
+  m_Name: SpotLightA_LookAt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &519834281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519834280}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &519834282
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519834280}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &637077396
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,7 +955,7 @@ GameObject:
   - component: {fileID: 637077399}
   - component: {fileID: 637077400}
   m_Layer: 0
-  m_Name: TestMain
+  m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -897,8 +993,6 @@ PlayableDirector:
   m_SceneBindings:
   - key: {fileID: -614066062999520679, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
     value: {fileID: 330585548}
-  - key: {fileID: -8174101242046445847, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
-    value: {fileID: 1014506681}
   - key: {fileID: 0}
     value: {fileID: 0}
   - key: {fileID: -3454951685797324234, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
@@ -907,13 +1001,24 @@ PlayableDirector:
     value: {fileID: 832575521}
   - key: {fileID: 7278793672049216466, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
     value: {fileID: 46435829}
+  - key: {fileID: 4249989636101751674, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
+    value: {fileID: 410087043}
+  - key: {fileID: -4270074967233311508, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
+    value: {fileID: 46435832}
+  - key: {fileID: -5024414298344539712, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
+    value: {fileID: 519834282}
   m_ExposedReferences:
     m_References:
     - 549d55f83035c3842933e77369320263: {fileID: 0}
+    - a6650998e6f4fbb478e69bf3ff096e14: {fileID: 519834281}
     - 396e38938dc2baf48b206e37a9ee8935: {fileID: 0}
     - 5589f60d05dd0be43bc35ac493b76063: {fileID: 410087040}
     - b1461454ccf6b9a4dbbe51a540e9a9c6: {fileID: 0}
+    - c8cf9ec96e69f7c4eb21559f0d1c7e16: {fileID: 519834281}
     - 02578ed559591c34094701ecfe91ee39: {fileID: 0}
+    - bf44a7c692313f24090bc957b93ac2c8: {fileID: 519834281}
+    - b1ce357a4f3cff7468b2071c0f84520a: {fileID: 519834281}
+    - 5dfe280d4d315af4e89644f3dd8bb5cc: {fileID: 519834281}
 --- !u!114 &637077399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1064,6 +1169,46 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688560960}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &708883200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
+  m_Name: Tonemapping(Clone)
+  m_EditorClassIdentifier: 
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 1
+  neutralHDRRangeReductionMode:
+    m_OverrideState: 0
+    m_Value: 2
+  acesPreset:
+    m_OverrideState: 0
+    m_Value: 3
+  hueShiftAmount:
+    m_OverrideState: 0
+    m_Value: 0
+  detectPaperWhite:
+    m_OverrideState: 0
+    m_Value: 0
+  paperWhite:
+    m_OverrideState: 0
+    m_Value: 300
+  detectBrightnessLimits:
+    m_OverrideState: 0
+    m_Value: 1
+  minNits:
+    m_OverrideState: 0
+    m_Value: 0.005
+  maxNits:
+    m_OverrideState: 0
+    m_Value: 1000
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,39 +1293,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef3f1b619e0dd641b13bbb781ef7648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bloomIntensity: 1.4139307
-  depthOfFieldFocusDistance: 4.7194276
-  volumeProfile: {fileID: 2027135059}
-  bloomComponent: {fileID: 2134942289}
-  depthOfFieldComponent: {fileID: 2074923008}
---- !u!114 &832632744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
-  m_Name: Vignette(Clone)
-  m_EditorClassIdentifier: 
-  active: 1
-  color:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
-  center:
-    m_OverrideState: 0
-    m_Value: {x: 0.5, y: 0.5}
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0.25
-  smoothness:
-    m_OverrideState: 1
-    m_Value: 0.4
-  rounded:
-    m_OverrideState: 0
-    m_Value: 0
+  BloomIntensity: 0
+  DepthOfFieldFocusDistance: 4.7194276
+  VignetteIntensity: 0.25
+  _volumeProfile: {fileID: 1348530700}
+  _bloomComponent: {fileID: 1748294328}
+  _depthOfFieldComponent: {fileID: 317220045}
+  _vignetteComponent: {fileID: 2069855914}
 --- !u!1 &1014506681
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,6 +1312,7 @@ GameObject:
   - component: {fileID: 1014506684}
   - component: {fileID: 1014506683}
   - component: {fileID: 1014506686}
+  - component: {fileID: 1014506687}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -1258,13 +1378,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1014506681}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.67946887, y: -0.08294426, z: -0.20294622, w: 0.7001822}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 2.56296, z: 6}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 66.612, y: -80.885, z: -90.827}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!95 &1014506686
 Animator:
   serializedVersion: 5
@@ -1286,6 +1406,38 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1014506687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014506681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 707e6597e4cefff4daee5b5c6c0ca7bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CustomPropertyFloat: 0.5
+  CustomPropertyColor: {r: 1, g: 1, b: 1, a: 1}
+  CustomPropertyVector3: {x: 0, y: 0, z: 0}
+--- !u!114 &1348530700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: SampleSceneProfile
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: 708883200}
+  - {fileID: 1748294328}
+  - {fileID: 2069855914}
+  - {fileID: 317220045}
 --- !u!1 &1518228588
 GameObject:
   m_ObjectHideFlags: 0
@@ -1454,70 +1606,7 @@ MonoBehaviour:
   _playableDirector: {fileID: 637077398}
   _sendIntervalFps: 60
   _showLog: 0
---- !u!114 &2027135059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: SampleSceneProfile
-  m_EditorClassIdentifier: 
-  components:
-  - {fileID: 443831506}
-  - {fileID: 2134942289}
-  - {fileID: 832632744}
-  - {fileID: 2074923008}
---- !u!114 &2074923008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c01700fd266d6914ababb731e09af2eb, type: 3}
-  m_Name: DepthOfField(Clone)
-  m_EditorClassIdentifier: 
-  active: 0
-  mode:
-    m_OverrideState: 1
-    m_Value: 2
-  gaussianStart:
-    m_OverrideState: 0
-    m_Value: 10
-  gaussianEnd:
-    m_OverrideState: 0
-    m_Value: 30
-  gaussianMaxRadius:
-    m_OverrideState: 0
-    m_Value: 1
-  highQualitySampling:
-    m_OverrideState: 0
-    m_Value: 0
-  focusDistance:
-    m_OverrideState: 1
-    m_Value: 4.7194276
-  aperture:
-    m_OverrideState: 1
-    m_Value: 5.2
-  focalLength:
-    m_OverrideState: 1
-    m_Value: 231
-  bladeCount:
-    m_OverrideState: 0
-    m_Value: 5
-  bladeCurvature:
-    m_OverrideState: 0
-    m_Value: 1
-  bladeRotation:
-    m_OverrideState: 0
-    m_Value: 0
---- !u!114 &2134942289
+--- !u!114 &1748294328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1538,7 +1627,7 @@ MonoBehaviour:
     m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.24565452
+    m_Value: 3.33
   scatter:
     m_OverrideState: 0
     m_Value: 0.7
@@ -1564,6 +1653,34 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &2069855914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
+  m_Name: Vignette(Clone)
+  m_EditorClassIdentifier: 
+  active: 1
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  center:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.25
+  smoothness:
+    m_OverrideState: 1
+    m_Value: 0.4
+  rounded:
+    m_OverrideState: 0
+    m_Value: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1576,3 +1693,4 @@ SceneRoots:
   - {fileID: 1014506685}
   - {fileID: 46435830}
   - {fileID: 58226986}
+  - {fileID: 519834281}
