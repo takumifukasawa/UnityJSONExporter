@@ -84,7 +84,7 @@ namespace UnityJSONExporter
 
                 var targetComponent = SceneUtilities.FindComponentInScene(binding.type);
                 Debug.Log(
-                    $"[PlayableDirectorComponentInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}, target component: {targetComponent}");
+                    $"[AnimationTrackInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}, target component: {targetComponent}");
 
                 // if (targetComponent is )
                 if (targetComponent is TimelineBindingObjectBase)
@@ -114,6 +114,8 @@ namespace UnityJSONExporter
                     clipKeyframe.OutTangent = key.outTangent;
                     clipBinding.Keyframes.Add(clipKeyframe);
                 }
+
+                Debug.Log($"[AnimationTrackInfo.GenerateAnimationClipInfo] clipBinding.PropertyName: {clipBinding.PropertyName}, keyframe num: {clipBinding.Keyframes.Count}");
             }
 
             return clipInfo;

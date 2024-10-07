@@ -55,7 +55,7 @@ namespace UnityJSONExporter
             // var lightControlClip = timelineClip.asset as LightControlClip;
             var animationClip = timelineClip.curves;
             var bindings = AnimationUtility.GetCurveBindings(animationClip);
-            
+
             var clipInfo = new ObjectMoveAndLookAtClipInfo(
                 (float)timelineClip.start,
                 (float)timelineClip.duration
@@ -95,12 +95,27 @@ namespace UnityJSONExporter
                         // TODO: shorthand
                         case "LocalPosition.x":
                             keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.X, keyValue);
+                            if (minifyPropertyName)
+                            {
+                                clipBinding.PropertyName = "lx";
+                            }
+
                             break;
                         case "LocalPosition.y":
                             keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Y, keyValue);
+                            if (minifyPropertyName)
+                            {
+                                clipBinding.PropertyName = "ly";
+                            }
+
                             break;
                         case "LocalPosition.z":
                             keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Z, keyValue);
+                            if (minifyPropertyName)
+                            {
+                                clipBinding.PropertyName = "lz";
+                            }
+
                             break;
                         default:
                             throw new Exception($"[ObjectMoveAndLookAtTrackInfo.GenerateMoveAndLookAtTrackClipInfo] invalid property: {binding.propertyName}");
