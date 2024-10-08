@@ -44,6 +44,18 @@ namespace UnityJSONExporter
         public const string LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A = "color.a";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A_SHORTEN = "c.a";
 
+        public const string MATERIAL_PROPERTY_BASE_COLOR_R = "material._BaseColor.r";
+        public const string MATERIAL_PROPERTY_BASE_COLOR_R_SHORTEN = "m.bc.r";
+
+        public const string MATERIAL_PROPERTY_BASE_COLOR_G = "material._BaseColor.g";
+        public const string MATERIAL_PROPERTY_BASE_COLOR_G_SHORTEN = "m.bc.g";
+
+        public const string MATERIAL_PROPERTY_BASE_COLOR_B = "material._BaseColor.b";
+        public const string MATERIAL_PROPERTY_BASE_COLOR_B_SHORTEN = "m.bc.b";
+
+        public const string MATERIAL_PROPERTY_BASE_COLOR_A = "material._BaseColor.a";
+        public const string MATERIAL_PROPERTY_BASE_COLOR_A_SHORTEN = "m.bc.a";
+
         public const string LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY = "bounceIntensity";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY_SHORTEN = "bi";
 
@@ -108,6 +120,22 @@ namespace UnityJSONExporter
                 LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A_SHORTEN
             },
             {
+                MATERIAL_PROPERTY_BASE_COLOR_R,
+                MATERIAL_PROPERTY_BASE_COLOR_R_SHORTEN
+            },
+            {
+                MATERIAL_PROPERTY_BASE_COLOR_G,
+                MATERIAL_PROPERTY_BASE_COLOR_G_SHORTEN
+            },
+            {
+                MATERIAL_PROPERTY_BASE_COLOR_B,
+                MATERIAL_PROPERTY_BASE_COLOR_B_SHORTEN
+            },
+            {
+                MATERIAL_PROPERTY_BASE_COLOR_A,
+                MATERIAL_PROPERTY_BASE_COLOR_A_SHORTEN
+            },
+            {
                 LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY,
                 LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY_SHORTEN
             },
@@ -130,7 +158,7 @@ namespace UnityJSONExporter
 
             Debug.LogWarning($"[PropertyNameResolver.ResolveUnityBuiltinPropertyName] invalid property name: {propertyName}");
 
-            
+
             return propertyName;
         }
     }
