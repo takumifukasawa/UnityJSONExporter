@@ -84,20 +84,29 @@ namespace UnityJSONExporter
 
                 var targetComponent = SceneUtilities.FindComponentInScene(binding.type);
                 Debug.Log(
-                    $"[AnimationTrackInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type.FullName: {binding.type.FullName}, target component: {targetComponent}");
+                    $"[AnimationTrackInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type: {binding.type}, target component: {targetComponent}, component type: {targetComponent.GetType()}");
 
+                var type = targetComponent.GetType();
                 // if (targetComponent is )
-                if (targetComponent is TimelineBindingObjectBase)
+                clipBinding.PropertyName = binding.propertyName;
+
+                if (minifyPropertyName)
                 {
-                    clipBinding.PropertyName = JsonUtilities.ResolveJsonProperty(
-                        targetComponent as PostProcessController,
-                        binding.propertyName,
-                        minifyPropertyName
-                    );
-                }
-                else
-                {
-                    clipBinding.PropertyName = binding.propertyName;
+                    if (targetComponent is TimelineBindingObjectBase)
+                    {
+                        clipBinding.PropertyName = (targetComponent as TimelineBindingObjectBase).ResolvePropertyName(binding.propertyName);
+                        // clipBinding.PropertyName = JsonUtilities.ResolveJsonProperty<type>(
+                        //     // targetComponent as PostProcessController,
+                        //     targetComponent as type,
+                        //     binding.propertyName,
+                        //     minifyPropertyName
+                        // );
+                    }
+                    else
+                    {
+                        // clipBinding.PropertyName = binding.propertyName;
+                        clipBinding.PropertyName = PropertyNameResolver.ResolveUnityBuiltinPropertyName(binding.propertyName);
+                    }
                 }
 
 

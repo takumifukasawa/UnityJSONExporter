@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityJSONExporter;
 
 /// <summary>
 /// 
@@ -46,6 +47,11 @@ public class PostProcessController : TimelineBindingObjectBase
     private float _depthOfFieldFocusDistanceCache;
 
     private float _vignetteIntensityCache;
+
+    public override string ResolvePropertyName(string propertyName)
+    {
+        return JsonUtilities.ResolveJsonProperty(this, propertyName);
+    }
 
     /// <summary>
     /// 

@@ -115,7 +115,8 @@ namespace UnityJSONExporter
                     var lightControlTrack = track as LightControlTrack;
                     trackInfo = new LightControlTrackInfo(
                         lightControlTrack,
-                        bindingObject.name
+                        bindingObject.name,
+                        minifyPropertyName
                     );
                 }
 

@@ -52,39 +52,39 @@ namespace UnityJSONExporter
 
                     switch (binding.propertyName)
                     {
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:
                             _hasLocalPosition = true;
                             _localPosition.x = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y:
                             _hasLocalPosition = true;
                             _localPosition.y = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z:
                             _hasLocalPosition = true;
                             _localPosition.z = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.x = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.y = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
                             _hasLocalRotationEuler = true;
                             _localRotationEuler.z = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X:
                             _hasLocalScale = true;
                             _localScale.x = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y:
                             _hasLocalScale = true;
                             _localScale.y = value;
                             break;
-                        case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z:
+                        case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z:
                             _hasLocalScale = true;
                             _localScale.z = value;
                             break;
@@ -163,31 +163,31 @@ namespace UnityJSONExporter
 
                 switch (binding.propertyName)
                 {
-                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_R:
+                    case PropertyNameResolver.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_R:
                         _hasColor = true;
                         _color.r = value;
                         break;
-                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_G:
+                    case PropertyNameResolver.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_G:
                         _hasColor = true;
                         _color.g = value;
                         break;
-                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_B:
+                    case PropertyNameResolver.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_B:
                         _hasColor = true;
                         _color.b = value;
                         break;
-                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A:
+                    case PropertyNameResolver.LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A:
                         _hasColor = true;
                         _color.a = value;
                         break;
-                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY:
+                    case PropertyNameResolver.LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY:
                         _hasBounceIntensity = true;
                         _bounceIntensity = value;
                         break;
-                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_INTENSITY:
+                    case PropertyNameResolver.LIGHT_CONTROL_CLIP_PROPERTY_INTENSITY:
                         _hasIntensity = true;
                         _intensity = value;
                         break;
-                    case Constants.LIGHT_CONTROL_CLIP_PROPERTY_RANGE:
+                    case PropertyNameResolver.LIGHT_CONTROL_CLIP_PROPERTY_RANGE:
                         _hasRange = true;
                         _range = value;
                         break;

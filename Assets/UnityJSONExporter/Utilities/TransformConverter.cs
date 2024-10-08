@@ -177,15 +177,15 @@ namespace UnityJSONExporter
         public static bool IsTransformProperty(string propertyName)
         {
             return
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y ||
-                propertyName == Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z;
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y ||
+                propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z;
         }
         /// <summary>
         /// 
@@ -202,23 +202,23 @@ namespace UnityJSONExporter
 
             switch (binding.propertyName)
             {
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.X, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Y:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Y, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_Z:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Z, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_X:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Rotation, TransformConverter.AxisDirection.X, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Y:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Rotation, TransformConverter.AxisDirection.Y, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_EULER_ANGLES_RAW_Z:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Rotation, TransformConverter.AxisDirection.Z, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_X:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Scale, TransformConverter.AxisDirection.X, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Scale, TransformConverter.AxisDirection.Y, keyValue);
-                case Constants.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z:
+                case PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z:
                     return TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Scale, TransformConverter.AxisDirection.Z, keyValue);
                 default:
                     throw new Exception($"[PlayableDirectorComponentInfo.ConvertTransformCurveValue] invalid property: {binding.propertyName}");

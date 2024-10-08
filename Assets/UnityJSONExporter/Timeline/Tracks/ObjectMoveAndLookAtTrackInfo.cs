@@ -97,7 +97,7 @@ namespace UnityJSONExporter
                             keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.X, keyValue);
                             if (minifyPropertyName)
                             {
-                                clipBinding.PropertyName = "lx";
+                                clipBinding.PropertyName = "lp.x";
                             }
 
                             break;
@@ -105,7 +105,7 @@ namespace UnityJSONExporter
                             keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Y, keyValue);
                             if (minifyPropertyName)
                             {
-                                clipBinding.PropertyName = "ly";
+                                clipBinding.PropertyName = "lp.y";
                             }
 
                             break;
@@ -113,7 +113,7 @@ namespace UnityJSONExporter
                             keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Z, keyValue);
                             if (minifyPropertyName)
                             {
-                                clipBinding.PropertyName = "lz";
+                                clipBinding.PropertyName = "lp.z";
                             }
 
                             break;

@@ -8,35 +8,69 @@ namespace UnityJSONExporter
     {
         public static string ResolveJsonProperty<T>(
             T component,
-            string targetProperty,
-            bool needsMinify
+            string targetField
+            // bool needsMinify
         ) where T : Component
         {
-            if (!needsMinify)
-            {
-                return targetProperty;
-            }
+            // if (!needsMinify)
+            // {
+            //     return targetField;
+            // }
 
             var type = typeof(T);
             var fields = type.GetFields();
             // for debug
-            // Debug.Log($"[PlayableDirectorComponentInfo.ResolveJsonProperty] type: {type}, type2: {type2}, properties count: {properties.Length}");
+            Debug.Log($"[JsonUtilities.ResolveJsonProperty] ===================================");
+            Debug.Log($"[JsonUtilities.ResolveJsonProperty] type: {type}, target field: {targetField}, fields: {fields.Length}");
+
+            // 1: オブジェクト名
+            // 2: フィールド
+            var fieldObjectPattern = @"(^.*?)\.(x|y|z|w|r|g|b|a)$";
+
+            // オブジェクトの場合。color, vectorなど
+            var matchFieldObject = System.Text.RegularExpressions.Regex.Match(targetField, fieldObjectPattern);
+
+            Debug.Log($"[JsonUtilities.ResolveJsonProperty] field: {targetField}, match object field: {matchFieldObject.Success}");
+
+            // 一致するfieldを探索
             foreach (var field in fields)
             {
+                // 宣言されているjsonpropertryを取得
                 var jsonProperty = field
                     .GetCustomAttributes(typeof(JsonPropertyAttribute), false)
                     .Cast<JsonPropertyAttribute>()
                     .FirstOrDefault();
+                var fieldName = field.Name;
+
+                if (jsonProperty == null)
+                {
+                    continue;
+                }
+
                 // for debug
-                // Debug.Log($"[PlayableDirectorComponentInfo.ResolveJsonProperty] property name: {property.Name}, target property: {targetProperty}, jsonProperty: {jsonProperty}, jsonPropertyName: {jsonProperty.PropertyName}");
-                if (field.Name == targetProperty && needsMinify)
+                // if (matchFieldObject.Success)
+                // {
+                //     Debug.Log($"[JsonUtilities.ResolveJsonProperty] field: {fieldName}, match object field: // {matchFieldObject.Groups[1].Value}, json property: {jsonProperty.PropertyName}");
+                // }
+                
+                // オブジェクトの場合
+                if (
+                    matchFieldObject.Success
+                    && matchFieldObject.Groups[1].Value == fieldName
+                )
+                {
+                    return $"{jsonProperty.PropertyName}.{matchFieldObject.Groups[2].Value}";
+                }
+
+                // 完全一致していたらそのまま変換. float など
+                if (field.Name == targetField)
                 {
                     return jsonProperty.PropertyName;
                 }
             }
 
             // fallback
-            return targetProperty;
+            return targetField;
         }
     }
 }

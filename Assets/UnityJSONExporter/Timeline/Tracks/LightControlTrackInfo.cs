@@ -8,7 +8,8 @@ namespace UnityJSONExporter
     {
         public LightControlTrackInfo(
             LightControlTrack track,
-            string targetName
+            string targetName,
+            bool minifyPropertyName
         ) : base(TrackInfoType.LightControlTrack, targetName)
         {
             var timelineClips = track.GetClips();
@@ -16,12 +17,16 @@ namespace UnityJSONExporter
             {
                 Clips.Add(GenerateLightControlClipInfo(
                     // track as LightControlTrack,
-                    timelineClip
+                    timelineClip,
+                    minifyPropertyName
                 ));
             }
         }
 
-        ClipInfoBase GenerateLightControlClipInfo(TimelineClip timelineClip)
+        ClipInfoBase GenerateLightControlClipInfo(
+            TimelineClip timelineClip,
+            bool minifyPropertyName
+        )
         {
             // var lightControlClip = timelineClip.asset as LightControlClip;
             var animationClip = timelineClip.curves;
@@ -36,7 +41,12 @@ namespace UnityJSONExporter
             {
                 var clipBinding = new ClipBinding();
                 lightControlClipInfo.Bindings.Add(clipBinding);
-                clipBinding.PropertyName = binding.propertyName; // TODO: property name はそのまま入っちゃうので短縮化したい
+
+                // TODO: property name はそのまま入っちゃうので短縮化したい
+                clipBinding.PropertyName =
+                    minifyPropertyName
+                        ? PropertyNameResolver.ResolveUnityBuiltinPropertyName(binding.propertyName)
+                        : binding.propertyName;
 
                 // for debug
                 // property check
