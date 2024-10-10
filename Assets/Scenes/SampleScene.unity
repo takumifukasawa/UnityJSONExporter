@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 157286620}
   - component: {fileID: 157286619}
   - component: {fileID: 157286618}
+  - component: {fileID: 157286621}
   m_Layer: 0
   m_Name: TitleLogo
   m_TagString: ExcludeExport
@@ -294,6 +295,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 1.42}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &157286621
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157286617}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &317220045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,8 +839,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 525319892}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.6245427, y: -0.02460321, z: 0.019690735, w: 0.7803546}
-  m_LocalPosition: {x: 0.06838226, y: 4.8337507, z: -1.0833824}
+  m_LocalRotation: {x: 0.4720627, y: -0.22546574, z: 0.12628052, w: 0.84283763}
+  m_LocalPosition: {x: 1.452157, y: 4.7471614, z: -2.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -944,6 +966,8 @@ PlayableDirector:
     value: {fileID: 525319893}
   - key: {fileID: 5874676246602438248, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
     value: {fileID: 525319895}
+  - key: {fileID: -6996403738146571164, guid: 30ddd1e911422784bae1614f2ed5e137, type: 2}
+    value: {fileID: 157286621}
   m_ExposedReferences:
     m_References:
     - 549d55f83035c3842933e77369320263: {fileID: 0}
@@ -1128,7 +1152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef3f1b619e0dd641b13bbb781ef7648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BloomIntensity: 3.338688
+  BloomIntensity: 3.33
   DepthOfFieldFocusDistance: 4.7194276
   VignetteIntensity: 0.25
   _volumeProfile: {fileID: 1348530700}
@@ -1260,8 +1284,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343232932}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.105870076, y: 0.81955004, z: -0.5397074, w: 0.16076458}
-  m_LocalPosition: {x: -1.1669502, y: 7.183791, z: 2.86}
+  m_LocalRotation: {x: 0.20544793, y: 0.7918966, z: -0.44140756, w: 0.36857888}
+  m_LocalPosition: {x: -3.3985412, y: 7.183791, z: 2.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
