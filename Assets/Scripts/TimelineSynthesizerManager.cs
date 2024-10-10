@@ -9,12 +9,31 @@ namespace TimelineSynthesizer
     /// <summary>
     /// 
     /// </summary>
-    public class TimelineSynthesizerData
+    public class TimelineSynthesizerSeekData
     {
         public string Type = "seekTimeline";
-
-        // [JsonProperty(PropertyName = "currentTime")]
         public float CurrentTime;
+
+        public TimelineSynthesizerSeekData(float time)
+        {
+            CurrentTime = time;
+        }
+    }
+
+    public class TimelineSynthesizerPlayData
+    {
+        public string Type = "playTimeline";
+        public float CurrentTime;
+
+        public TimelineSynthesizerPlayData(float time)
+        {
+            CurrentTime = time;
+        }
+    }
+
+    public class TimelineSynthesizerStopData
+    {
+        public string Type = "stopTimeline";
     }
 
     /// <summary>
@@ -24,8 +43,10 @@ namespace TimelineSynthesizer
     public class TimelineSynthesizerManager : MonoBehaviour
     {
         // ----------------------------------------------------------------------------
-        // serialize
+        // members, fields
         // ----------------------------------------------------------------------------
+
+        // serialize --------------------------------------------
 
         [SerializeField]
         private WebSocketConnector _webSocketConnector;
@@ -44,27 +65,31 @@ namespace TimelineSynthesizer
         [SerializeField]
         private bool _showLog = false;
 
+        // public --------------------------------------------
+
+        public bool IsPlaying => _isPlaying;
+
+        // private --------------------------------------------
+
+        private bool _isPlaying = false;
+        private DateTime _prevDateTimeNow;
+
         // ----------------------------------------------------------------------------
-        // unity engine
+        // methods
         // ----------------------------------------------------------------------------
+
+        // engine --------------------------------------------
 
         void Update()
         {
 #if UNITY_EDITOR
-            SendCurrentTime();
+            SendSeek();
 #endif
         }
 
-        // ----------------------------------------------------------------------------
-        // private
-        // ----------------------------------------------------------------------------
+        // private --------------------------------------------
 
-        private DateTime _prevDateTimeNow;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        async void SendCurrentTime()
+        async void SendSeek()
         {
             if (_playableDirector == null || _webSocketConnector == null)
             {
@@ -87,11 +112,15 @@ namespace TimelineSynthesizer
                 return;
             }
 
+            if (_isPlaying)
+            {
+                return;
+            }
+
             // Debug.Log($"diff: {(DateTime.Now - _prevDateTimeNow).TotalSeconds}");
             _prevDateTimeNow = DateTime.Now;
 
-            var data = new TimelineSynthesizerData();
-            data.CurrentTime = (float)_playableDirector.time;
+            var data = new TimelineSynthesizerSeekData((float)_playableDirector.time);
 
             var jsonContent = JsonConvert.SerializeObject(data, new JsonSerializerSettings()
             {
@@ -101,8 +130,61 @@ namespace TimelineSynthesizer
 
             if (_showLog)
             {
-                Debug.Log("[WebSocketConnector.SendCurrentTime] sending...");
-                Debug.Log($"[WebSocketConnector.SendCurrentTime] send json: {jsonContent}");
+                Debug.Log("[WebSocketConnector.SendSeek] sending...");
+                Debug.Log($"[WebSocketConnector.SendSeek] send json: {jsonContent}");
+            }
+
+            _webSocketConnector.TrySendText(jsonContent);
+        }
+
+        public async void SendPlay()
+        {
+            if (_isPlaying)
+            {
+                return;
+            }
+
+            _isPlaying = true;
+
+            var data = new TimelineSynthesizerPlayData((float)_playableDirector.time);
+
+            var jsonContent = JsonConvert.SerializeObject(data, new JsonSerializerSettings()
+            {
+                ContractResolver = new PropertyNameSwitchResolver(false),
+                Formatting = Formatting.None
+            });
+
+            if (_showLog)
+            {
+                Debug.Log("[WebSocketConnector.SendPlay] sending...");
+                Debug.Log($"[WebSocketConnector.SendPlay] send json: {jsonContent}");
+            }
+
+            _webSocketConnector.TrySendText(jsonContent);
+        }
+
+        public async void SendStop()
+        {
+            if (!_isPlaying)
+            {
+                return;
+            }
+
+            _isPlaying = false;
+
+            var data = new TimelineSynthesizerStopData();
+
+            var jsonContent = JsonConvert.SerializeObject(data, new JsonSerializerSettings()
+            {
+                ContractResolver = new PropertyNameSwitchResolver(false),
+                Formatting = Formatting.None
+            });
+
+
+            if (_showLog)
+            {
+                Debug.Log("[WebSocketConnector.SendStop] sending...");
+                Debug.Log($"[WebSocketConnector.SendStop] send json: {jsonContent}");
             }
 
             _webSocketConnector.TrySendText(jsonContent);

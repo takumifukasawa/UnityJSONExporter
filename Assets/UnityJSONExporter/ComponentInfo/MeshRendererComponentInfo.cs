@@ -31,7 +31,11 @@ namespace UnityJSONExporter
                         srcMaterial.GetInt("_ReceiveShadows")
                     );
                     return;
+                case "TextMeshPro/Distance Field":
+                    Material = null;
+                    break;
                 default:
+
                     throw new Exception("Unsupported shader: " + srcMaterial.shader.name);
             }
         }
