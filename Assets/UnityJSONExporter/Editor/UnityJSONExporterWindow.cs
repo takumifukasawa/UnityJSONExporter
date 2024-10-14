@@ -129,6 +129,8 @@ namespace UnityJSONExporter
 
             if (GUILayout.Button("Export Scene"))
             {
+                // どっちも書き出す
+                ExportHotReloadSceneJson();
                 ExportSceneJson();
             }
 

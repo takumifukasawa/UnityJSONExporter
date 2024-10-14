@@ -5,6 +5,10 @@ namespace UnityJSONExporter
 {
     public static class PropertyNameResolver
     {
+        //
+        // general
+        //
+        
         public const string ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X = "m_LocalPosition.x";
         public const string ANIMATION_CLIP_PROPERTY_LOCAL_POSITION_X_SHORTEN = "lp.x";
 
@@ -44,6 +48,10 @@ namespace UnityJSONExporter
         public const string LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A = "color.a";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_COLOR_A_SHORTEN = "c.a";
 
+        //
+        // material
+        //
+        
         public const string MATERIAL_PROPERTY_BASE_COLOR_R = "material._BaseColor.r";
         public const string MATERIAL_PROPERTY_BASE_COLOR_R_SHORTEN = "m.bc.r";
 
@@ -56,6 +64,10 @@ namespace UnityJSONExporter
         public const string MATERIAL_PROPERTY_BASE_COLOR_A = "material._BaseColor.a";
         public const string MATERIAL_PROPERTY_BASE_COLOR_A_SHORTEN = "m.bc.a";
 
+        //
+        // light
+        //
+        
         public const string LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY = "bounceIntensity";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_BOUNCE_INTENSITY_SHORTEN = "bi";
 
@@ -65,6 +77,17 @@ namespace UnityJSONExporter
         public const string LIGHT_CONTROL_CLIP_PROPERTY_RANGE = "range";
         public const string LIGHT_CONTROL_CLIP_PROPERTY_RANGE_SHORTEN = "r";
 
+        //
+        // camera
+        //
+        
+        public const string CAMERA_FIELD_OF_VIEW = "field of view";
+        public const string CAMERA_FIELD_OF_VIEW_SHORTEN = "fov";
+        
+        //
+        // create pair
+        //
+        
         private static Dictionary<string, string> _propertyPairs = new Dictionary<string, string>
         {
             {
@@ -146,6 +169,10 @@ namespace UnityJSONExporter
             {
                 LIGHT_CONTROL_CLIP_PROPERTY_RANGE,
                 LIGHT_CONTROL_CLIP_PROPERTY_RANGE_SHORTEN
+            },
+            {
+                CAMERA_FIELD_OF_VIEW,
+                CAMERA_FIELD_OF_VIEW_SHORTEN
             }
         };
 
