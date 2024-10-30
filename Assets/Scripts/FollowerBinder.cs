@@ -11,7 +11,6 @@ public class FollowerBinder : TimelineBindingObjectBase
     // Attract: 2
     [JsonProperty(PropertyName = "fm")]
     public int FollowMode = 0;
-
     [Range(0, 256)]
     [JsonProperty(PropertyName = "ic")]
     public float InstanceCount;
@@ -28,6 +27,12 @@ public class FollowerBinder : TimelineBindingObjectBase
 
     [JsonProperty(PropertyName = "amp")]
     public float AttractMinPower;
+
+    // [JsonProperty(PropertyName = "ap")]
+    // public float AttractPower;
+
+    [JsonProperty(PropertyName = "aa")]
+    public float AttractAmplitude;
 
     [JsonProperty(PropertyName = "dm")]
     public float DiffuseMixer = 0;
