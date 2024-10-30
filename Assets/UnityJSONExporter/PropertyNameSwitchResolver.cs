@@ -28,7 +28,7 @@ namespace UnityJSONExporter
             var jsonProperty = member.GetCustomAttributes<JsonPropertyAttribute>();
            
             // for debug
-            // Debug.Log($"property name: ${property.PropertyName}, minify name enabled: {_minifyNameEnabled}, original property name: {originalPropertyName[0]}");
+            // LoggerProxy.Log($"property name: ${property.PropertyName}, minify name enabled: {_minifyNameEnabled}, original property name: {originalPropertyName[0]}");
 
             if (jsonProperty != null && _minifyNameEnabled)
             {
@@ -40,7 +40,7 @@ namespace UnityJSONExporter
             }
 
             // for debug
-            // Debug.Log($"[PropertyNameSwitchResolver] old name: {originalPropertyName} -> new name: {property.PropertyName}");
+            // LoggerProxy.Log($"[PropertyNameSwitchResolver] old name: {originalPropertyName} -> new name: {property.PropertyName}");
 
             return property;
         }

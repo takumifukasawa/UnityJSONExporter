@@ -15,10 +15,10 @@ namespace UnityJSONExporter
             var a = Mathf.RoundToInt(color.a * 255);
 
             // for debug
-            // Debug.Log(r.ToString("X2"));
-            // Debug.Log(g.ToString("X2"));
-            // Debug.Log(b.ToString("X2"));
-            // Debug.Log(a.ToString("X2"));
+            // LoggerProxy.Log(r.ToString("X2"));
+            // LoggerProxy.Log(g.ToString("X2"));
+            // LoggerProxy.Log(b.ToString("X2"));
+            // LoggerProxy.Log(a.ToString("X2"));
 
             string hexColor = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", r, g, b, a);
 

@@ -42,7 +42,7 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class VolumeLayerBase
     {
-        [JsonProperty (PropertyName = "v")]
+        [JsonProperty (PropertyName = "l")]
         public string LayerType;
         
         public VolumeLayerBase(VolumeLayerType layerType)
@@ -54,7 +54,7 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class VolumeLayerBloom : VolumeLayerBase
     {
-        [JsonProperty(PropertyName = "i")]
+        [JsonProperty(PropertyName = "bl_i")]
         public float Intensity;
 
         public VolumeLayerBloom(Bloom bloom) : base(UnityJSONExporter.VolumeLayerType.Bloom)
@@ -66,7 +66,7 @@ namespace UnityJSONExporter
     [System.Serializable]
     public class VolumeLayerDepthOfField : VolumeLayerBase
     {
-        [JsonProperty(PropertyName = "fd")]
+        [JsonProperty(PropertyName = "dof_fd")]
         public float FocusDistance;
         
         public VolumeLayerDepthOfField(DepthOfField dof) : base(UnityJSONExporter.VolumeLayerType.DepthOfField)

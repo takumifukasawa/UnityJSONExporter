@@ -21,7 +21,7 @@ namespace Custom
         public override string ResolvePropertyName(string propertyName)
         {
             var res = JsonUtilities.ResolveJsonProperty(this, propertyName);
-            Debug.Log($"[CustomScript] type: {this.GetType()},ResolvePropertyName: {propertyName}, res: {res}");
+            LoggerProxy.Log($"[CustomScript] type: {this.GetType()},ResolvePropertyName: {propertyName}, res: {res}");
             return res;
         }
     }

@@ -101,10 +101,10 @@ namespace UnityJSONExporter
         /// <param name="t"></param>
         public void AssignProperty(Transform t)
         {
-            // Debug.Log("==========");
-            // Debug.Log(LocalPosition);
-            // Debug.Log(LocalRotationEuler);
-            // Debug.Log(LocalScale);
+            // LoggerProxy.Log("==========");
+            // LoggerProxy.Log(LocalPosition);
+            // LoggerProxy.Log(LocalRotationEuler);
+            // LoggerProxy.Log(LocalScale);
             if (_hasLocalPosition)
             {
                 t.localPosition = _localPosition;
@@ -157,7 +157,7 @@ namespace UnityJSONExporter
             foreach (var binding in bindings)
             {
                 // for debug
-                // Debug.Log($"binding type: {binding.type}, path: {binding.path}, property name: {binding.propertyName}");
+                // LoggerProxy.Log($"binding type: {binding.type}, path: {binding.path}, property name: {binding.propertyName}");
                 var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
                 var value = CurveUtilities.EvaluateCurve(time, curve);
 

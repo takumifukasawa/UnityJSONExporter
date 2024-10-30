@@ -183,7 +183,7 @@ namespace UnityJSONExporter
                 return _propertyPairs[propertyName];
             }
 
-            Debug.LogWarning($"[PropertyNameResolver.ResolveUnityBuiltinPropertyName] invalid property name: {propertyName}");
+            LoggerProxy.LogWarning($"[PropertyNameResolver.ResolveUnityBuiltinPropertyName] invalid property name: {propertyName}");
 
 
             return propertyName;

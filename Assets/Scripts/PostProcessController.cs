@@ -29,6 +29,7 @@ public class PostProcessController : TimelineBindingObjectBase
     [JsonProperty(PropertyName = "vi_i")]
     public float VignetteIntensity;
 
+    [Space(13)]
     [Header("Components")]
     [SerializeField]
     private VolumeProfile _volumeProfile;
@@ -59,10 +60,10 @@ public class PostProcessController : TimelineBindingObjectBase
     void Update()
     {
         // for debug
-        // Debug.Log("============");
-        // Debug.Log(_volumeProfile);
-        // Debug.Log(_bloomComponent);
-        // Debug.Log(_depthOfFieldComponent);
+        // LoggerProxy.Log("============");
+        // LoggerProxy.Log(_volumeProfile);
+        // LoggerProxy.Log(_bloomComponent);
+        // LoggerProxy.Log(_depthOfFieldComponent);
 
         //
         // update bloom

@@ -10,7 +10,7 @@ public class GBufferMaterialBinder : TimelineBindingObjectBase
     public override string ResolvePropertyName(string propertyName)
     {
         var res = JsonUtilities.ResolveJsonProperty(this, propertyName);
-        Debug.Log($"[GBufferMaterialBinder] type: {this.GetType()},ResolvePropertyName: {propertyName}, res: {res}");
+        LoggerProxy.Log($"[GBufferMaterialBinder] type: {this.GetType()},ResolvePropertyName: {propertyName}, res: {res}");
         return res;
     }
 }

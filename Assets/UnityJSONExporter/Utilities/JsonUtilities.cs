@@ -20,8 +20,8 @@ namespace UnityJSONExporter
             var type = typeof(T);
             var fields = type.GetFields();
             // for debug
-            Debug.Log($"[JsonUtilities.ResolveJsonProperty] ===================================");
-            Debug.Log($"[JsonUtilities.ResolveJsonProperty] type: {type}, target field: {targetField}, fields: {fields.Length}");
+            LoggerProxy.Log($"[JsonUtilities.ResolveJsonProperty] ===================================");
+            LoggerProxy.Log($"[JsonUtilities.ResolveJsonProperty] type: {type}, target field: {targetField}, fields: {fields.Length}");
 
             // 1: オブジェクト名
             // 2: フィールド
@@ -30,7 +30,7 @@ namespace UnityJSONExporter
             // オブジェクトの場合。color, vectorなど
             var matchFieldObject = System.Text.RegularExpressions.Regex.Match(targetField, fieldObjectPattern);
 
-            Debug.Log($"[JsonUtilities.ResolveJsonProperty] field: {targetField}, match object field: {matchFieldObject.Success}");
+            LoggerProxy.Log($"[JsonUtilities.ResolveJsonProperty] field: {targetField}, match object field: {matchFieldObject.Success}");
 
             // 一致するfieldを探索
             foreach (var field in fields)
@@ -50,7 +50,7 @@ namespace UnityJSONExporter
                 // for debug
                 // if (matchFieldObject.Success)
                 // {
-                //     Debug.Log($"[JsonUtilities.ResolveJsonProperty] field: {fieldName}, match object field: // {matchFieldObject.Groups[1].Value}, json property: {jsonProperty.PropertyName}");
+                //     LoggerProxy.Log($"[JsonUtilities.ResolveJsonProperty] field: {fieldName}, match object field: // {matchFieldObject.Groups[1].Value}, json property: {jsonProperty.PropertyName}");
                 // }
                 
                 // オブジェクトの場合

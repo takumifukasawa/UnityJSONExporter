@@ -24,11 +24,11 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "ts")]
         public List<TrackInfoBase> Tracks = new List<TrackInfoBase>();
 
-        public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ConvertAxis convertAxis, bool minifyPropertyName) : base(ComponentType.PlayableDirector)
+        public PlayableDirectorComponentInfo(PlayableDirector playableDirector, ConvertAxis convertAxis, bool minifyPropertyName, bool exportSignalEmitter) : base(ComponentType.PlayableDirector)
         {
             var asset = playableDirector.playableAsset;
 
-            // Debug.Log($"[PlayableDirectorComponentInfo] duration: {playableDirector.duration}");
+            // LoggerProxy.Log($"[PlayableDirectorComponentInfo] duration: {playableDirector.duration}");
 
             Duration = asset.duration;
             Name = asset.name;
@@ -41,7 +41,7 @@ namespace UnityJSONExporter
 
             foreach (var rootTrack in timelineAsset.GetRootTracks())
             {
-                Debug.Log($"[PlayableDirectorComponentInfo] root track: {rootTrack.name}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] root track: {rootTrack.name}");
                 if (rootTrack is GroupTrack groupTrack)
                 {
                     foreach (var childTrack in groupTrack.GetChildTracks())
@@ -51,8 +51,9 @@ namespace UnityJSONExporter
                                 childTrack,
                                 convertAxis,
                                 minifyPropertyName,
+                                exportSignalEmitter,
                                 out TrackInfoBase trackInfo
-                            ))
+                            ) && trackInfo != null)
                         {
                             Tracks.Add(trackInfo);
                         }
@@ -65,8 +66,9 @@ namespace UnityJSONExporter
                             rootTrack,
                             convertAxis,
                             minifyPropertyName,
+                            exportSignalEmitter,
                             out TrackInfoBase trackInfo
-                        ))
+                        ) && trackInfo != null)
                     {
                         Tracks.Add(trackInfo);
                     }
@@ -76,15 +78,15 @@ namespace UnityJSONExporter
             // foreach (var track in timelineAsset.GetOutputTracks())
             // {
             //     // for debug
-            //     Debug.Log($"[PlayableDirectorComponentInfo] ===== track name: {track.name}, muted: {track.muted}, type: {track.GetType()} =====");
+            //     LoggerProxy.Log($"[PlayableDirectorComponentInfo] ===== track name: {track.name}, muted: {track.muted}, type: {track.GetType()} =====");
 
             //     var bindingObject = playableDirector.GetGenericBinding(track);
             //     // for debug
             //     // track.outputs.ToList().ForEach(o =>
             //     // {
-            //     //     Debug.Log($"[PlayableDirectorComponentInfo] output source: {o.sourceObject}");
-            //     //     Debug.Log($"[PlayableDirectorComponentInfo] output stream name: {o.streamName}");
-            //     //     Debug.Log($"[PlayableDirectorComponentInfo] output target name: {o.outputTargetType}");
+            //     //     LoggerProxy.Log($"[PlayableDirectorComponentInfo] output source: {o.sourceObject}");
+            //     //     LoggerProxy.Log($"[PlayableDirectorComponentInfo] output stream name: {o.streamName}");
+            //     //     LoggerProxy.Log($"[PlayableDirectorComponentInfo] output target name: {o.outputTargetType}");
             //     // });
 
             //     // ミュート状態のtrackは使わないので書き出さない
@@ -104,16 +106,16 @@ namespace UnityJSONExporter
             //     //
             //     if (track.GetType() == typeof(MarkerTrack))
             //     {
-            //         Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}");
             //         var markerTrack = track as MarkerTrack;
             //         var outputs = markerTrack.outputs;
             //         var markers = markerTrack.GetMarkers();
-            //         Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}, marker track output count: {markerTrack.outputs.Count()}, outputs count: {outputs.Count()}, marker count: {markers.Count()}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}, marker track output count: {markerTrack.outputs.Count()}, outputs count: {outputs.Count()}, marker count: {markers.Count()}");
             //         var signalEmitterInfo = new List<SignalEmitterInfo>();
             //         foreach (var marker in markers)
             //         {
             //             var signalEmitter = marker as SignalEmitter;
-            //             Debug.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
+            //             LoggerProxy.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
             //             signalEmitterInfo.Add(new SignalEmitterInfo(signalEmitter.name, (float)signalEmitter.time));
             //         }
 
@@ -128,7 +130,7 @@ namespace UnityJSONExporter
             //     {
             //         // for debug
             //         // var boundObject = playableDirector.GetGenericBinding(track);
-            //         // Debug.Log($"[PlayableDirectorComponentInfo] animation track: {track.name}, bound object: {boundObject}");
+            //         // LoggerProxy.Log($"[PlayableDirectorComponentInfo] animation track: {track.name}, bound object: {boundObject}");
             //         var animationTrack = track as AnimationTrack;
             //         trackInfo = new AnimationTrackInfo(
             //             animationTrack,
@@ -145,7 +147,7 @@ namespace UnityJSONExporter
             //     //
             //     if (track.GetType() == typeof(LightControlTrack))
             //     {
-            //         Debug.Log($"[PlayableDirectorComponentInfo] light control track: {track.name}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] light control track: {track.name}");
             //         var lightControlTrack = track as LightControlTrack;
             //         trackInfo = new LightControlTrackInfo(
             //             lightControlTrack,
@@ -159,7 +161,7 @@ namespace UnityJSONExporter
             //     //
             //     if (track.GetType() == typeof(ControlTrack))
             //     {
-            //         Debug.Log($"[PlayableDirectorComponentInfo] control track: {track.name}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] control track: {track.name}");
             //         // TODO: 追加
             //     }
 
@@ -168,7 +170,7 @@ namespace UnityJSONExporter
             //     //
             //     if (track.GetType() == typeof(ActivationTrack))
             //     {
-            //         Debug.Log($"[PlayableDirectorComponentInfo] activation track: {track.name}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] activation track: {track.name}");
             //         var activationTrack = track as ActivationTrack;
             //         trackInfo = new ActivationTrackInfo(activationTrack, bindingObject.name);
             //     }
@@ -176,13 +178,13 @@ namespace UnityJSONExporter
             //     // object move and look at track
             //     if (track.GetType() == typeof(ObjectMoveAndLookAtTrack))
             //     {
-            //         Debug.Log($"[PlayableDirectorComponentInfo] object move and look at track: {track.name}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] object move and look at track: {track.name}");
             //         var objectMoveAndLookAtTrack = track as ObjectMoveAndLookAtTrack;
-            //         Debug.Log($"[PlayableDirectorComponentInfo] object move and look at track: {objectMoveAndLookAtTrack.name}");
-            //         Debug.Log($"[PlayableDirectorComponentInfo] binding object: {bindingObject.name}");
-            //         Debug.Log($"[PlayableDirectorComponentInfo] convert axis: {convertAxis}");
-            //         Debug.Log($"[PlayableDirectorComponentInfo] minify property name: {minifyPropertyName}");
-            //         Debug.Log($"[PlayableDirectorComponentInfo] typeof(UnityEngine.Object): {typeof(UnityEngine.Object)}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] object move and look at track: {objectMoveAndLookAtTrack.name}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] binding object: {bindingObject.name}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] convert axis: {convertAxis}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] minify property name: {minifyPropertyName}");
+            //         LoggerProxy.Log($"[PlayableDirectorComponentInfo] typeof(UnityEngine.Object): {typeof(UnityEngine.Object)}");
             //         trackInfo = new ObjectMoveAndLookAtTrackInfo(
             //             objectMoveAndLookAtTrack,
             //             bindingObject.name,
@@ -199,7 +201,7 @@ namespace UnityJSONExporter
             //     }
             //     else
             //     {
-            //         Debug.LogError($"[PlayableDirectorComponentInfo] unknown track type: {track.GetType()}");
+            //         LoggerProxy.LogError($"[PlayableDirectorComponentInfo] unknown track type: {track.GetType()}");
             //     }
             // }
         }
@@ -209,21 +211,22 @@ namespace UnityJSONExporter
             TrackAsset track,
             ConvertAxis convertAxis,
             bool minifyPropertyName,
+            bool exportSignalEmitter,
             out TrackInfoBase trackInfo
         )
         {
             trackInfo = null;
 
             // for debug
-            Debug.Log($"[PlayableDirectorComponentInfo] ===== track name: {track.name}, muted: {track.muted}, type: {track.GetType()} =====");
+            LoggerProxy.Log($"[PlayableDirectorComponentInfo] ===== track name: {track.name}, muted: {track.muted}, type: {track.GetType()} =====");
 
             var bindingObject = playableDirector.GetGenericBinding(track);
             // for debug
             // track.outputs.ToList().ForEach(o =>
             // {
-            //     Debug.Log($"[PlayableDirectorComponentInfo] output source: {o.sourceObject}");
-            //     Debug.Log($"[PlayableDirectorComponentInfo] output stream name: {o.streamName}");
-            //     Debug.Log($"[PlayableDirectorComponentInfo] output target name: {o.outputTargetType}");
+            //     LoggerProxy.Log($"[PlayableDirectorComponentInfo] output source: {o.sourceObject}");
+            //     LoggerProxy.Log($"[PlayableDirectorComponentInfo] output stream name: {o.streamName}");
+            //     LoggerProxy.Log($"[PlayableDirectorComponentInfo] output target name: {o.outputTargetType}");
             // });
 
             // ミュート状態のtrackは使わないので書き出さない
@@ -241,16 +244,20 @@ namespace UnityJSONExporter
             //
             if (track.GetType() == typeof(MarkerTrack))
             {
-                Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}");
+                if (!exportSignalEmitter)
+                {
+                    return true;
+                }
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}");
                 var markerTrack = track as MarkerTrack;
                 var outputs = markerTrack.outputs;
                 var markers = markerTrack.GetMarkers();
-                Debug.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}, marker track output count: {markerTrack.outputs.Count()}, outputs count: {outputs.Count()}, marker count: {markers.Count()}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}, marker track output count: {markerTrack.outputs.Count()}, outputs count: {outputs.Count()}, marker count: {markers.Count()}");
                 var signalEmitterInfo = new List<SignalEmitterInfo>();
                 foreach (var marker in markers)
                 {
                     var signalEmitter = marker as SignalEmitter;
-                    Debug.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
+                    LoggerProxy.Log($"[PlayableDirectorComponentInfo] signal emitter: {signalEmitter.name}");
                     signalEmitterInfo.Add(new SignalEmitterInfo(signalEmitter.name, (float)signalEmitter.time));
                 }
 
@@ -265,7 +272,7 @@ namespace UnityJSONExporter
             {
                 // for debug
                 // var boundObject = playableDirector.GetGenericBinding(track);
-                // Debug.Log($"[PlayableDirectorComponentInfo] animation track: {track.name}, bound object: {boundObject}");
+                // LoggerProxy.Log($"[PlayableDirectorComponentInfo] animation track: {track.name}, bound object: {boundObject}");
                 var animationTrack = track as AnimationTrack;
                 trackInfo = new AnimationTrackInfo(
                     animationTrack,
@@ -282,7 +289,7 @@ namespace UnityJSONExporter
             //
             if (track.GetType() == typeof(LightControlTrack))
             {
-                Debug.Log($"[PlayableDirectorComponentInfo] light control track: {track.name}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] light control track: {track.name}");
                 var lightControlTrack = track as LightControlTrack;
                 trackInfo = new LightControlTrackInfo(
                     lightControlTrack,
@@ -296,7 +303,7 @@ namespace UnityJSONExporter
             //
             if (track.GetType() == typeof(ControlTrack))
             {
-                Debug.Log($"[PlayableDirectorComponentInfo] control track: {track.name}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] control track: {track.name}");
                 // TODO: 追加
             }
 
@@ -305,7 +312,7 @@ namespace UnityJSONExporter
             //
             if (track.GetType() == typeof(ActivationTrack))
             {
-                Debug.Log($"[PlayableDirectorComponentInfo] activation track: {track.name}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] activation track: {track.name}");
                 var activationTrack = track as ActivationTrack;
                 trackInfo = new ActivationTrackInfo(activationTrack, bindingObject.name);
             }
@@ -313,13 +320,13 @@ namespace UnityJSONExporter
             // object move and look at track
             if (track.GetType() == typeof(ObjectMoveAndLookAtTrack))
             {
-                Debug.Log($"[PlayableDirectorComponentInfo] object move and look at track: {track.name}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] object move and look at track: {track.name}");
                 var objectMoveAndLookAtTrack = track as ObjectMoveAndLookAtTrack;
-                Debug.Log($"[PlayableDirectorComponentInfo] object move and look at track: {objectMoveAndLookAtTrack.name}");
-                Debug.Log($"[PlayableDirectorComponentInfo] binding object: {bindingObject.name}");
-                Debug.Log($"[PlayableDirectorComponentInfo] convert axis: {convertAxis}");
-                Debug.Log($"[PlayableDirectorComponentInfo] minify property name: {minifyPropertyName}");
-                Debug.Log($"[PlayableDirectorComponentInfo] typeof(UnityEngine.Object): {typeof(UnityEngine.Object)}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] object move and look at track: {objectMoveAndLookAtTrack.name}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] binding object: {bindingObject.name}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] convert axis: {convertAxis}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] minify property name: {minifyPropertyName}");
+                LoggerProxy.Log($"[PlayableDirectorComponentInfo] typeof(UnityEngine.Object): {typeof(UnityEngine.Object)}");
                 trackInfo = new ObjectMoveAndLookAtTrackInfo(
                     objectMoveAndLookAtTrack,
                     bindingObject.name,
@@ -332,7 +339,7 @@ namespace UnityJSONExporter
 
             if (trackInfo == null)
             {
-                Debug.LogError($"[PlayableDirectorComponentInfo] unknown track type: {track.GetType()}");
+                LoggerProxy.LogError($"[PlayableDirectorComponentInfo] unknown track type: {track.GetType()}");
                 return false;
             }
 

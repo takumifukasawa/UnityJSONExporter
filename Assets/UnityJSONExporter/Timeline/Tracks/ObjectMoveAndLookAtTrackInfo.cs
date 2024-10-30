@@ -22,9 +22,9 @@ namespace UnityJSONExporter
             foreach (var timelineClip in timelineClips)
             {
                 // for debug
-                Debug.Log($"[ObjectMoveAndLookAtTrackInfo.constructor] timeline clip : {timelineClip}");
-                Debug.Log($"[ObjectMoveAndLookAtTrackInfo.constructor] animation clip : {timelineClip.animationClip}");
-                Debug.Log($"[ObjectMoveAndLookAtTrackInfo.constructor] asset : {timelineClip.asset}");
+                LoggerProxy.Log($"[ObjectMoveAndLookAtTrackInfo.constructor] timeline clip : {timelineClip}");
+                LoggerProxy.Log($"[ObjectMoveAndLookAtTrackInfo.constructor] animation clip : {timelineClip.animationClip}");
+                LoggerProxy.Log($"[ObjectMoveAndLookAtTrackInfo.constructor] asset : {timelineClip.asset}");
                 var animationClip = timelineClip.animationClip;
                 Clips.Add(GenerateMoveAndLookAtTrackClipInfo(
                     timelineClip,
@@ -69,7 +69,7 @@ namespace UnityJSONExporter
                 clipBinding.PropertyName = binding.propertyName;
 
                 // for debug
-                Debug.Log($"[ObjectMoveAndLookAtTrackInfo.GenerateMoveAndLookAtTrackClipInfo] property: {binding.propertyName}");
+                LoggerProxy.Log($"[ObjectMoveAndLookAtTrackInfo.GenerateMoveAndLookAtTrackClipInfo] property: {binding.propertyName}");
 
                 // NOTE: AnimationClipの場合はいろんなpropertyの可能性があるのでガードしない（transform, material, ...)
                 // if (checkType != null && binding.type.FullName != checkType.FullName)
@@ -81,7 +81,7 @@ namespace UnityJSONExporter
 
                 foreach (var key in curve.keys)
                 {
-                    Debug.Log($"[ObjectMoveAndLookAtTrackInfo.GenerateMoveAndLookAtTrackClipInfo] property: {binding.propertyName}, key: {key.time}, {key.value}, {key.inTangent}, {key.outTangent}");
+                    LoggerProxy.Log($"[ObjectMoveAndLookAtTrackInfo.GenerateMoveAndLookAtTrackClipInfo] property: {binding.propertyName}, key: {key.time}, {key.value}, {key.inTangent}, {key.outTangent}");
 
                     // tmp
                     // float keyValue = convertTransformValue && TransformConverter.IsTransformProperty(binding.propertyName)
@@ -127,7 +127,10 @@ namespace UnityJSONExporter
                     clipKeyframe.Value = keyValue;
                     clipKeyframe.InTangent = key.inTangent;
                     clipKeyframe.OutTangent = key.outTangent;
-                    clipBinding.Keyframes.Add(clipKeyframe);
+                    // for obj
+                    // clipBinding.Keyframes.Add(clipKeyframe);
+                    // for arr
+                    clipBinding.AddKeyframe(key.time, keyValue, key.inTangent, key.outTangent);
                 }
             }
 

@@ -17,10 +17,11 @@ namespace UnityJSONExporter
         // public
         // ---------------------------------------------------------------------------------------------
 
-        public SceneInfoBuilder(ConvertAxis exportAxis, bool minifyPropertyName)
+        public SceneInfoBuilder(ConvertAxis exportAxis, bool minifyPropertyName, bool exportSignalEmitter)
         {
             _convertAxis = exportAxis;
             _minifyPropertyName = minifyPropertyName;
+            _exportSignalEmitter = exportSignalEmitter;
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace UnityJSONExporter
         public SceneInfo GenerateSceneInfo()
         {
             // for debug
-            // Debug.Log("[SceneInfo.GenerateSceneInfo]");
+            // LoggerProxy.Log("[SceneInfo.GenerateSceneInfo]");
 
             var sceneInfo = new SceneInfo();
             // sceneInfo.Name = SceneManager.GetActiveScene().name;
@@ -48,6 +49,7 @@ namespace UnityJSONExporter
 
         private ConvertAxis _convertAxis;
         private bool _minifyPropertyName;
+        private bool _exportSignalEmitter;
 
         /// <summary>
         /// 
@@ -166,7 +168,8 @@ namespace UnityJSONExporter
                 var playableDirectorComponentInfo = new PlayableDirectorComponentInfo(
                     playableDirector,
                     _convertAxis,
-                    _minifyPropertyName
+                    _minifyPropertyName,
+                    _exportSignalEmitter
                 );
                 componentInfoList.Add(playableDirectorComponentInfo);
             }

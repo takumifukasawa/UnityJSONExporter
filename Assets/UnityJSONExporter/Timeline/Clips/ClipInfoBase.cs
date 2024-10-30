@@ -33,8 +33,19 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "n")]
         public string PropertyName;
 
+        // for obj
+        // [JsonProperty(PropertyName = "k")]
+        // public List<ClipKeyframe> Keyframes = new List<ClipKeyframe>();
+       
+        // for arr
         [JsonProperty(PropertyName = "k")]
-        public List<ClipKeyframe> Keyframes = new List<ClipKeyframe>();
+        public List<List<float>> Keyframes = new List<List<float>>();
+
+        public void AddKeyframe(float t, float v, float it, float ot)
+        {
+            // Keyframes.Add(new ClipKeyframe(t, v, it, ot));
+            Keyframes.Add(new List<float> {t, v, it, ot});
+        }
     }
 
     /// <summary>

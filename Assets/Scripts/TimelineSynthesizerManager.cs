@@ -117,7 +117,7 @@ namespace TimelineSynthesizer
                 return;
             }
 
-            // Debug.Log($"diff: {(DateTime.Now - _prevDateTimeNow).TotalSeconds}");
+            // LoggerProxy.Log($"diff: {(DateTime.Now - _prevDateTimeNow).TotalSeconds}");
             _prevDateTimeNow = DateTime.Now;
 
             var data = new TimelineSynthesizerSeekData((float)_playableDirector.time);
@@ -130,8 +130,8 @@ namespace TimelineSynthesizer
 
             if (_showLog)
             {
-                Debug.Log("[WebSocketConnector.SendSeek] sending...");
-                Debug.Log($"[WebSocketConnector.SendSeek] send json: {jsonContent}");
+                LoggerProxy.Log("[WebSocketConnector.SendSeek] sending...");
+                LoggerProxy.Log($"[WebSocketConnector.SendSeek] send json: {jsonContent}");
             }
 
             _webSocketConnector.TrySendText(jsonContent);
@@ -156,8 +156,8 @@ namespace TimelineSynthesizer
 
             if (_showLog)
             {
-                Debug.Log("[WebSocketConnector.SendPlay] sending...");
-                Debug.Log($"[WebSocketConnector.SendPlay] send json: {jsonContent}");
+                LoggerProxy.Log("[WebSocketConnector.SendPlay] sending...");
+                LoggerProxy.Log($"[WebSocketConnector.SendPlay] send json: {jsonContent}");
             }
 
             _webSocketConnector.TrySendText(jsonContent);
@@ -183,8 +183,8 @@ namespace TimelineSynthesizer
 
             if (_showLog)
             {
-                Debug.Log("[WebSocketConnector.SendStop] sending...");
-                Debug.Log($"[WebSocketConnector.SendStop] send json: {jsonContent}");
+                LoggerProxy.Log("[WebSocketConnector.SendStop] sending...");
+                LoggerProxy.Log($"[WebSocketConnector.SendStop] send json: {jsonContent}");
             }
 
             _webSocketConnector.TrySendText(jsonContent);

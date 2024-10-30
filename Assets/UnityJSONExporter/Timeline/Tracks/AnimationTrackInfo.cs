@@ -22,11 +22,11 @@ namespace UnityJSONExporter
             foreach (var timelineClip in timelineClips)
             {
                 // for debug
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] timeline clip : {timelineClip}");
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] animation clip : {timelineClip.animationClip}");
-                // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset : {timelineClip.asset}");
-                // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {timelineClip.asset is UnityEngine.Timeline.ActivationPlayableAsset}");
-                // // Debug.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {typeof(timelineClip.asset)}");
+                // LoggerProxy.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] timeline clip : {timelineClip}");
+                // LoggerProxy.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] animation clip : {timelineClip.animationClip}");
+                // LoggerProxy.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset : {timelineClip.asset}");
+                // // LoggerProxy.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {timelineClip.asset is UnityEngine.Timeline.ActivationPlayableAsset}");
+                // // LoggerProxy.Log($"[PlayableDirectorComponentInfo.GenerateClipInfoList] asset is activation control playable: {typeof(timelineClip.asset)}");
                 var animationClip = timelineClip.animationClip;
                 Clips.Add(GenerateAnimationClipInfo(
                     timelineClip,
@@ -83,7 +83,7 @@ namespace UnityJSONExporter
                 var curve = AnimationUtility.GetEditorCurve(animationClip, binding);
 
                 var targetComponent = SceneUtilities.FindComponentInScene(binding.type);
-                Debug.Log(
+                LoggerProxy.Log(
                     $"[AnimationTrackInfo.GenerateAnimationClipInfo] timeline clip name: {timelineClip.displayName}, type: {checkType}, binding.propertyName: {binding.propertyName}, binding.type: {binding.type}, target component: {targetComponent}, component type: {targetComponent.GetType()}");
 
                 var type = targetComponent.GetType();
@@ -121,10 +121,13 @@ namespace UnityJSONExporter
                     clipKeyframe.Value = keyValue;
                     clipKeyframe.InTangent = key.inTangent;
                     clipKeyframe.OutTangent = key.outTangent;
-                    clipBinding.Keyframes.Add(clipKeyframe);
+                    // for obj
+                    // clipBinding.Keyframes.Add(clipKeyframe);
+                    // for arr
+                    clipBinding.AddKeyframe(key.time, keyValue, key.inTangent, key.outTangent);
                 }
 
-                Debug.Log($"[AnimationTrackInfo.GenerateAnimationClipInfo] clipBinding.PropertyName: {clipBinding.PropertyName}, keyframe num: {clipBinding.Keyframes.Count}");
+                LoggerProxy.Log($"[AnimationTrackInfo.GenerateAnimationClipInfo] clipBinding.PropertyName: {clipBinding.PropertyName}, keyframe num: {clipBinding.Keyframes.Count}");
             }
 
             return clipInfo;

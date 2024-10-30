@@ -63,7 +63,10 @@ namespace UnityJSONExporter
                     clipKeyframe.Value = keyValue;
                     clipKeyframe.InTangent = key.inTangent;
                     clipKeyframe.OutTangent = key.outTangent;
-                    clipBinding.Keyframes.Add(clipKeyframe);
+                    // for obj
+                    // clipBinding.Keyframes.Add(clipKeyframe);
+                    // for arr
+                    clipBinding.AddKeyframe(key.time, keyValue, key.inTangent, key.outTangent);
                 }
             }
 
