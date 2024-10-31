@@ -17,6 +17,15 @@ public class CustomPostProcessController : TimelineBindingObjectBase
     [JsonProperty(PropertyName = "vl_rs")]
     public float VolumetricLightRayStep;
     
+    // [Header("Glitch")]
+    // [Range(0, 1)]
+    // [JsonProperty(PropertyName = "gl_e")]
+    // public float GlitchEnabled;
+    
+    [Range(0, 1)]
+    [JsonProperty(PropertyName = "gl_r")]
+    public float GlitchRate;
+    
     [Header("Color Cover Pass")]
     [JsonProperty(PropertyName = "cbr")]
     [Range(0, 1)]
