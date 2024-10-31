@@ -42,6 +42,9 @@ public class FollowerBinder : TimelineBindingObjectBase
     
     [JsonProperty(PropertyName = "ffr")]
     public float FlowerFloorRange = 10;
+    
+    [JsonProperty(PropertyName = "ffo")]
+    public float FlowerFloorOffsetZ = 8;
  
     [Space(13)]
     [Header("Surface")]

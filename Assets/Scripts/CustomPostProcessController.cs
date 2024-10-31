@@ -12,6 +12,14 @@ public class CustomPostProcessController : TimelineBindingObjectBase
     [JsonProperty(PropertyName = "bl_i")]
     public float BloomIntensity;
     
+    [Space(13)]
+    [Header("Dof")]
+    [JsonProperty(PropertyName = "dof_fr")]
+    public float DofFocusRange;
+    
+    [JsonProperty(PropertyName = "dof_br")]
+    public float DofBokehRadius;
+    
     [Header("Volumetric Fog")]
     [Range(0, 1)]
     [JsonProperty(PropertyName = "vl_rs")]

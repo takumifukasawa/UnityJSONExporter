@@ -14,7 +14,7 @@ public class FloorBinder : TimelineBindingObjectBase
     
     [JsonProperty(PropertyName = "mr")]
     public float MorphRate = 0f;
-    
+ 
     public override string ResolvePropertyName(string propertyName)
     {
         var res = JsonUtilities.ResolveJsonProperty(this, propertyName);
