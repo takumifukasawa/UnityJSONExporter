@@ -31,6 +31,12 @@ namespace UnityJSONExporter
                         srcMaterial.GetInt("_ReceiveShadows")
                     );
                     return;
+                case "Universal Render Pipeline/Unlit":
+                    Material = new UnlitMaterialInfo(
+                        srcMaterial.name,
+                        srcMaterial.GetColor("_BaseColor")
+                    );
+                    return;
                 case "TextMeshPro/Distance Field":
                     Material = null;
                     break;
