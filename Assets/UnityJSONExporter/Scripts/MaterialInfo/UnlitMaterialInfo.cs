@@ -9,7 +9,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "c")]
         public string Color;
 
-        public UnlitMaterialInfo(string name, Color color) : base(name, MaterialType.None)
+        public UnlitMaterialInfo(string name, Color color) : base(name, MaterialType.Unlit)
         {
             Color = ColorUtilities.ConvertColorToHexString(color);
         }
