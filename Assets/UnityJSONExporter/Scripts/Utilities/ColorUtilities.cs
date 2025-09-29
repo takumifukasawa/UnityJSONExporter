@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace UnityJSONExporter
 {
@@ -27,21 +28,30 @@ namespace UnityJSONExporter
         public static string ConvertEmissionToHexString(Color hdr)
         {
             // 強さ（peak）
-            var intensity = Mathf.Max(hdr.r, Mathf.Max(hdr.g, hdr.b));
+            var intensity = Mathf.Sqrt(Mathf.Max(hdr.r, Mathf.Max(hdr.g, hdr.b)));
 
             // 色を0..1に正規化（強さで割る）
             Color color01 = (intensity > 0f) ? hdr / intensity : Color.black;
 
             // sRGB で出力（Web/UI向け）
-            color01 = color01.gamma;
+            // color01 = color01.gamma;
 
             // 0..255 へ
             var r = Mathf.RoundToInt(color01.r * 255);
             var g = Mathf.RoundToInt(color01.g * 255);
             var b = Mathf.RoundToInt(color01.b * 255);
             var i = Mathf.RoundToInt(intensity * 25.5f); // 強さを0..10に圧縮
+           
+            // clamp
+            var cr = Math.Clamp(r, 0, 255);
+            var cg = Math.Clamp(g, 0, 255);
+            var cb = Math.Clamp(b, 0, 255);
+            var ci = Math.Clamp(i, 0, 255);
+           
+            // for debug
+            // Debug.Log($"emission: {hdr} => {color01} x {intensity} => {r},{g},{b} x {i} -> {cr},{cg},{cg} x {ci}");
 
-            var hexColor = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", r, g, b, i);
+            var hexColor = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", cr, cg, cb, ci);
             return hexColor;
         }
     }
