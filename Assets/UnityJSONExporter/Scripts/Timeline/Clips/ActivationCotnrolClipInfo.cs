@@ -1,8 +1,10 @@
-﻿namespace UnityJSONExporter
+﻿using UnityEngine.Timeline;
+
+namespace UnityJSONExporter
 {
     public class ActivationControlClipInfo : ClipInfoBase
     {
-        public ActivationControlClipInfo(float s, float d) : base(ClipInfoType.ActivationControlClip, s, d)
+        public ActivationControlClipInfo(string name, float s, float d, TimelineClip.ClipExtrapolation clipExtrapolation) : base(name, ClipInfoType.ActivationControlClip, s, d, clipExtrapolation)
         {
         }
     }

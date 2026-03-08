@@ -26,6 +26,8 @@ namespace UnityJSONExporter
                     Material = new LitMaterialInfo(
                         srcMaterial.name,
                         srcMaterial.GetColor("_BaseColor"),
+                        srcMaterial.GetTextureScale("_BaseMap"),
+                        srcMaterial.GetTextureOffset("_BaseMap"),
                         srcMaterial.GetFloat("_Metallic"),
                         srcMaterial.GetFloat("_Glossiness"),
                         srcMaterial.GetColor("_EmissionColor"),

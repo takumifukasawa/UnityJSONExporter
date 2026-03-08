@@ -7,6 +7,8 @@
         LightControlTrack, // 2
         ActivationTrack, // 3
         MarkerTrack, // 4
-        ObjectMoveAndLookAtTrack // 5
+        // custom
+        ObjectMoveAndLookAtTrack, // 5
+        // HumanTrack // 6
     }
 }

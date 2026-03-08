@@ -19,6 +19,7 @@ public class ObjectMoveAndLookAtTrack : TrackAsset
         if (trackBinding == null)
             return;
         driver.AddFromName<ObjectMoveAndLookAtController>(trackBinding.gameObject, ObjectMoveAndLookAtController.LocalPositionPropertyName);
+        driver.AddFromName<ObjectMoveAndLookAtController>(trackBinding.gameObject, ObjectMoveAndLookAtController.UpVectorPropertyName);
         driver.AddFromName<ObjectMoveAndLookAtController>(trackBinding.gameObject, ObjectMoveAndLookAtController.LookAtTargetPropertyName);
 #endif
         base.GatherProperties(director, driver);

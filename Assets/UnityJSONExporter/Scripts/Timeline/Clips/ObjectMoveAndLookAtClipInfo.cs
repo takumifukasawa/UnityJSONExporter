@@ -1,6 +1,7 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
+using UnityEngine.Timeline;
 
 namespace UnityJSONExporter
 {
@@ -9,11 +10,27 @@ namespace UnityJSONExporter
     /// </summary>
     public class ObjectMoveAndLookAtClipInfo : ClipInfoBase
     {
-        [JsonProperty(PropertyName = "b")]
-        public List<ClipBinding> Bindings = new List<ClipBinding>();
+        [JsonIgnore]
+        // [JsonProperty(PropertyName = "b")]
+        // [CanBeNull]
+        public List<ClipBinding> Bindings = null;
 
-        public ObjectMoveAndLookAtClipInfo(float s, float d) : base(ClipInfoType.ObjectMoveAndLookAtClip, s, d)
+        public ObjectMoveAndLookAtClipInfo(string name, float s, float d, TimelineClip.ClipExtrapolation clipExtrapolation) : base(name, ClipInfoType.ObjectMoveAndLookAtClip, s, d, clipExtrapolation)
         {
+        }
+
+        public void AddBinding(ClipBinding binding)
+        {
+            if (Bindings == null) Bindings = new List<ClipBinding>();
+            Bindings.Add(binding);
+        }
+
+        protected internal override void WriteSubclassArray(JsonWriter w, JsonSerializer s)
+        {
+            // [親の情報, bindings]
+
+            if (Bindings != null && Bindings.Count > 0) s.Serialize(w, Bindings);
+            else w.WriteNull();
         }
     }
 }

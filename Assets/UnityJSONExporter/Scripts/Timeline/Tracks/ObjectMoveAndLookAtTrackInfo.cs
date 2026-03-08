@@ -9,13 +9,14 @@ namespace UnityJSONExporter
     public class ObjectMoveAndLookAtTrackInfo : ClipTrackInfoBase
     {
         public ObjectMoveAndLookAtTrackInfo(
+            string name,
             ObjectMoveAndLookAtTrack track,
             string targetName,
             ConvertAxis convertAxis,
             bool minifyPropertyName,
             Type checkType = null,
             bool convertTransformValue = false
-        ) : base(TrackInfoType.ObjectMoveAndLookAtTrack, targetName)
+        ) : base(name, TrackInfoType.ObjectMoveAndLookAtTrack, targetName)
         {
             var timelineClips = track.GetClips();
 
@@ -57,14 +58,19 @@ namespace UnityJSONExporter
             var bindings = AnimationUtility.GetCurveBindings(animationClip);
 
             var clipInfo = new ObjectMoveAndLookAtClipInfo(
+                timelineClip.displayName,
                 (float)timelineClip.start,
-                (float)timelineClip.duration
+                (float)timelineClip.duration,
+                timelineClip.postExtrapolationMode
             );
+
+            // timeScale の逆数でkeyframe時間を変換
+            float timeScaleInverse = 1.0f / (float)timelineClip.timeScale;
 
             foreach (var binding in bindings)
             {
                 var clipBinding = new ClipBinding();
-                clipInfo.Bindings.Add(clipBinding);
+                clipInfo.AddBinding(clipBinding);
 
                 clipBinding.PropertyName = binding.propertyName;
 
@@ -117,20 +123,47 @@ namespace UnityJSONExporter
                             }
 
                             break;
+                        case "UpVector.x":
+                            keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.X, keyValue);
+                            if (minifyPropertyName)
+                            {
+                                clipBinding.PropertyName = "uv.x";
+                            }
+
+                            break;
+                        case "UpVector.y":
+                            keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Y, keyValue);
+                            if (minifyPropertyName)
+                            {
+                                clipBinding.PropertyName = "uv.y";
+                            }
+
+                            break;
+                        case "UpVector.z":
+                            keyValue = TransformConverter.ConvertValue(convertAxis, TransformConverter.TransformType.Position, TransformConverter.AxisDirection.Z, keyValue);
+                            if (minifyPropertyName)
+                            {
+                                clipBinding.PropertyName = "uv.z";
+                            }
+
+                            break;
                         default:
                             throw new Exception($"[ObjectMoveAndLookAtTrackInfo.GenerateMoveAndLookAtTrackClipInfo] invalid property: {binding.propertyName}");
                     }
 
 
+                    // keyframe時間にtimeScaleの逆数を適用
+                    float adjustedTime = key.time * timeScaleInverse;
+
                     var clipKeyframe = new ClipKeyframe();
-                    clipKeyframe.Time = key.time;
+                    clipKeyframe.Time = adjustedTime;
                     clipKeyframe.Value = keyValue;
                     clipKeyframe.InTangent = key.inTangent;
                     clipKeyframe.OutTangent = key.outTangent;
                     // for obj
                     // clipBinding.Keyframes.Add(clipKeyframe);
                     // for arr
-                    clipBinding.AddKeyframe(key.time, keyValue, key.inTangent, key.outTangent);
+                    clipBinding.AddKeyframe(adjustedTime, keyValue, key.inTangent, key.outTangent);
                 }
             }
 

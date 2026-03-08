@@ -29,7 +29,7 @@ namespace UnityJSONExporter
         private bool _exportSignalEmitter;
 
         [SerializeField]
-        private ConvertAxis _convertAxis = ConvertAxis.Default;
+        private ConvertAxis _convertAxis = ConvertAxis.RightHand;
 
         [SerializeField]
         private string _fileName = "file_name";
@@ -131,7 +131,7 @@ namespace UnityJSONExporter
 
             GUILayout.Space(13);
 
-            if (GUILayout.Button("Export Scene"))
+            if (GUILayout.Button("Export Scenes"))
             {
                 // どっちも書き出す
                 ExportHotReloadSceneJson();
@@ -154,6 +154,73 @@ namespace UnityJSONExporter
             GetWindow<UnityJSONExporterWindow>("Unity JSON Exporter Window");
         }
 
+        /// <summary>
+        /// ショートカットでExport Sceneを実行
+        /// </summary>
+        [MenuItem("Tools/Unity JSON Exporter/Export Scenes %#w")]
+        public static void ExportScenesFromShortcut()
+        {
+            var window = GetWindow<UnityJSONExporterWindow>();
+            if (window != null)
+            {
+                window.ExportHotReloadSceneJson();
+                window.ExportSceneJson();
+            }
+        }
+
+        /// <summary>
+        /// ショートカットでExport Hot Reload Sceneを実行
+        /// </summary>
+        [MenuItem("Tools/Unity JSON Exporter/Export Hot Reload Scene %#q")]
+        public static void ExportHotReloadSceneFromShortcut()
+        {
+            var window = GetWindow<UnityJSONExporterWindow>();
+            if (window != null)
+            {
+                window.ExportHotReloadSceneJson();
+            }
+        }
+
+        /// <summary>
+        /// ショートカットでWebSocket接続を実行
+        /// </summary>
+        [MenuItem("Tools/Unity JSON Exporter/Connect WebSocket %&j")]
+        public static void ConnectWebSocketFromShortcut()
+        {
+            var window = GetWindow<UnityJSONExporterWindow>();
+            if (window != null)
+            {
+                if (window._webSocketConnector != null)
+                {
+                    window._webSocketConnector.Connect();
+                }
+                else
+                {
+                    LoggerProxy.Log("[UnityJSONExporterWindow] WebSocket Connector is not set");
+                }
+            }
+        }
+
+        /// <summary>
+        /// ショートカットでWebSocket切断を実行
+        /// </summary>
+        [MenuItem("Tools/Unity JSON Exporter/Close WebSocket %&k")]
+        public static void CloseWebSocketFromShortcut()
+        {
+            var window = GetWindow<UnityJSONExporterWindow>();
+            if (window != null)
+            {
+                if (window._webSocketConnector != null)
+                {
+                    window._webSocketConnector.Close();
+                }
+                else
+                {
+                    LoggerProxy.Log("[UnityJSONExporterWindow] WebSocket Connector is not set");
+                }
+            }
+        }
+
         private string SAVE_KEY = "UnityJSONExporterWindowSaveData";
 
         /// <summary>
@@ -162,13 +229,6 @@ namespace UnityJSONExporter
         private void OnEnable()
         {
             EditorApplication.update += OnUpdateEditor;
-            // var defaultSaveData = JsonConvert.SerializeObject(this, new JsonSerializerSettings()
-            // {
-            //     ContractResolver = new PropertyNameSwitchResolver(false),
-            //     Formatting = Formatting.None
-            // });
-            // var saveDataString = EditorPrefs.GetString(SAVE_KEY, defaultSaveData);
-            // var saveData = JsonConvert.DeserializeObject<UnityJSONExporterWindow>(saveDataString);
         }
 
         /// <summary>
@@ -177,12 +237,6 @@ namespace UnityJSONExporter
         private void OnDisable()
         {
             EditorApplication.update -= OnUpdateEditor;
-            // var saveData = JsonConvert.SerializeObject(this, new JsonSerializerSettings()
-            // {
-            //     ContractResolver = new PropertyNameSwitchResolver(false),
-            //     Formatting = Formatting.None
-            // });
-            // EditorPrefs.SetString(SAVE_KEY, saveData);
         }
 
         /// <summary>
@@ -237,7 +291,8 @@ namespace UnityJSONExporter
                 var exportSceneMessageContent = JsonConvert.SerializeObject(new ExportSceneMessage(), new JsonSerializerSettings()
                 {
                     ContractResolver = new PropertyNameSwitchResolver(false),
-                    Formatting = Formatting.None
+                    Formatting = Formatting.None,
+                    NullValueHandling = NullValueHandling.Ignore
                 });
                 _webSocketConnector.TrySendText(exportSceneMessageContent);
             }
@@ -262,7 +317,8 @@ namespace UnityJSONExporter
                 var exportSceneMessageContent = JsonConvert.SerializeObject(new ExportHotReloadSceneMessage(), new JsonSerializerSettings()
                 {
                     ContractResolver = new PropertyNameSwitchResolver(false),
-                    Formatting = Formatting.None
+                    Formatting = Formatting.None,
+                    NullValueHandling = NullValueHandling.Ignore
                 });
                 _webSocketConnector.TrySendText(exportSceneMessageContent);
             }
@@ -291,14 +347,20 @@ namespace UnityJSONExporter
 
             var sceneInfo = (new SceneInfoBuilder(_convertAxis, _minifyPropertyName, _exportSignalEmitter)).GenerateSceneInfo();
 
-            // var jsonContent = JsonUtility.ToJson(sceneInfo);
-            // var jsonContent = JsonConvert.SerializeObject(sceneInfo, _prettyFormat ? Formatting.Indented : Formatting.None);
-            var jsonContent = JsonConvert.SerializeObject(sceneInfo, new JsonSerializerSettings()
+            string jsonContent;
+            var stringWriter = new StringWriter();
+            using (var jsonWriter = new CustomJsonWriter(stringWriter))
             {
-                ContractResolver = new PropertyNameSwitchResolver(_minifyPropertyName),
-                Formatting = _prettyFormat ? Formatting.Indented : Formatting.None,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore // vector3のnormalizedの無限参照対策
-            });
+                jsonWriter.Formatting = _prettyFormat ? Formatting.Indented : Formatting.None;
+                var serializer = JsonSerializer.Create(new JsonSerializerSettings()
+                {
+                    ContractResolver = new PropertyNameSwitchResolver(_minifyPropertyName),
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // vector3のnormalizedの無限参照対策
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+                serializer.Serialize(jsonWriter, sceneInfo);
+            }
+            jsonContent = stringWriter.ToString();
 
             if (_dryRun)
             {
@@ -342,5 +404,14 @@ namespace UnityJSONExporter
         {
             public string Type = "exportHotReloadScene";
         }
+
+        // JsonSerializerSettings BuildSerializerSettings()
+        // {
+        //     return new JsonSerializerSettings()
+        //     {
+        //         ContractResolver = new PropertyNameSwitchResolver(false),
+        //         Formatting = Formatting.None
+        //     };
+        // }
     }
 }

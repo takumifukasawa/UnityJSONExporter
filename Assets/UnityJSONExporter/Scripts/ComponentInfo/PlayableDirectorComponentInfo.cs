@@ -1,4 +1,4 @@
-﻿// #define LIGHT_CONTROL_TRACK_ENABLED
+﻿#define LIGHT_CONTROL_TRACK_ENABLED
 
 using System;
 using System.Collections.Generic;
@@ -250,6 +250,7 @@ namespace UnityJSONExporter
                 {
                     return true;
                 }
+
                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] marker track: {track.name}");
                 var markerTrack = track as MarkerTrack;
                 var outputs = markerTrack.outputs;
@@ -263,7 +264,7 @@ namespace UnityJSONExporter
                     signalEmitterInfo.Add(new SignalEmitterInfo(signalEmitter.name, (float)signalEmitter.time));
                 }
 
-                trackInfo = new MarkerTrackInfo(signalEmitterInfo);
+                trackInfo = new MarkerTrackInfo(track.name, signalEmitterInfo);
             }
 
 
@@ -277,6 +278,7 @@ namespace UnityJSONExporter
                 // LoggerProxy.Log($"[PlayableDirectorComponentInfo] animation track: {track.name}, bound object: {boundObject}");
                 var animationTrack = track as AnimationTrack;
                 trackInfo = new AnimationTrackInfo(
+                    track.name,
                     animationTrack,
                     bindingObject.name,
                     convertAxis,
@@ -295,13 +297,14 @@ namespace UnityJSONExporter
                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] light control track: {track.name}");
                 var lightControlTrack = track as LightControlTrack;
                 trackInfo = new LightControlTrackInfo(
+                    track.name,
                     lightControlTrack,
                     bindingObject.name,
                     minifyPropertyName
                 );
             }
 #endif
-            
+
             //
             // control track
             //
@@ -318,10 +321,12 @@ namespace UnityJSONExporter
             {
                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] activation track: {track.name}");
                 var activationTrack = track as ActivationTrack;
-                trackInfo = new ActivationTrackInfo(activationTrack, bindingObject.name);
+                trackInfo = new ActivationTrackInfo(track.name, activationTrack, bindingObject.name);
             }
 
+            //
             // object move and look at track
+            //
             if (track.GetType() == typeof(ObjectMoveAndLookAtTrack))
             {
                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] object move and look at track: {track.name}");
@@ -332,6 +337,7 @@ namespace UnityJSONExporter
                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] minify property name: {minifyPropertyName}");
                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] typeof(UnityEngine.Object): {typeof(UnityEngine.Object)}");
                 trackInfo = new ObjectMoveAndLookAtTrackInfo(
+                    track.name,
                     objectMoveAndLookAtTrack,
                     bindingObject.name,
                     convertAxis,
@@ -340,6 +346,28 @@ namespace UnityJSONExporter
                     true
                 );
             }
+
+//             //
+//             // human track
+//             //
+//             if (track.GetType() == typeof(HumanTrack))
+//             {
+//                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] human track: {track.name}");
+//                 var humanTrack = track as HumanTrack;
+//                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] human track: {humanTrack.name}");
+//                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] binding object: {bindingObject.name}");
+//                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] convert axis: {convertAxis}");
+//                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] minify property name: {minifyPropertyName}");
+//                 LoggerProxy.Log($"[PlayableDirectorComponentInfo] typeof(UnityEngine.Object): {typeof(UnityEngine.Object)}");
+//                 trackInfo = new HumanTrackInfo(
+//                     humanTrack,
+//                     bindingObject.name,
+//                     convertAxis,
+//                     minifyPropertyName,
+//                     typeof(UnityEngine.Object),
+//                     true
+//                 );
+//             }
 
             if (trackInfo == null)
             {

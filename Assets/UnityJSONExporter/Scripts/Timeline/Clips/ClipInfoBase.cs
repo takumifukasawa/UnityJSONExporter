@@ -1,72 +1,67 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using UnityEngine.Timeline;
 
 namespace UnityJSONExporter
 {
-    public enum ClipInfoType
-    {
-        None, // 0
-        AnimationClip, // 1
-        LightControlClip, // 2
-        ActivationControlClip, // 3
-        SignalEmitter, // 4
-        ObjectMoveAndLookAtClip // 5
-    }
-    
-    public class ClipKeyframe
-    {
-        [JsonProperty(PropertyName = "t")]
-        public float Time;
-
-        [JsonProperty(PropertyName = "v")]
-        public float Value;
-
-        [JsonProperty(PropertyName = "i")]
-        public float InTangent;
-
-        [JsonProperty(PropertyName = "o")]
-        public float OutTangent;
-    }
-
-    public class ClipBinding
-    {
-        [JsonProperty(PropertyName = "n")]
-        public string PropertyName;
-
-        // for obj
-        // [JsonProperty(PropertyName = "k")]
-        // public List<ClipKeyframe> Keyframes = new List<ClipKeyframe>();
-       
-        // for arr
-        [JsonProperty(PropertyName = "k")]
-        public List<List<float>> Keyframes = new List<List<float>>();
-
-        public void AddKeyframe(float t, float v, float it, float ot)
-        {
-            // Keyframes.Add(new ClipKeyframe(t, v, it, ot));
-            Keyframes.Add(new List<float> {t, v, it, ot});
-        }
-    }
-
     /// <summary>
     /// 
     /// </summary>
+    [JsonConverter(typeof(ClipInfoBaseAsArrayConverter))]
     public class ClipInfoBase
     {
-        [JsonProperty(PropertyName = "t")]
+        [JsonIgnore]
+        public string Name;
+        
+        [JsonIgnore]
+        // [JsonProperty(PropertyName = "t")]
         public ClipInfoType Type;
 
-        [JsonProperty(PropertyName = "s")]
+        [JsonIgnore]
+        // [JsonProperty(PropertyName = "s")]
         public float Start;
 
-        [JsonProperty(PropertyName = "d")]
+        [JsonIgnore]
+        // [JsonProperty(PropertyName = "d")]
         public float Duration;
 
-        public ClipInfoBase(ClipInfoType type, float s, float d)
+        [JsonIgnore]
+        public TimelineClip.ClipExtrapolation PostExtrapolation = TimelineClip.ClipExtrapolation.None;
+
+        public ClipInfoBase(string name, ClipInfoType type, float s, float d, TimelineClip.ClipExtrapolation postExtrapolation)
         {
+            Name = name;
             Type = type;
             Start = s;
             Duration = d;
+            PostExtrapolation = postExtrapolation;
         }
+
+        protected internal virtual void WriteSubclassArray(JsonWriter w, JsonSerializer s)
+        {
+        }
+    }
+
+
+    public sealed class ClipInfoBaseAsArrayConverter : JsonConverter<ClipInfoBase>
+    {
+        public override void WriteJson(JsonWriter w, ClipInfoBase v, JsonSerializer s)
+        {
+            w.WriteStartArray();
+            w.WriteValue(v.Name);
+            w.WriteValue((int)v.Type);
+            JsonUtilities.WriteRoundedValue(w, v.Start, JsonUtilities.DefaultRoundingDecimals);
+            JsonUtilities.WriteRoundedValue(w, v.Duration, JsonUtilities.DefaultRoundingDecimals);
+            w.WriteValue((int)v.PostExtrapolation);
+
+            v.WriteSubclassArray(w, s); // ← サブクラスの追記
+            w.WriteEndArray();
+        }
+
+        public override bool CanRead => false;
+
+        public override ClipInfoBase ReadJson(JsonReader r, Type t, ClipInfoBase ex, bool hasEx, JsonSerializer s)
+            => throw new NotSupportedException();
     }
 }

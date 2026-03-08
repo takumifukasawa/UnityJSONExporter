@@ -8,7 +8,7 @@ namespace UnityJSONExporter
         [JsonProperty(PropertyName = "ses")]
         public List<SignalEmitterInfo> SignalEmitters = new List<SignalEmitterInfo>();
 
-        public MarkerTrackInfo(List<SignalEmitterInfo> signalEmitterInfos) : base(TrackInfoType.MarkerTrack)
+        public MarkerTrackInfo(string name, List<SignalEmitterInfo> signalEmitterInfos) : base(name, TrackInfoType.MarkerTrack)
         {
             SignalEmitters = signalEmitterInfos;
         }

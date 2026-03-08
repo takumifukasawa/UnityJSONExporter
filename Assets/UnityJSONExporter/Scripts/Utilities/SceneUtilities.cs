@@ -7,7 +7,11 @@ namespace UnityJSONExporter
     {
         public static Component FindComponentInScene(Type componentType)
         {
-            var allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+            // var allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+            var allObjects = UnityEngine.Object.FindObjectsByType<GameObject>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
             foreach (var obj in allObjects)
             {
                 var component = obj.GetComponent(componentType);
@@ -19,6 +23,5 @@ namespace UnityJSONExporter
 
             return null;
         }
-
     }
 }

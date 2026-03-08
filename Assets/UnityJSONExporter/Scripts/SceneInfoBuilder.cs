@@ -92,12 +92,16 @@ namespace UnityJSONExporter
         /// <returns></returns>
         void InternalRecursiveBuildGameObjectInfo(GameObject go, ref ObjectInfo parent)
         {
+            Debug.Log($"[SceneInfoBuilder.InternalRecursiveBuildGameObjectInfo] go: {go.name}, has exclude tag: {go.tag.Equals(EXCLUDE_TAG)}");
             var objectInfo = GenerateObjectInfo(go);
             parent.AddChild(objectInfo);
 
             foreach (Transform child in go.transform)
             {
-                InternalRecursiveBuildGameObjectInfo(child.gameObject, ref objectInfo);
+                if (!child.gameObject.tag.Equals(EXCLUDE_TAG))
+                {
+                    InternalRecursiveBuildGameObjectInfo(child.gameObject, ref objectInfo);
+                }
             }
         }
 
@@ -109,7 +113,12 @@ namespace UnityJSONExporter
         ObjectInfo GenerateObjectInfo(GameObject go)
         {
             var objectInfo = new ObjectInfo(go, _convertAxis);
-            objectInfo.Components = ParseComponents(go);
+            var components = ParseComponents(go);
+            if (components.Count > 0)
+            {
+                objectInfo.AddComponentRange(components);
+            }
+
             return objectInfo;
         }
 
@@ -142,14 +151,16 @@ namespace UnityJSONExporter
                 componentInfoList.Add(lightComponentInfo);
             }
 
-            //
-            // mesh renderer
-            //
-            if (go.TryGetComponent(out MeshRenderer meshRenderer))
-            {
-                var meshRendererComponentInfo = new MeshRendererComponentInfo(meshRenderer);
-                componentInfoList.Add(meshRendererComponentInfo);
-            }
+            // CUSTOM_BEGIN comment out
+            // //
+            // // mesh renderer
+            // //
+            // if (go.TryGetComponent(out MeshRenderer meshRenderer))
+            // {
+            //     var meshRendererComponentInfo = new MeshRendererComponentInfo(meshRenderer);
+            //     componentInfoList.Add(meshRendererComponentInfo);
+            // }
+            // CUSTOM_END comment out
 
             //
             // mesh filter
@@ -175,16 +186,16 @@ namespace UnityJSONExporter
             }
 
             //
-            // volume (post processing)
+            // post processing
             //
-            if (go.TryGetComponent(out Volume volume))
+            if (go.TryGetComponent(out PostProcessController postProcessController))
             {
-                var volumeComponentInfo = new VolumeComponentInfo(volume);
-                componentInfoList.Add(volumeComponentInfo);
+                var postProcessComponentInfo = new PostProcessControllerComponentInfo(postProcessController);
+                componentInfoList.Add(postProcessComponentInfo);
             }
-            
-            // custom components
-            
+
+            // custom components ---
+
             //
             // object move and look at controller
             //
@@ -193,6 +204,34 @@ namespace UnityJSONExporter
                 var objectMoveAndLookAtControllerComponentInfo = new ObjectMoveAndLookAtControllerComponentInfo(objectMoveAndLookAtController);
                 componentInfoList.Add(objectMoveAndLookAtControllerComponentInfo);
             }
+
+            //
+            // fbm noise texture controller
+            //
+            if (go.TryGetComponent(out FbmNoiseTextureController fbmNoiseTextureController) && fbmNoiseTextureController.ExportComponentHierarchy)
+            {
+                var fbmNoiseTextureControllerComponentInfo = new FbmNoiseTextureControllerComponentInfo(fbmNoiseTextureController);
+                componentInfoList.Add(fbmNoiseTextureControllerComponentInfo);
+            }
+
+            //
+            // g-buffer material controller
+            //
+            if (go.TryGetComponent(out GBufferMaterialController gBufferMaterialController) && gBufferMaterialController.ExportComponentHierarchy)
+            {
+                var gBufferMaterialControllerComponentInfo = new GBufferMaterialControllerComponentInfo(gBufferMaterialController);
+                componentInfoList.Add(gBufferMaterialControllerComponentInfo);
+            }
+
+            // //
+            // // human controller
+            // //
+            // // if (go.TryGetComponent(out HumanController humanController) && humanController.ExportComponentHierarchy)
+            // if (go.TryGetComponent(out HumanController humanController))
+            // {
+            //     var humanControllerComponentInfo = new HumanControllerComponentInfo(humanController);
+            //     componentInfoList.Add(humanControllerComponentInfo);
+            // }
 
             return componentInfoList;
         }

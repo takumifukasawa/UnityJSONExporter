@@ -8,7 +8,13 @@ public class ObjectMoveAndLookAtBehaviour : PlayableBehaviour
     // property name を string で指定する際に分かりやすくするため
 
     public Vector3 LocalPosition;
+    public Vector3 UpVector;
     public ExposedReference<Transform> LookAtTarget;
+
+    public ObjectMoveAndLookAtBehaviour()
+    {
+        UpVector = new Vector3(0, 1, 0);
+    }
     
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {

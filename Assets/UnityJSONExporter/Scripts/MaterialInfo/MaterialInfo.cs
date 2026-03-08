@@ -11,17 +11,23 @@ namespace UnityJSONExporter
     }
 
     [System.Serializable]
+    [JsonConverter(typeof(MaterialInfoArrayConverter))]
     public class MaterialInfo
     {
-        [JsonProperty(PropertyName = "n")]
-        public string Name;
+        // CUSTOM_BEGIN comment out
+        // [JsonProperty(PropertyName = "n")]
+        // public string Name;
+        // CUSTOM_END
 
         [JsonProperty(PropertyName = "t")]
         public MaterialType Type;
 
         public MaterialInfo(string name, MaterialType type)
         {
-            Name = name;
+            // CUSTOM_BEGIN comment out
+            // 一旦nameは使わない
+            // Name = name;
+            // CUSTOM_END
             Type = type;
         }
     }

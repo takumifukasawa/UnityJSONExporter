@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 namespace UnityJSONExporter
 {
     [System.Serializable]
+    [JsonConverter(typeof(MaterialInfoArrayConverter))]
     public class UnlitMaterialInfo : MaterialInfo
     {
         [JsonProperty(PropertyName = "c")]

@@ -7,9 +7,10 @@ namespace UnityJSONExporter
     public class ActivationTrackInfo : ClipTrackInfoBase
     {
         public ActivationTrackInfo(
+            string name,
             ActivationTrack track,
             string targetName
-        ) : base(TrackInfoType.ActivationTrack, targetName)
+        ) : base(name, TrackInfoType.ActivationTrack, targetName)
         {
             var timelineClips = track.GetClips();
             foreach (var timelineClip in timelineClips)
@@ -20,12 +21,14 @@ namespace UnityJSONExporter
                 ));
             }
         }
-        
+
         ClipInfoBase GenerateActivationControlClipInfo(TimelineClip timelineClip)
         {
             var clipInfo = new ActivationControlClipInfo(
+                timelineClip.displayName,
                 (float)timelineClip.start,
-                (float)timelineClip.duration
+                (float)timelineClip.duration,
+                timelineClip.postExtrapolationMode
             );
 
             return clipInfo;

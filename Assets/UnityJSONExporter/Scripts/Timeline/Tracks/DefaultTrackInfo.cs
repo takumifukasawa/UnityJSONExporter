@@ -5,7 +5,7 @@ namespace UnityJSONExporter
 {
     public class DefaultTrackInfo : ClipTrackInfoBase
     {
-        public DefaultTrackInfo(TrackInfoType type, string targetName) : base(type, targetName)
+        public DefaultTrackInfo(string name, TrackInfoType type, string targetName) : base(name, type, targetName)
         {
         }
     }

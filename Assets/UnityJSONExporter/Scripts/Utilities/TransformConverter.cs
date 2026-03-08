@@ -4,34 +4,9 @@ using UnityEngine;
 
 namespace UnityJSONExporter
 {
-    public class RawVector3
-    {
-        public float x;
-        public float y;
-        public float z;
-        public RawVector3(float x, float y, float z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
 
-        public static RawVector3 zero
-        {
-            get { return new RawVector3(0, 0, 0); }
-        }
-        
-        public static RawVector3 fromVector3(Vector3 v)
-        {
-            return new RawVector3(v.x, v.y, v.z);
-        }
-        
-        public static Vector3 toVector3(RawVector3 v)
-        {
-            return new Vector3(v.x, v.y, v.z);
-        }
-    }
-    
+
+
     public static class TransformConverter
     {
         /// <summary>
@@ -95,14 +70,14 @@ namespace UnityJSONExporter
 
                     return value;
 
-                case ConvertAxis.Default:
-                    return value;
+                // case ConvertAxis.Default:
+                //     return value;
 
                 default:
                     break;
             }
 
-            throw new Exception("invalid params");
+            throw new Exception($"[TransformConverter.ConvertAxis] invalid params: convertAxis={convertAxis}, transformType={transformType}, axisDirection={axisDirection}, value={value}");
         }
 
         /// <summary>
@@ -147,9 +122,53 @@ namespace UnityJSONExporter
             {
                 case ConvertAxis.RightHand:
                     return new Vector4Info(quaternion.x, quaternion.y, -quaternion.z, -quaternion.w);
-                    // return new Vector4Info(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+                // return new Vector4Info(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
                 default:
                     return new Vector4Info(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+            }
+        }
+
+        public static float ConvertRotationQuaternionX(ConvertAxis axis, float x)
+        {
+            switch (axis)
+            {
+                case ConvertAxis.RightHand:
+                    return x;
+                default:
+                    return x;
+            }
+        }
+
+        public static float ConvertRotationQuaternionY(ConvertAxis axis, float y)
+        {
+            switch (axis)
+            {
+                case ConvertAxis.RightHand:
+                    return y;
+                default:
+                    return y;
+            }
+        }
+
+        public static float ConvertRotationQuaternionZ(ConvertAxis axis, float z)
+        {
+            switch (axis)
+            {
+                case ConvertAxis.RightHand:
+                    return -z;
+                default:
+                    return z;
+            }
+        }
+
+        public static float ConvertRotationQuaternionW(ConvertAxis axis, float w)
+        {
+            switch (axis)
+            {
+                case ConvertAxis.RightHand:
+                    return -w;
+                default:
+                    return w;
             }
         }
 
@@ -167,8 +186,8 @@ namespace UnityJSONExporter
                 ConvertValue(axis, TransformType.Scale, AxisDirection.Z, scale.z)
             );
         }
-        
-        
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -187,6 +206,7 @@ namespace UnityJSONExporter
                 propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Y ||
                 propertyName == PropertyNameResolver.ANIMATION_CLIP_PROPERTY_LOCAL_SCALE_Z;
         }
+
         /// <summary>
         /// 
         /// </summary>

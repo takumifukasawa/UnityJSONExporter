@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using UnityEngine.Timeline;
 
 namespace UnityJSONExporter
 {
@@ -8,11 +9,26 @@ namespace UnityJSONExporter
     /// </summary>
     public class LightControlClipInfo : ClipInfoBase
     {
-        [JsonProperty(PropertyName = "b")]
+        [JsonIgnore]
+        // [JsonProperty(PropertyName = "b")]
         public List<ClipBinding> Bindings = new List<ClipBinding>();
 
-        public LightControlClipInfo(float s, float d) : base(ClipInfoType.LightControlClip, s, d)
+        public LightControlClipInfo(string name, float s, float d, TimelineClip.ClipExtrapolation clipExtrapolation) : base(name, ClipInfoType.LightControlClip, s, d, clipExtrapolation)
         {
+        }
+
+        public void AddBinding(ClipBinding binding)
+        {
+            if (Bindings == null) Bindings = new List<ClipBinding>();
+            Bindings.Add(binding);
+        }
+
+        protected internal override void WriteSubclassArray(JsonWriter w, JsonSerializer s)
+        {
+            // [親の情報, bindings]
+            
+            if (Bindings != null && Bindings.Count > 0) s.Serialize(w, Bindings);
+            else w.WriteNull();
         }
     }
 }

@@ -11,35 +11,48 @@ namespace UnityJSONExporter
     public class LightComponentInfo : ComponentInfoBase
     {
         [JsonProperty(PropertyName = "l")]
-        public string LightType;
+        public virtual object[] LightData { get; protected set; }
 
-        [JsonProperty(PropertyName = "i")]
-        public float Intensity;
-
-        [JsonProperty(PropertyName = "c")]
-        public string Color;
+        // Light type constants (matching PaleGL/constants.ts)
+        private const int LIGHT_TYPE_DIRECTIONAL = 0;
+        private const int LIGHT_TYPE_SPOT = 1;
+        private const int LIGHT_TYPE_POINT = 2;
 
         public LightComponentInfo(Light light) : base(ComponentType.Light)
         {
-            LightType = light.type.ToString();
-            Intensity = light.intensity;
-            Color = ColorUtilities.ConvertColorToHexString(light.color);
+            var lightTypeValue = GetLightTypeValue(light.type);
+            var intensity = light.intensity;
+            var color = ColorUtilities.ConvertColorToHexString(light.color);
+            LightData = new object[] { lightTypeValue, intensity, color };
+        }
+
+        protected static int GetLightTypeValue(LightType lightType)
+        {
+            switch (lightType)
+            {
+                case LightType.Directional:
+                    return LIGHT_TYPE_DIRECTIONAL;
+                case LightType.Spot:
+                    return LIGHT_TYPE_SPOT;
+                case LightType.Point:
+                    return LIGHT_TYPE_POINT;
+                default:
+                    throw new Exception($"[LightComponentInfo.GetLightTypeValue] Unsupported light type: {lightType}");
+            }
         }
 
         public static LightComponentInfo BuildLightComponentInfo(Light light)
         {
-            var lightType = light.type.ToString();
-
-            switch (lightType)
+            switch (light.type)
             {
-                case "Directional":
+                case LightType.Directional:
                     return new DirectionalLightComponentInfo(light);
-                // case "Point":
+                // case LightType.Point:
                 //     return new PointLightComponentInfo(light);
-                case "Spot":
+                case LightType.Spot:
                     return new SpotLightComponentInfo(light);
                 default:
-                    throw new Exception($"[LightComponentInfo.BuildLightComponentInfo] Unsupported light type: {lightType}");
+                    throw new Exception($"[LightComponentInfo.BuildLightComponentInfo] Unsupported light type: {light.type}");
             }
         }
     }
@@ -48,25 +61,22 @@ namespace UnityJSONExporter
     {
         public DirectionalLightComponentInfo(Light light) : base(light)
         {
+            // DirectionalLight用の配列は基底クラスで設定済み: [lightType, intensity, color]
         }
     }
 
     public class SpotLightComponentInfo : LightComponentInfo
     {
-        [JsonProperty(PropertyName = "r")]
-        public float Range;
-
-        [JsonProperty(PropertyName = "isa")]
-        public float InnerSpotAngle;
-
-        [JsonProperty(PropertyName = "sa")]
-        public float SpotAngle;
-
         public SpotLightComponentInfo(Light light) : base(light)
         {
-            Range = light.range;
-            InnerSpotAngle = light.innerSpotAngle;
-            SpotAngle = light.spotAngle;
+            // SpotLight用の配列: [lightType, intensity, color, range, innerSpotAngle, spotAngle]
+            var lightTypeValue = GetLightTypeValue(light.type);
+            var intensity = light.intensity;
+            var color = ColorUtilities.ConvertColorToHexString(light.color);
+            var range = light.range;
+            var innerSpotAngle = light.innerSpotAngle;
+            var spotAngle = light.spotAngle;
+            LightData = new object[] { lightTypeValue, intensity, color, range, innerSpotAngle, spotAngle };
         }
     }
 }
